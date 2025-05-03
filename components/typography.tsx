@@ -17,7 +17,7 @@ export const H1 = ({ children }: { children: React.ReactNode }) => (
 );
 
 export const Text = ({ children }: { children: React.ReactNode }) => (
-  <text className="text-sm font-semibold">{children}</text>
+  <label className="text-sm font-semibold">{children}</label>
 );
 
 export default { H4, H3, H2, H1, Text };

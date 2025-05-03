@@ -4,6 +4,7 @@ import "./globals.css";
 import { QueryProvider } from "@/lib/react-query/QueryProvider";
 import { ThemeProvider } from "@/components/custom/theme/ThemeProvider";
 import { ThemeToggle } from "@/components/custom/theme/ThemeToggle";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +38,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <QueryProvider>
+            <Toaster />
             <ThemeToggle />
             {children}
           </QueryProvider>

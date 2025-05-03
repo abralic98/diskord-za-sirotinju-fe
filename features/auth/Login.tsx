@@ -17,24 +17,43 @@ import { client } from "@/lib/graphql/client";
 import {
   CreateSessionDocument,
   CreateSessionInput,
+  CreateSessionMutation,
   MutationCreateSessionArgs,
 } from "@/generated/graphql";
+import { useAuthStore } from "./store";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { GraphqlCatchError, GraphQLErrorResponse } from "@/helpers/errors";
+import { unknown } from "zod";
 
 export const Login = () => {
-  // Initialize form handling
   const form = useForm<CreateSessionInput>({
     resolver: zodResolver(loginSchema),
   });
 
-  // The submit handler for the form
+  const { push } = useRouter();
+
   const onSubmit = async (data: CreateSessionInput) => {
     const modifiedData: MutationCreateSessionArgs = {
       credentials: data,
     };
     try {
       console.log("kuracna");
-      const res = await client.request(CreateSessionDocument, modifiedData);
-    } catch (error) {}
+      const res = await client.request<CreateSessionMutation>(
+        CreateSessionDocument,
+        modifiedData,
+      );
+      if (res.createSession?.token && res.createSession.user) {
+        useAuthStore
+          .getState()
+          .setAuth(res.createSession.token, res.createSession.user);
+
+        push(routes.dashboard);
+      }
+    } catch (error) {
+      const err = error as GraphqlCatchError;
+      toast(err.response.errors[0].message);
+    }
   };
 
   const theme = useTheme();

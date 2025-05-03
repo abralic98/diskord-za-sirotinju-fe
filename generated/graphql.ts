@@ -160,7 +160,6 @@ export type User = {
   __typename?: 'User';
   email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-  password: Scalars['String']['output'];
   username: Scalars['String']['output'];
 };
 

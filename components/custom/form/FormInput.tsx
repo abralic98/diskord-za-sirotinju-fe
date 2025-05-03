@@ -1,9 +1,11 @@
 import { useFormContext, FieldValues, Path } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils"; // Optional for className merging
+import { cn } from "@/lib/utils"; 
 import { Label } from "@/components/ui/label";
 
-type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
+type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+  secure?: boolean;
+};
 
 type FormInputProps<T extends FieldValues> = {
   name: Path<T>;
@@ -14,6 +16,7 @@ export const FormInput = <T extends FieldValues>({
   name,
   label,
   className,
+  secure = false,
   ...rest
 }: FormInputProps<T>) => {
   const {
