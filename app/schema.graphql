@@ -1,0 +1,95 @@
+type Query {
+  getAllUsers: [User]
+  getUserById(id: ID!): User
+  getAllServers: [Server]
+}
+
+type Mutation {
+  createUser(user: CreateUserInput): User
+  deactivateUser(id: ID): User
+  createSession(credentials: CreateSessionInput): UserWithToken
+  createServer(server: CreateServerInput): Server
+  createRoom(room: CreateRoomInput): Room
+  createMessage(message: CreateMessageInput): Message
+}
+
+# USERS ##############################
+
+type User {
+  id: ID!
+  username: String!
+  password: String!
+  email: String!
+}
+
+type UserWithToken {
+  token: String
+  user: User
+}
+
+input CreateUserInput {
+  username: String!
+  password: String!
+  email: String!
+}
+
+input CreateSessionInput {
+  username: String!
+  password: String!
+}
+
+######################################
+
+#### SERVERS & ROOMS #################
+
+type Server {
+  id: ID!
+  name: String!
+  rooms: [Room]
+  users: [User]
+  createdBy: User!
+}
+
+type Room {
+  id: ID!
+  name: String!
+  maxLimit: Int
+  type: RoomType
+  messages: [Message]
+  server: Server!
+  createdBy: User!
+}
+
+enum RoomType {
+  VOICE
+  TEXT
+}
+
+type Message {
+  author: User!
+  text: String!
+  imgPath: String
+}
+
+enum MessageType {
+  TEXT
+  ATTACHMENT
+}
+
+input CreateServerInput {
+  name: String!
+}
+
+input CreateRoomInput {
+  name: String!
+  type: RoomType!
+  serverId: ID!
+}
+
+input CreateMessageInput {
+  text: String!
+  type: MessageType!
+  roomId: ID!
+}
+
+####################################
