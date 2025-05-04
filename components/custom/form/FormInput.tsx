@@ -1,6 +1,6 @@
 import { useFormContext, FieldValues, Path } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils"; 
+import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 
 type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
@@ -9,7 +9,7 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
 
 type FormInputProps<T extends FieldValues> = {
   name: Path<T>;
-  label: String;
+  label: string;
 } & InputProps;
 
 export const FormInput = <T extends FieldValues>({
@@ -30,6 +30,7 @@ export const FormInput = <T extends FieldValues>({
     <div className="flex flex-col gap-1">
       <Label>{label}</Label>
       <Input
+        secure={secure}
         {...register(name)}
         className={cn("border", error && "border-red-500", className)}
         {...rest}

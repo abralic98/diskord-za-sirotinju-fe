@@ -12,42 +12,40 @@ import Link from "next/link";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema } from "./zod";
 import { client } from "@/lib/graphql/client";
 import {
   CreateSessionDocument,
-  CreateSessionInput,
-  CreateSessionMutation,
-  MutationCreateSessionArgs,
+  CreateUserDocument,
+  CreateUserInput,
+  CreateUserMutation,
+  CreateUserMutationVariables,
 } from "@/generated/graphql";
-import { useAuthStore } from "./store";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { GraphqlCatchError, GraphQLErrorResponse } from "@/helpers/errors";
-import { unknown } from "zod";
+import { GraphqlCatchError } from "@/helpers/errors";
+import { registerSchema } from "../zod";
 
-export const Login = () => {
-  const form = useForm<CreateSessionInput>({
-    resolver: zodResolver(loginSchema),
+type ExtraInput = {
+  confirm_password: string;
+};
+export const Register = () => {
+  const form = useForm<CreateUserInput>({
+    resolver: zodResolver(registerSchema),
   });
 
   const { push } = useRouter();
 
-  const onSubmit = async (data: CreateSessionInput) => {
-    const modifiedData: MutationCreateSessionArgs = {
-      credentials: data,
+  const onSubmit = async (data: CreateUserInput & ExtraInput) => {
+    const { confirm_password, ...rest } = data;
+    const modifiedData: CreateUserMutationVariables = {
+      user: rest,
     };
     try {
-      console.log("kuracna");
-      const res = await client.request<CreateSessionMutation>(
-        CreateSessionDocument,
+      const res = await client.request<CreateUserMutation>(
+        CreateUserDocument,
         modifiedData,
       );
-      if (res.createSession?.token && res.createSession.user) {
-        useAuthStore
-          .getState()
-          .setAuth(res.createSession.token, res.createSession.user);
-
+      if (res.createUser?.id) {
         push(routes.dashboard);
       }
     } catch (error) {
@@ -66,14 +64,20 @@ export const Login = () => {
           <H3>EZComms</H3>
         </div>
 
-        <FormInput<CreateSessionInput> name="username" label="Username" />
-        <FormInput<CreateSessionInput>
+        <FormInput<CreateUserInput> name="username" label="Username" />
+        <FormInput<CreateUserInput> name="email" label="Email" />
+        <FormInput<CreateUserInput>
           name="password"
-          secure={true}
           label="Password"
+          secure={true}
         />
-        <Link href={routes.register}>
-          <Text>Don't have account? Register now!</Text>
+        <FormInput<CreateUserInput>
+          name="confirm_password"
+          label="Confirm password"
+          secure={true}
+        />
+        <Link href={routes.login}>
+          <Text>Already have account? Login</Text>
         </Link>
         <Checkbox label="Remember me" id="remember-me" />
         <Button

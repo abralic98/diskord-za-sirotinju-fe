@@ -8,3 +8,9 @@ mutation CreateSession($credentials: CreateSessionInput!) {
     }
   }
 }
+
+mutation CreateUser($user: CreateUserInput!) {
+  createUser(user: $user) {
+    id
+  }
+}

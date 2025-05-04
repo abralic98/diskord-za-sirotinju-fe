@@ -176,6 +176,13 @@ export type CreateSessionMutationVariables = Exact<{
 
 export type CreateSessionMutation = { __typename?: 'Mutation', createSession?: { __typename?: 'UserWithToken', token?: string | null, user?: { __typename?: 'User', id: string, username: string, email: string } | null } | null };
 
+export type CreateUserMutationVariables = Exact<{
+  user: CreateUserInput;
+}>;
+
+
+export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', id: string } | null };
+
 
 
 export const CreateSessionDocument = `
@@ -202,5 +209,27 @@ export const useCreateSessionMutation = <
     return useMutation<CreateSessionMutation, TError, CreateSessionMutationVariables, TContext>(
       ['CreateSession'],
       (variables?: CreateSessionMutationVariables) => fetcher<CreateSessionMutation, CreateSessionMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, CreateSessionDocument, variables)(),
+      options
+    )};
+
+export const CreateUserDocument = `
+    mutation CreateUser($user: CreateUserInput!) {
+  createUser(user: $user) {
+    id
+  }
+}
+    `;
+
+export const useCreateUserMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      options?: UseMutationOptions<CreateUserMutation, TError, CreateUserMutationVariables, TContext>
+    ) => {
+    
+    return useMutation<CreateUserMutation, TError, CreateUserMutationVariables, TContext>(
+      ['CreateUser'],
+      (variables?: CreateUserMutationVariables) => fetcher<CreateUserMutation, CreateUserMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, CreateUserDocument, variables)(),
       options
     )};
