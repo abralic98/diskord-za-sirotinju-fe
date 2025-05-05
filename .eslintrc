@@ -1,0 +1,37 @@
+{
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2021": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
+  "plugins": [
+    "react",
+    "@typescript-eslint",
+    "graphql"
+  ],
+  "rules": {
+    // GraphQL specific rules
+    "graphql/template-strings": [
+      "error",
+      {
+        "env": "literal",  
+        "schemaJson": "./generated/graphql" 
+      }
+    ],
+    "graphql/required-fields": "error",
+    "graphql/no-deprecated-fields": "warn",
+    "graphql/named-operations": "error",
+    "graphql/no-unused-fields": "warn"
+  }
+}

@@ -1,4 +1,4 @@
-import { useMutation, UseMutationOptions } from '@tanstack/react-query';
+import { useMutation, useQuery, UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -64,9 +64,9 @@ export type CreateUserInput = {
 
 export type Message = {
   __typename?: 'Message';
-  author: User;
+  author?: Maybe<User>;
   imgPath?: Maybe<Scalars['String']['output']>;
-  text: Scalars['String']['output'];
+  text?: Maybe<Scalars['String']['output']>;
 };
 
 export enum MessageType {
@@ -118,7 +118,13 @@ export type Query = {
   __typename?: 'Query';
   getAllServers?: Maybe<Array<Maybe<Server>>>;
   getAllUsers?: Maybe<Array<Maybe<User>>>;
+  getRoomsByServerId?: Maybe<Array<Maybe<Room>>>;
   getUserById?: Maybe<User>;
+};
+
+
+export type QueryGetRoomsByServerIdArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -128,12 +134,12 @@ export type QueryGetUserByIdArgs = {
 
 export type Room = {
   __typename?: 'Room';
-  createdBy: User;
+  createdBy?: Maybe<User>;
   id: Scalars['ID']['output'];
   maxLimit?: Maybe<Scalars['Int']['output']>;
   messages?: Maybe<Array<Maybe<Message>>>;
   name: Scalars['String']['output'];
-  server: Server;
+  server?: Maybe<Server>;
   type?: Maybe<RoomType>;
 };
 
@@ -148,9 +154,9 @@ export enum RoomType {
  */
 export type Server = {
   __typename?: 'Server';
-  createdBy: User;
-  id: Scalars['ID']['output'];
-  name: Scalars['String']['output'];
+  createdBy?: Maybe<User>;
+  id?: Maybe<Scalars['ID']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
   rooms?: Maybe<Array<Maybe<Room>>>;
   users?: Maybe<Array<Maybe<User>>>;
 };
@@ -158,9 +164,9 @@ export type Server = {
 /**  USERS ############################## */
 export type User = {
   __typename?: 'User';
-  email: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  username: Scalars['String']['output'];
+  email?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  username?: Maybe<Scalars['String']['output']>;
 };
 
 export type UserWithToken = {
@@ -174,14 +180,33 @@ export type CreateSessionMutationVariables = Exact<{
 }>;
 
 
-export type CreateSessionMutation = { __typename?: 'Mutation', createSession?: { __typename?: 'UserWithToken', token?: string | null, user?: { __typename?: 'User', id: string, username: string, email: string } | null } | null };
+export type CreateSessionMutation = { __typename?: 'Mutation', createSession?: { __typename?: 'UserWithToken', token?: string | null, user?: { __typename?: 'User', id?: string | null, username?: string | null, email?: string | null } | null } | null };
 
 export type CreateUserMutationVariables = Exact<{
   user: CreateUserInput;
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', id: string } | null };
+export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', id?: string | null } | null };
+
+export type GetAllServersSidebarQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllServersSidebarQuery = { __typename?: 'Query', getAllServers?: Array<{ __typename?: 'Server', id?: string | null, name?: string | null } | null> | null };
+
+export type CreateServerMutationVariables = Exact<{
+  server?: InputMaybe<CreateServerInput>;
+}>;
+
+
+export type CreateServerMutation = { __typename?: 'Mutation', createServer?: { __typename?: 'Server', id?: string | null } | null };
+
+export type GetRoomsByServerIdQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetRoomsByServerIdQuery = { __typename?: 'Query', getRoomsByServerId?: Array<{ __typename?: 'Room', id: string, name: string, maxLimit?: number | null, type?: RoomType | null, messages?: Array<{ __typename?: 'Message', text?: string | null, imgPath?: string | null, author?: { __typename?: 'User', username?: string | null, id?: string | null } | null } | null> | null, createdBy?: { __typename?: 'User', id?: string | null, username?: string | null } | null } | null> | null };
 
 
 
@@ -231,5 +256,89 @@ export const useCreateUserMutation = <
     return useMutation<CreateUserMutation, TError, CreateUserMutationVariables, TContext>(
       ['CreateUser'],
       (variables?: CreateUserMutationVariables) => fetcher<CreateUserMutation, CreateUserMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, CreateUserDocument, variables)(),
+      options
+    )};
+
+export const GetAllServersSidebarDocument = `
+    query getAllServersSidebar {
+  getAllServers {
+    id
+    name
+  }
+}
+    `;
+
+export const useGetAllServersSidebarQuery = <
+      TData = GetAllServersSidebarQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      variables?: GetAllServersSidebarQueryVariables,
+      options?: UseQueryOptions<GetAllServersSidebarQuery, TError, TData>
+    ) => {
+    
+    return useQuery<GetAllServersSidebarQuery, TError, TData>(
+      variables === undefined ? ['getAllServersSidebar'] : ['getAllServersSidebar', variables],
+      fetcher<GetAllServersSidebarQuery, GetAllServersSidebarQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetAllServersSidebarDocument, variables),
+      options
+    )};
+
+export const CreateServerDocument = `
+    mutation createServer($server: CreateServerInput) {
+  createServer(server: $server) {
+    id
+  }
+}
+    `;
+
+export const useCreateServerMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      options?: UseMutationOptions<CreateServerMutation, TError, CreateServerMutationVariables, TContext>
+    ) => {
+    
+    return useMutation<CreateServerMutation, TError, CreateServerMutationVariables, TContext>(
+      ['createServer'],
+      (variables?: CreateServerMutationVariables) => fetcher<CreateServerMutation, CreateServerMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, CreateServerDocument, variables)(),
+      options
+    )};
+
+export const GetRoomsByServerIdDocument = `
+    query getRoomsByServerId($id: ID!) {
+  getRoomsByServerId(id: $id) {
+    id
+    name
+    maxLimit
+    type
+    messages {
+      author {
+        username
+        id
+      }
+      text
+      imgPath
+    }
+    createdBy {
+      id
+      username
+    }
+  }
+}
+    `;
+
+export const useGetRoomsByServerIdQuery = <
+      TData = GetRoomsByServerIdQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      variables: GetRoomsByServerIdQueryVariables,
+      options?: UseQueryOptions<GetRoomsByServerIdQuery, TError, TData>
+    ) => {
+    
+    return useQuery<GetRoomsByServerIdQuery, TError, TData>(
+      ['getRoomsByServerId', variables],
+      fetcher<GetRoomsByServerIdQuery, GetRoomsByServerIdQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetRoomsByServerIdDocument, variables),
       options
     )};

@@ -1,14 +1,14 @@
 import type { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
-  schema: "http://localhost:8080/graphql", // Your GraphQL schema URL
-  documents: "./graphql/**/*.graphql", // Path to your GraphQL queries and mutations
+  schema: "http://localhost:8080/graphql", 
+  documents: "./graphql/**/*.graphql", 
   generates: {
     "./generated/graphql.ts": {
       plugins: [
-        "typescript", // Generate TypeScript types
-        "typescript-operations", // Generate types for GraphQL queries/mutations
-        "typescript-react-query", // Generate React Query hooks
+        "typescript", 
+        "typescript-operations", 
+        "typescript-react-query",
       ],
     },
   },

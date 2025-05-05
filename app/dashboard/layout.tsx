@@ -1,5 +1,5 @@
-import { MainSidebar } from "@/components/custom/sidebars/MainSidebar";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { ServerListSidebar } from "@/components/custom/sidebars/ServerListSidebar";
+import { RoomSidebar } from "@/features/dashboard/rooms/RoomSidebar";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -13,8 +13,9 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex flex-row">
-      <MainSidebar />
+    <div className="flex flex-row h-dvh">
+      <ServerListSidebar />
+      <RoomSidebar />
       {children}
     </div>
   );

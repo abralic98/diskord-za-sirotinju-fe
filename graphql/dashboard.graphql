@@ -1,0 +1,39 @@
+query getAllServersSidebar {
+  getAllServers {
+    id
+    name
+  }
+}
+
+mutation CreateUser($user: CreateUserInput!) {
+  createUser(user: $user) {
+    id
+  }
+}
+
+mutation createServer($server: CreateServerInput) {
+  createServer(server: $server) {
+    id
+  }
+}
+
+query getRoomsByServerId($id: ID!) {
+  getRoomsByServerId(id: $id) {
+    id
+    name
+    maxLimit
+    type
+    messages {
+      author {
+        username
+        id
+      }
+      text
+      imgPath
+    }
+    createdBy {
+      id
+      username
+    }
+  }
+}
