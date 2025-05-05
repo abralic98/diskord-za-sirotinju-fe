@@ -9,7 +9,7 @@ import {
 import React, { Dispatch, ReactNode, SetStateAction, useState } from "react";
 
 export interface CustomDialogProps {
-  trigger: ReactNode;
+  trigger?: ReactNode;
   header: {
     title?: string;
     description?: string;
@@ -27,15 +27,17 @@ export const CustomDialog = ({
 }: CustomDialogProps) => {
   return (
     <Dialog open={open ?? open}>
-      <DialogTrigger
-        onClick={() => {
-          if (setOpen) {
-            setOpen(!open);
-          }
-        }}
-      >
-        {trigger}
-      </DialogTrigger>
+      {trigger && (
+        <DialogTrigger
+          onClick={() => {
+            if (setOpen) {
+              setOpen(!open);
+            }
+          }}
+        >
+          {trigger}
+        </DialogTrigger>
+      )}
       <DialogContent>
         {header.title && (
           <DialogHeader>

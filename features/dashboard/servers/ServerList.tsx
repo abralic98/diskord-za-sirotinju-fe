@@ -30,7 +30,7 @@ export const ServerList = () => {
 
   const renderServers = () => {
     return data?.getAllServers?.map((server) => {
-      return <SingleServer server={server} />;
+      return <SingleServer key={server?.id} server={server} />;
     });
   };
 

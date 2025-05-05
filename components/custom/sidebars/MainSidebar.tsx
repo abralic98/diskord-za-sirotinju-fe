@@ -17,7 +17,7 @@ export const MainSidebar = ({ content }: Props) => {
   const { open } = useSidebar();
   const appName = open ? "EZComms" : "EZ";
   return (
-    <Sidebar collapsible="icon" className="relative">
+    <Sidebar collapsible="icon" className="relative h-full">
       <SidebarHeader className="bg-red-500 h-10 flex items-start justify-center">
         <H3>{appName}</H3>
       </SidebarHeader>

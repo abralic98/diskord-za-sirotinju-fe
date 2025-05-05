@@ -208,6 +208,13 @@ export type GetRoomsByServerIdQueryVariables = Exact<{
 
 export type GetRoomsByServerIdQuery = { __typename?: 'Query', getRoomsByServerId?: Array<{ __typename?: 'Room', id: string, name: string, maxLimit?: number | null, type?: RoomType | null, messages?: Array<{ __typename?: 'Message', text?: string | null, imgPath?: string | null, author?: { __typename?: 'User', username?: string | null, id?: string | null } | null } | null> | null, createdBy?: { __typename?: 'User', id?: string | null, username?: string | null } | null } | null> | null };
 
+export type CreateRoomMutationVariables = Exact<{
+  room?: InputMaybe<CreateRoomInput>;
+}>;
+
+
+export type CreateRoomMutation = { __typename?: 'Mutation', createRoom?: { __typename?: 'Room', id: string } | null };
+
 
 
 export const CreateSessionDocument = `
@@ -340,5 +347,27 @@ export const useGetRoomsByServerIdQuery = <
     return useQuery<GetRoomsByServerIdQuery, TError, TData>(
       ['getRoomsByServerId', variables],
       fetcher<GetRoomsByServerIdQuery, GetRoomsByServerIdQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetRoomsByServerIdDocument, variables),
+      options
+    )};
+
+export const CreateRoomDocument = `
+    mutation createRoom($room: CreateRoomInput) {
+  createRoom(room: $room) {
+    id
+  }
+}
+    `;
+
+export const useCreateRoomMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      options?: UseMutationOptions<CreateRoomMutation, TError, CreateRoomMutationVariables, TContext>
+    ) => {
+    
+    return useMutation<CreateRoomMutation, TError, CreateRoomMutationVariables, TContext>(
+      ['createRoom'],
+      (variables?: CreateRoomMutationVariables) => fetcher<CreateRoomMutation, CreateRoomMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, CreateRoomDocument, variables)(),
       options
     )};
