@@ -3,7 +3,7 @@
 import EZLogoDark from "@/assets/logo/EZLogoDark";
 import EZLogoWhite from "@/assets/logo/EZLogoWhite";
 import { FormInput } from "@/components/custom/form/FormInput";
-import { H1, H3, H4, Text } from "@/components/typography";
+import { H3, Text } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import routes from "@/lib/routes";
@@ -14,7 +14,6 @@ import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { client } from "@/lib/graphql/client";
 import {
-  CreateSessionDocument,
   CreateUserDocument,
   CreateUserInput,
   CreateUserMutation,
@@ -24,34 +23,41 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { GraphqlCatchError } from "@/helpers/errors";
 import { registerSchema } from "../zod";
+import { useMutation } from "@tanstack/react-query";
 
-type ExtraInput = {
-  confirm_password: string;
-};
+type CreateUserInputModified = {
+  confirmPassword: string;
+} & CreateUserInput;
+
 export const Register = () => {
-  const form = useForm<CreateUserInput>({
+  const form = useForm<CreateUserInputModified>({
     resolver: zodResolver(registerSchema),
   });
 
   const { push } = useRouter();
 
-  const onSubmit = async (data: CreateUserInput & ExtraInput) => {
-    const { confirm_password, ...rest } = data;
-    const modifiedData: CreateUserMutationVariables = {
-      user: rest,
-    };
-    try {
+  const createUserMutation = useMutation({
+    mutationFn: async (data: CreateUserInputModified) => {
+      const { confirmPassword, ...rest } = data;
+      const modifiedData: CreateUserMutationVariables = {
+        user: rest,
+      };
       const res = await client.request<CreateUserMutation>(
         CreateUserDocument,
         modifiedData,
       );
-      if (res.createUser?.id) {
-        push(routes.dashboard);
-      }
-    } catch (error) {
-      const err = error as GraphqlCatchError;
+    },
+    onSuccess: () => {
+      push(routes.dashboard);
+    },
+    onError: (error) => {
+      const err = error as unknown as GraphqlCatchError;
       toast(err.response.errors[0].message);
-    }
+    },
+  });
+
+  const onSubmit = async (data: CreateUserInputModified) => {
+    createUserMutation.mutateAsync(data);
   };
 
   const theme = useTheme();
@@ -64,15 +70,15 @@ export const Register = () => {
           <H3>EZComms</H3>
         </div>
 
-        <FormInput<CreateUserInput> name="username" label="Username" />
-        <FormInput<CreateUserInput> name="email" label="Email" />
-        <FormInput<CreateUserInput>
+        <FormInput<CreateUserInputModified> name="username" label="Username" />
+        <FormInput<CreateUserInputModified> name="email" label="Email" />
+        <FormInput<CreateUserInputModified>
           name="password"
           label="Password"
           secure={true}
         />
-        <FormInput<CreateUserInput>
-          name="confirm_password"
+        <FormInput<CreateUserInputModified>
+          name="confirmPassword"
           label="Confirm password"
           secure={true}
         />
@@ -81,6 +87,7 @@ export const Register = () => {
         </Link>
         <Checkbox label="Remember me" id="remember-me" />
         <Button
+          isLoading={createUserMutation.isPending}
           className="justify-center items-center"
           onClick={form.handleSubmit(onSubmit)}
         >

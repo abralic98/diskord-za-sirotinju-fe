@@ -3,7 +3,7 @@
 import EZLogoDark from "@/assets/logo/EZLogoDark";
 import EZLogoWhite from "@/assets/logo/EZLogoWhite";
 import { FormInput } from "@/components/custom/form/FormInput";
-import { H1, H3, H4, Text } from "@/components/typography";
+import { H3, Text } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import routes from "@/lib/routes";
@@ -12,7 +12,6 @@ import Link from "next/link";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema } from "./zod";
 import { client } from "@/lib/graphql/client";
 import {
   CreateSessionDocument,
@@ -20,43 +19,47 @@ import {
   CreateSessionMutation,
   MutationCreateSessionArgs,
 } from "@/generated/graphql";
-import { useAuthStore } from "./store";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { GraphqlCatchError, GraphQLErrorResponse } from "@/helpers/errors";
-import { unknown } from "zod";
+import { GraphqlCatchError } from "@/helpers/errors";
+import { useMutation } from "@tanstack/react-query";
+import { useAuthStore } from "../store";
+import { loginSchema } from "../zod";
 
 export const Login = () => {
   const form = useForm<CreateSessionInput>({
     resolver: zodResolver(loginSchema),
   });
 
+  const theme = useTheme();
+
   const { push } = useRouter();
 
-  const onSubmit = async (data: CreateSessionInput) => {
-    const modifiedData: MutationCreateSessionArgs = {
-      credentials: data,
-    };
-    try {
-      console.log("kuracna");
-      const res = await client.request<CreateSessionMutation>(
+  const createSessionMutation = useMutation({
+    mutationFn: async (data: CreateSessionInput) => {
+      const modifiedData: MutationCreateSessionArgs = { credentials: data };
+      return client.request<CreateSessionMutation>(
         CreateSessionDocument,
         modifiedData,
       );
+    },
+    onSuccess: (res) => {
       if (res.createSession?.token && res.createSession.user) {
         useAuthStore
           .getState()
           .setAuth(res.createSession.token, res.createSession.user);
-
         push(routes.dashboard);
       }
-    } catch (error) {
-      const err = error as GraphqlCatchError;
+    },
+    onError: (error) => {
+      const err = error as unknown as GraphqlCatchError;
       toast(err.response.errors[0].message);
-    }
-  };
+    },
+  });
 
-  const theme = useTheme();
+  const onSubmit = async (data: CreateSessionInput) => {
+    createSessionMutation.mutateAsync(data);
+  };
 
   return (
     <FormProvider {...form}>
@@ -77,6 +80,7 @@ export const Login = () => {
         </Link>
         <Checkbox label="Remember me" id="remember-me" />
         <Button
+          isLoading={createSessionMutation.isPending}
           className="justify-center items-center"
           onClick={form.handleSubmit(onSubmit)}
         >
