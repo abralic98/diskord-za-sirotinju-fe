@@ -5,5 +5,5 @@ import React from "react";
 export const DashboardContent = () => {
   const { open } = useSidebar();
 
-  return <div className="p-[12px] bg-sidebar-border">create rooms and severs</div>;
+  return <div className="p-[12px] w-full bg-sidebar-border">create rooms and severs</div>;
 };

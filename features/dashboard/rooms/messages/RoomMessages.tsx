@@ -20,7 +20,7 @@ interface Props {
 
 export const RoomMessages = ({ roomId }: Props) => {
   const { height } = useWindowDimensions();
-  const { data, error } = useQuery({
+  const { data, error, isLoading } = useQuery({
     queryKey: [queryKeys.getMessagesByRoomId, roomId],
     enabled: Boolean(roomId),
     queryFn: async (): Promise<GetMessagesByRoomIdQuery> => {
@@ -43,6 +43,8 @@ export const RoomMessages = ({ roomId }: Props) => {
       return <SingleMessage key={message?.id} message={message} />;
     });
   };
+
+  if (isLoading) return null;
 
   return (
     <div
