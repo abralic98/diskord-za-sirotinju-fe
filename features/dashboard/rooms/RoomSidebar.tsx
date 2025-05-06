@@ -20,7 +20,6 @@ import {
   CustomDialogProps,
 } from "@/components/custom/dialog/CustomDialog";
 import { CreateRoomForm } from "./components/CreateRoomForm";
-import { DialogProps } from "@radix-ui/react-dialog";
 
 export const RoomSidebar = () => {
   const { serverId } = useIds();
@@ -65,7 +64,7 @@ export const RoomSidebar = () => {
   return (
     <MainSidebar
       content={
-        <div className="h-full">
+        <div className="h-full border border-sidebar-border">
           <Context
             options={options}
             trigger={

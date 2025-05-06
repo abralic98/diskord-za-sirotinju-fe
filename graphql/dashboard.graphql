@@ -43,3 +43,7 @@ mutation createRoom($room: CreateRoomInput) {
     id
   }
 }
+
+# query getMessagesByRoomId($id: ID!){
+#
+# }

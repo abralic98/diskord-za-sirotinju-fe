@@ -11,13 +11,22 @@ import { GraphqlCatchError } from "@/helpers/errors";
 import { queryKeys } from "@/helpers/queryKeys";
 import { client } from "@/lib/graphql/client";
 import { queryClient } from "@/lib/react-query/queryClient";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import React, { Dispatch, SetStateAction } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { createServerSchema } from "../zod";
+import { FormSwitch } from "@/components/custom/form/FormSwitch";
+import { H4 } from "@/components/typography";
+import { Label } from "@/components/ui/label";
 
 export const CreateServerForm = () => {
-  const form = useForm<CreateServerInput>();
+  const form = useForm<CreateServerInput>({
+    resolver: zodResolver(createServerSchema),
+    defaultValues: {
+      publicServer: false,
+    },
+  });
 
   const createServerMutation = useMutation({
     mutationFn: async (data: CreateServerInput) => {
@@ -49,6 +58,13 @@ export const CreateServerForm = () => {
     <FormProvider {...form}>
       <form className="flex flex-col gap-md">
         <FormInput<CreateServerInput> label="Server name" name="name" />
+        <FormSwitch<CreateServerInput>
+          label="Public Server"
+          name="publicServer"
+        />
+        {form.watch("publicServer") === true && (
+          <Label>Server will appear on discovery page</Label>
+        )}
         <div className="flex flex-row justify-between">
           <DialogClose asChild>
             <Button

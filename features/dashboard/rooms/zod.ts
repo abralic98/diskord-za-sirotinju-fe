@@ -6,3 +6,4 @@ export const createRoomSchema = z.object({
   serverId: z.string().min(1, { message: "Missing serverId" }),
   type: z.nativeEnum(RoomType, { message: "Invalid room type" }),
 });
+

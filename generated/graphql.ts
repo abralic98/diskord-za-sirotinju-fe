@@ -49,6 +49,7 @@ export type CreateRoomInput = {
 
 export type CreateServerInput = {
   name: Scalars['String']['input'];
+  publicServer: Scalars['Boolean']['input'];
 };
 
 export type CreateSessionInput = {
@@ -65,6 +66,7 @@ export type CreateUserInput = {
 export type Message = {
   __typename?: 'Message';
   author?: Maybe<User>;
+  id?: Maybe<Scalars['ID']['output']>;
   imgPath?: Maybe<Scalars['String']['output']>;
   text?: Maybe<Scalars['String']['output']>;
 };
@@ -157,6 +159,7 @@ export type Server = {
   createdBy?: Maybe<User>;
   id?: Maybe<Scalars['ID']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+  publicServer?: Maybe<Scalars['Boolean']['output']>;
   rooms?: Maybe<Array<Maybe<Room>>>;
   users?: Maybe<Array<Maybe<User>>>;
 };

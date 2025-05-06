@@ -15,7 +15,9 @@ interface Props {
 export const SingleRoom = ({ room }: Props) => {
   const { open } = useSidebar();
   const { push } = useRouter();
-  const { serverId } = useIds();
+  const { serverId, roomId } = useIds();
+
+  const currentRoom = roomId === room?.id;
 
   const handleContextMenu = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -28,12 +30,15 @@ export const SingleRoom = ({ room }: Props) => {
       onContextMenu={handleContextMenu}
       onClick={() => push(`${routes.dashboard}/${serverId}/${room?.id}`)}
       className={cn(
+        currentRoom
+          ? "bg-active-room hover:bg-active-room-hover"
+          : "bg-sidebar-accent hover:bg-sidebar-hover",
         open ? "justify-start" : "justify-center",
-        "hover:bg-sidebar-hover w-full h-10 bg-sidebar-accent flex flex-row gap-md items-center p-3 rounded-md cursor-pointer ",
+        " w-full h-10  flex flex-row gap-md items-center p-3 rounded-md cursor-pointer ",
       )}
     >
       {icon}
-      {open && <Text>{room?.name}</Text>}
+      {open && <Text className="truncate max-w-full">{room?.name}</Text>}
     </div>
   );
 };
