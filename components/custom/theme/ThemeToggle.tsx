@@ -16,7 +16,7 @@ export function ThemeToggle() {
   const { setTheme } = useTheme();
 
   return (
-    <div className="absolute right-5 top-5">
+    <div className="absolute right-5 top-3">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon">

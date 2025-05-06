@@ -33,6 +33,7 @@ export const ServerList = () => {
       return <SingleServer key={server?.id} server={server} />;
     });
   };
+  console.log(data?.getAllServers?.length, "SERVERi")
 
   return (
     <ScrollArea className="h-full w-[60px] rounded-md">

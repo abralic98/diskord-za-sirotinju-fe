@@ -44,6 +44,36 @@ mutation createRoom($room: CreateRoomInput) {
   }
 }
 
-# query getMessagesByRoomId($id: ID!){
-#
-# }
+query getMessagesByRoomId($id: ID!) {
+  getMessagesByRoomId(id: $id) {
+    id
+    author {
+      id
+      username
+    }
+    text
+    imgPath
+    type
+  }
+}
+
+query getRoomById($id: ID!) {
+  getRoomById(id: $id) {
+    id
+    name
+    type
+  }
+}
+
+query getUsersByServerId($id: ID!) {
+  getUsersByServerId(id: $id) {
+    id
+    username
+  }
+}
+
+mutation createMessage($message: CreateMessageInput) {
+  createMessage(message: $message) {
+    id
+  }
+}

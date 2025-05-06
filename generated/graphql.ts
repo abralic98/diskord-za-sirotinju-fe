@@ -69,6 +69,7 @@ export type Message = {
   id?: Maybe<Scalars['ID']['output']>;
   imgPath?: Maybe<Scalars['String']['output']>;
   text?: Maybe<Scalars['String']['output']>;
+  type?: Maybe<MessageType>;
 };
 
 export enum MessageType {
@@ -120,8 +121,21 @@ export type Query = {
   __typename?: 'Query';
   getAllServers?: Maybe<Array<Maybe<Server>>>;
   getAllUsers?: Maybe<Array<Maybe<User>>>;
+  getMessagesByRoomId?: Maybe<Array<Maybe<Message>>>;
+  getRoomById?: Maybe<Room>;
   getRoomsByServerId?: Maybe<Array<Maybe<Room>>>;
   getUserById?: Maybe<User>;
+  getUsersByServerId?: Maybe<Array<Maybe<User>>>;
+};
+
+
+export type QueryGetMessagesByRoomIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryGetRoomByIdArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -131,6 +145,11 @@ export type QueryGetRoomsByServerIdArgs = {
 
 
 export type QueryGetUserByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryGetUsersByServerIdArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -217,6 +236,34 @@ export type CreateRoomMutationVariables = Exact<{
 
 
 export type CreateRoomMutation = { __typename?: 'Mutation', createRoom?: { __typename?: 'Room', id: string } | null };
+
+export type GetMessagesByRoomIdQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetMessagesByRoomIdQuery = { __typename?: 'Query', getMessagesByRoomId?: Array<{ __typename?: 'Message', id?: string | null, text?: string | null, imgPath?: string | null, type?: MessageType | null, author?: { __typename?: 'User', id?: string | null, username?: string | null } | null } | null> | null };
+
+export type GetRoomByIdQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetRoomByIdQuery = { __typename?: 'Query', getRoomById?: { __typename?: 'Room', id: string, name: string, type?: RoomType | null } | null };
+
+export type GetUsersByServerIdQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetUsersByServerIdQuery = { __typename?: 'Query', getUsersByServerId?: Array<{ __typename?: 'User', id?: string | null, username?: string | null } | null> | null };
+
+export type CreateMessageMutationVariables = Exact<{
+  message?: InputMaybe<CreateMessageInput>;
+}>;
+
+
+export type CreateMessageMutation = { __typename?: 'Mutation', createMessage?: { __typename?: 'Message', id?: string | null } | null };
 
 
 
@@ -372,5 +419,106 @@ export const useCreateRoomMutation = <
     return useMutation<CreateRoomMutation, TError, CreateRoomMutationVariables, TContext>(
       ['createRoom'],
       (variables?: CreateRoomMutationVariables) => fetcher<CreateRoomMutation, CreateRoomMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, CreateRoomDocument, variables)(),
+      options
+    )};
+
+export const GetMessagesByRoomIdDocument = `
+    query getMessagesByRoomId($id: ID!) {
+  getMessagesByRoomId(id: $id) {
+    id
+    author {
+      id
+      username
+    }
+    text
+    imgPath
+    type
+  }
+}
+    `;
+
+export const useGetMessagesByRoomIdQuery = <
+      TData = GetMessagesByRoomIdQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      variables: GetMessagesByRoomIdQueryVariables,
+      options?: UseQueryOptions<GetMessagesByRoomIdQuery, TError, TData>
+    ) => {
+    
+    return useQuery<GetMessagesByRoomIdQuery, TError, TData>(
+      ['getMessagesByRoomId', variables],
+      fetcher<GetMessagesByRoomIdQuery, GetMessagesByRoomIdQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetMessagesByRoomIdDocument, variables),
+      options
+    )};
+
+export const GetRoomByIdDocument = `
+    query getRoomById($id: ID!) {
+  getRoomById(id: $id) {
+    id
+    name
+    type
+  }
+}
+    `;
+
+export const useGetRoomByIdQuery = <
+      TData = GetRoomByIdQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      variables: GetRoomByIdQueryVariables,
+      options?: UseQueryOptions<GetRoomByIdQuery, TError, TData>
+    ) => {
+    
+    return useQuery<GetRoomByIdQuery, TError, TData>(
+      ['getRoomById', variables],
+      fetcher<GetRoomByIdQuery, GetRoomByIdQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetRoomByIdDocument, variables),
+      options
+    )};
+
+export const GetUsersByServerIdDocument = `
+    query getUsersByServerId($id: ID!) {
+  getUsersByServerId(id: $id) {
+    id
+    username
+  }
+}
+    `;
+
+export const useGetUsersByServerIdQuery = <
+      TData = GetUsersByServerIdQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      variables: GetUsersByServerIdQueryVariables,
+      options?: UseQueryOptions<GetUsersByServerIdQuery, TError, TData>
+    ) => {
+    
+    return useQuery<GetUsersByServerIdQuery, TError, TData>(
+      ['getUsersByServerId', variables],
+      fetcher<GetUsersByServerIdQuery, GetUsersByServerIdQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetUsersByServerIdDocument, variables),
+      options
+    )};
+
+export const CreateMessageDocument = `
+    mutation createMessage($message: CreateMessageInput) {
+  createMessage(message: $message) {
+    id
+  }
+}
+    `;
+
+export const useCreateMessageMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      options?: UseMutationOptions<CreateMessageMutation, TError, CreateMessageMutationVariables, TContext>
+    ) => {
+    
+    return useMutation<CreateMessageMutation, TError, CreateMessageMutationVariables, TContext>(
+      ['createMessage'],
+      (variables?: CreateMessageMutationVariables) => fetcher<CreateMessageMutation, CreateMessageMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, CreateMessageDocument, variables)(),
       options
     )};

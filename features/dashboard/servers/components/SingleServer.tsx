@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import routes from "@/lib/routes";
 import { cn } from "@/lib/utils";
 import { useIds } from "@/hooks/useIds";
+import { useUserListSidebarStore } from "../store";
 
 type SidebarServer = Omit<Server, "createdBy" | "rooms" | "users">;
 
@@ -15,13 +16,17 @@ interface Props {
 export const SingleServer = ({ server }: Props) => {
   const { push } = useRouter();
   const { serverId } = useIds();
+  const { close } = useUserListSidebarStore();
 
   if (!server) return null;
 
   const isServerSelected = server.id === serverId;
   return (
     <div
-      onClick={() => push(`${routes.dashboard}/${server.id}`)}
+      onClick={() => {
+        close();
+        push(`${routes.dashboard}/${server.id}`);
+      }}
       className={cn(
         isServerSelected
           ? "rounded-xl bg-sidebar-hover"
@@ -29,7 +34,7 @@ export const SingleServer = ({ server }: Props) => {
         "hover:bg-sidebar-hover transition-colors duration-200  flex items-center justify-center w-14 h-14 cursor-pointer",
       )}
     >
-      <H4>{server.name.slice(0, 2)}</H4>
+      <H4>{server?.name?.slice(0, 2)}</H4>
     </div>
   );
 };

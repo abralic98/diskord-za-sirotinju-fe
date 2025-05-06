@@ -4,12 +4,14 @@ import { EyeIcon, EyeOffIcon } from "lucide-react"; // `EyeOffIcon` instead of `
 
 type InputProps = {
   secure?: boolean;
+  icon?: React.ReactNode;
 };
 
 function Input({
   className,
   secure,
   type,
+  icon,
   ...props
 }: React.ComponentProps<"input"> & InputProps) {
   const [secured, setSecured] = React.useState(secure ?? false);
@@ -28,6 +30,8 @@ function Input({
         {...props}
       />
 
+      {icon && <div className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer text-muted-foreground" >{icon}</div>}
+
       {secure && (
         <div
           onClick={() => setSecured(!secured)}
@@ -40,6 +44,7 @@ function Input({
           )}
         </div>
       )}
+
     </div>
   );
 }

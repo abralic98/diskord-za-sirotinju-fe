@@ -22,7 +22,7 @@ export const Text = ({
   className,
 }: {
   children: React.ReactNode;
-  className: string;
+  className?: string;
 }) => (
   <label className={cn("text-sm font-semibold", className)}>{children}</label>
 );

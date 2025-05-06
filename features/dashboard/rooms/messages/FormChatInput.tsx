@@ -4,24 +4,25 @@ import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { ReactNode } from "react";
 
-type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
-  secure?: boolean;
-};
-
-type FormInputProps<T extends FieldValues> = {
+type FormChatInputProps<T extends FieldValues> = {
   name: Path<T>;
   label?: string;
   icon?: ReactNode;
-} & InputProps;
+  placeholder?: string
+  inputClassName?: string
+  containerClassName?: string
+};
 
-export const FormInput = <T extends FieldValues>({
+export const FormChatInput = <T extends FieldValues>({
   name,
   label,
-  className,
-  secure = false,
   icon,
+  placeholder,
+  inputClassName,
+  containerClassName,
   ...rest
-}: FormInputProps<T>) => {
+
+}: FormChatInputProps<T>) => {
   const {
     register,
     formState: { errors },
@@ -30,13 +31,13 @@ export const FormInput = <T extends FieldValues>({
   const error = errors[name];
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className={cn("flex flex-col gap-1", containerClassName)}>
       {label && <Label>{label}</Label>}
       <Input
-        secure={secure}
         icon={icon}
+        placeholder={placeholder}
         {...register(name)}
-        className={cn("border", error && "border-red-500", className)}
+        className={cn("border", error && "border-red-500", inputClassName)}
         {...rest}
       />
       {error && (

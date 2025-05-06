@@ -1,13 +1,12 @@
-import { Context } from "@/components/custom/context/Context";
-import { H4, Text } from "@/components/typography";
+import { Text } from "@/components/typography";
 import { useSidebar } from "@/components/ui/sidebar";
-import { Room, RoomType } from "@/generated/graphql";
+import { Room } from "@/generated/graphql";
 import { useIds } from "@/hooks/useIds";
 import routes from "@/lib/routes";
 import { cn } from "@/lib/utils";
-import { AudioLines } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { getRoomIcon } from "../helpers";
 
 interface Props {
   room?: Room | null | undefined;
@@ -23,8 +22,6 @@ export const SingleRoom = ({ room }: Props) => {
     e.stopPropagation();
   };
 
-  const icon = room?.type === RoomType.Text ? <H4>#</H4> : <AudioLines />;
-
   return (
     <div
       onContextMenu={handleContextMenu}
@@ -37,7 +34,7 @@ export const SingleRoom = ({ room }: Props) => {
         " w-full h-10  flex flex-row gap-md items-center p-3 rounded-md cursor-pointer ",
       )}
     >
-      {icon}
+      {getRoomIcon({ room: room })}
       {open && <Text className="truncate max-w-full">{room?.name}</Text>}
     </div>
   );
