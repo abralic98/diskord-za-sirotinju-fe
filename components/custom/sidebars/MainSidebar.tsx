@@ -8,6 +8,7 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { UserInfoFooter } from "@/features/user/UserInfoFooter";
 import { ReactNode } from "react";
 
 interface Props {
@@ -22,7 +23,9 @@ export const MainSidebar = ({ content }: Props) => {
         <H3>{appName}</H3>
       </SidebarHeader>
       <SidebarContent>{content}</SidebarContent>
-      <SidebarFooter>user</SidebarFooter>
+      <SidebarFooter>
+        <UserInfoFooter />
+      </SidebarFooter>
       <div className="absolute right-0 top-0">
         <SidebarTrigger />
       </div>
