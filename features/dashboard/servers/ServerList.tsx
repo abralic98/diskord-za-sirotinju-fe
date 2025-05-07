@@ -12,8 +12,11 @@ import {
 import { client } from "@/lib/graphql/client";
 import { toast } from "sonner";
 import { GraphqlCatchError } from "@/helpers/errors";
+import { useServerListSidebarStore } from "./store";
+import { useEffect } from "react";
 
 export const ServerList = () => {
+  const { setServers } = useServerListSidebarStore();
   const { data, error } = useQuery({
     queryKey: [queryKeys.getAllServersSidebar],
     queryFn: async (): Promise<GetAllServersSidebarQuery> => {
@@ -23,17 +26,21 @@ export const ServerList = () => {
     },
   });
 
+  useEffect(() => {
+    if (data?.getAllServers) {
+      setServers(data.getAllServers);
+    }
+  }, [data]);
+
   if (error) {
     const err = error as unknown as GraphqlCatchError;
     toast(err.response.errors[0].message);
   }
-
   const renderServers = () => {
     return data?.getAllServers?.map((server) => {
       return <SingleServer key={server?.id} server={server} />;
     });
   };
-  console.log(data?.getAllServers?.length, "SERVERi")
 
   return (
     <ScrollArea className="h-full w-[60px] rounded-md">

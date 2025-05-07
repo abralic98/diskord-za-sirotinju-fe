@@ -11,7 +11,6 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createRoomSchema } from "../zod";
 import { FormInput } from "@/components/custom/form/FormInput";
-import { CustomRadioGroup } from "@/components/custom/radio-group/CustomRadioGroup";
 import {
   FormRadioGroup,
   SelectItemOption,
@@ -24,17 +23,20 @@ import { queryClient } from "@/lib/react-query/queryClient";
 import { queryKeys } from "@/helpers/queryKeys";
 import { GraphqlCatchError } from "@/helpers/errors";
 import { useIds } from "@/hooks/useIds";
+import { useRouter } from "next/navigation";
+import routes from "@/lib/routes";
 
 interface Props {
-  setOpen: Dispatch<SetStateAction<boolean>>;
+  setOpen?: Dispatch<SetStateAction<boolean>>;
 }
 export const CreateRoomForm = ({ setOpen }: Props) => {
-  const {serverId} = useIds()
+  const { serverId } = useIds();
+  const { push } = useRouter();
   const form = useForm<CreateRoomInput>({
     resolver: zodResolver(createRoomSchema),
-    defaultValues:{
-      serverId: serverId
-    }
+    defaultValues: {
+      serverId: serverId,
+    },
   });
   const options: SelectItemOption[] = [
     {
@@ -47,7 +49,7 @@ export const CreateRoomForm = ({ setOpen }: Props) => {
     },
   ];
 
-  const createServerMutation = useMutation({
+  const createRoomMutation = useMutation({
     mutationFn: async (data: CreateRoomInput) => {
       const modifiedData: CreateRoomMutationVariables = {
         room: data,
@@ -56,13 +58,15 @@ export const CreateRoomForm = ({ setOpen }: Props) => {
         CreateRoomDocument,
         modifiedData,
       );
+      return res;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast("Room Created!");
       queryClient.refetchQueries({
         queryKey: [queryKeys.getRoomsByServerId],
       });
-      setOpen(false);
+      setOpen && setOpen(false);
+      push(`${routes.dashboard}/${serverId}/${data.createRoom?.id}`);
     },
     onError: (error) => {
       const err = error as unknown as GraphqlCatchError;
@@ -72,7 +76,7 @@ export const CreateRoomForm = ({ setOpen }: Props) => {
 
   console.log(form.formState.errors);
   const onSubmit = async (data: CreateRoomInput) => {
-    createServerMutation.mutateAsync(data);
+    createRoomMutation.mutateAsync(data);
   };
 
   return (
@@ -90,7 +94,7 @@ export const CreateRoomForm = ({ setOpen }: Props) => {
             <Button
               className="min-w-[150px]"
               type="button"
-              onClick={() => setOpen(false)}
+              onClick={() => setOpen && setOpen(false)}
             >
               Cancel
             </Button>

@@ -10,7 +10,7 @@ import { GraphqlCatchError } from "@/helpers/errors";
 import { queryKeys } from "@/helpers/queryKeys";
 import { client } from "@/lib/graphql/client";
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { SingleRoom } from "./components/SingleRoom";
 import { useIds } from "@/hooks/useIds";
@@ -20,9 +20,11 @@ import {
   CustomDialogProps,
 } from "@/components/custom/dialog/CustomDialog";
 import { CreateRoomForm } from "./components/CreateRoomForm";
+import { useRoomListSidebarStore } from "./store";
 
 export const RoomSidebar = () => {
   const { serverId } = useIds();
+  const { setRooms } = useRoomListSidebarStore();
   const [open, setOpen] = useState(false);
   const header: CustomDialogProps["header"] = {
     title: "Create new room",
@@ -40,6 +42,12 @@ export const RoomSidebar = () => {
       return await client.request(GetRoomsByServerIdDocument, variables);
     },
   });
+
+  useEffect(() => {
+    if (data?.getRoomsByServerId) {
+      setRooms(data.getRoomsByServerId ?? []);
+    }
+  }, [data]);
 
   if (error) {
     const err = error as unknown as GraphqlCatchError;
@@ -73,7 +81,7 @@ export const RoomSidebar = () => {
                 <CustomDialog
                   open={open}
                   header={header}
-                  content={<CreateRoomForm setOpen={setOpen} />}
+                  content={<CreateRoomForm serverId={serverId} setOpen={setOpen} />}
                 />
               </div>
             }

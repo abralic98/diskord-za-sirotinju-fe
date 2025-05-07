@@ -17,8 +17,9 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { createServerSchema } from "../zod";
 import { FormSwitch } from "@/components/custom/form/FormSwitch";
-import { H4 } from "@/components/typography";
 import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation";
+import routes from "@/lib/routes";
 
 export const CreateServerForm = () => {
   const form = useForm<CreateServerInput>({
@@ -27,6 +28,7 @@ export const CreateServerForm = () => {
       publicServer: false,
     },
   });
+  const { push } = useRouter()
 
   const createServerMutation = useMutation({
     mutationFn: async (data: CreateServerInput) => {
@@ -37,12 +39,15 @@ export const CreateServerForm = () => {
         CreateServerDocument,
         modifiedData,
       );
+      return res;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast("Server Created!");
       queryClient.refetchQueries({
         queryKey: [queryKeys.getAllServersSidebar],
       });
+      push(`${routes.dashboard}/${data.createServer?.id}`)
+
     },
     onError: (error) => {
       const err = error as unknown as GraphqlCatchError;

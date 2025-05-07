@@ -1,12 +1,12 @@
-import { Center } from "@/components/custom/Center";
+import { CenterScreen } from "@/components/custom/Center";
 import { Register } from "@/features/auth/register/Register";
 import React from "react";
 
 const RegisterPage = () => {
   return (
-    <Center>
+    <CenterScreen>
       <Register />
-    </Center>
+    </CenterScreen>
   );
 };
 

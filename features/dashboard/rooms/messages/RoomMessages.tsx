@@ -13,6 +13,8 @@ import { toast } from "sonner";
 import { CreateMessage } from "./CreateMessage";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useWindowDimensions } from "@/hooks/useWindowDimensions";
+import { NoMessages } from "../../components/NoMessages";
+import { Center } from "@/components/custom/Center";
 
 interface Props {
   roomId?: string;
@@ -39,6 +41,7 @@ export const RoomMessages = ({ roomId }: Props) => {
   }
 
   const renderMessages = () => {
+    if (Boolean(data?.getMessagesByRoomId?.length === 0)) return <NoMessages />;
     return data?.getMessagesByRoomId?.map((message) => {
       return <SingleMessage key={message?.id} message={message} />;
     });

@@ -1,12 +1,12 @@
-import { Center } from "@/components/custom/Center";
+import {  CenterScreen } from "@/components/custom/Center";
 import { Login } from "@/features/auth/login/Login";
 import React from "react";
 
 const LoginPage = () => {
   return (
-    <Center>
+    <CenterScreen>
       <Login />
-    </Center>
+    </CenterScreen>
   );
 };
 
