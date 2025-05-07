@@ -22,14 +22,7 @@ export const RoomMessages = () => {
   const { roomId } = useIds();
   const [firstScroll, setfirstScroll] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    error,
-    isLoading,
-  } = usePagination<GetMessagesByRoomIdQuery>({
+  const query = usePagination<GetMessagesByRoomIdQuery>({
     queryKey: [queryKeys.getMessagesByRoomId, roomId],
     document: GetMessagesByRoomIdDocument,
     variables: { id: roomId },
@@ -37,21 +30,21 @@ export const RoomMessages = () => {
   });
 
   useEffect(() => {
-    if (data && firstScroll) {
+    if (query.data && firstScroll) {
       setfirstScroll(false);
       scrollToBottom(scrollRef.current);
     }
-  }, [data]);
+  }, [query.data]);
 
-  if (error) {
-    const err = error as unknown as GraphqlCatchError;
+  if (query.error) {
+    const err = query.error as unknown as GraphqlCatchError;
     toast(err.response.errors[0].message);
   }
 
   const renderMessages = () => {
-    if (!data?.pages?.length) return <NoMessages />;
+    if (!query.data?.pages?.length) return <NoMessages />;
 
-    const allMessages = data.pages.flatMap(
+    const allMessages = query.data.pages.flatMap(
       (page) => page.getMessagesByRoomId?.content ?? [],
     );
 
@@ -62,7 +55,7 @@ export const RoomMessages = () => {
       .map((message) => <SingleMessage key={message.id} message={message} />);
   };
 
-  if (isLoading) return null;
+  if (query.isLoading) return null;
 
   return (
     <div
@@ -77,13 +70,7 @@ export const RoomMessages = () => {
           ref={scrollRef}
           className="overflow-y-scroll w-full p-2 flex flex-col gap-sm"
         >
-          {hasNextPage && (
-            <PaginationTrigger
-              fetchNextPage={fetchNextPage}
-              hasNextPage={hasNextPage}
-              isFetchingNextPage={isFetchingNextPage}
-            />
-          )}
+          {query.hasNextPage && <PaginationTrigger query={query} />}
           {renderMessages()}
         </div>
       </ScrollArea>

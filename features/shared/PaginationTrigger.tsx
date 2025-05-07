@@ -1,27 +1,26 @@
 "use client";
 
+import { UseInfiniteQueryResult } from "@tanstack/react-query";
 import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
 type PaginationTriggerProps = {
-  fetchNextPage: () => void;
-  hasNextPage: boolean;
-  isFetchingNextPage: boolean;
+  query: UseInfiniteQueryResult;
 };
 
 export const PaginationTrigger: React.FC<PaginationTriggerProps> = ({
-  fetchNextPage,
-  hasNextPage,
-  isFetchingNextPage,
+  query,
 }) => {
   const { ref, inView } = useInView({
     threshold: 0,
     triggerOnce: false,
   });
 
+  const { hasNextPage, isFetchingNextPage, fetchNextPage } = query;
+
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
-      console.log(hasNextPage, 'imalib')
+      console.log(hasNextPage, "imalib");
       fetchNextPage();
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
