@@ -4,7 +4,7 @@ import { H4 } from "@/components/typography";
 import { GetRoomByIdDocument, GetRoomByIdQuery } from "@/generated/graphql";
 import { GraphqlCatchError } from "@/helpers/errors";
 import { queryKeys } from "@/helpers/queryKeys";
-import { client } from "@/lib/graphql/client";
+import { requestWithAuth } from "@/lib/graphql/client";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { toast } from "sonner";
@@ -16,13 +16,13 @@ import { cn } from "@/lib/utils";
 import { useIds } from "@/hooks/useIds";
 
 export const CurrentRoomHeader = () => {
-  const { toggle, isOpen } = useUserListSidebarStore();
-  const {roomId} = useIds()
+  const { toggle } = useUserListSidebarStore();
+  const { roomId } = useIds();
   const { data, error } = useQuery({
     queryKey: [queryKeys.getRoomById, roomId],
     enabled: Boolean(roomId),
     queryFn: async (): Promise<GetRoomByIdQuery> => {
-      return await client.request<GetRoomByIdQuery>(GetRoomByIdDocument, {
+      return await requestWithAuth<GetRoomByIdQuery>(GetRoomByIdDocument, {
         id: roomId,
       });
     },

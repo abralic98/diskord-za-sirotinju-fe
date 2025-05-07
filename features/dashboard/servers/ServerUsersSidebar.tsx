@@ -7,13 +7,13 @@ import {
   GetUsersByServerIdDocument,
   GetUsersByServerIdQuery,
 } from "@/generated/graphql";
-import { client } from "@/lib/graphql/client";
 import { toast } from "sonner";
 import { GraphqlCatchError } from "@/helpers/errors";
 import { SingleUser } from "./components/SingleUser";
 import { useIds } from "@/hooks/useIds";
 import { useUserListSidebarStore } from "./store";
 import { motion, AnimatePresence } from "framer-motion";
+import { requestWithAuth } from "@/lib/graphql/client";
 
 export const ServerUsersSidebar = () => {
   const { isOpen } = useUserListSidebarStore();
@@ -23,7 +23,7 @@ export const ServerUsersSidebar = () => {
     queryKey: [queryKeys.getUsersByServerId],
     enabled: Boolean(serverId) && isOpen,
     queryFn: async (): Promise<GetUsersByServerIdQuery> => {
-      return await client.request<GetUsersByServerIdQuery>(
+      return await requestWithAuth<GetUsersByServerIdQuery>(
         GetUsersByServerIdDocument,
         { id: serverId },
       );

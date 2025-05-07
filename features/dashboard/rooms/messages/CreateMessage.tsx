@@ -13,7 +13,7 @@ import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { FormChatInput } from "./FormChatInput";
 import { useMutation } from "@tanstack/react-query";
-import { client } from "@/lib/graphql/client";
+import { requestWithAuth } from "@/lib/graphql/client";
 import { GraphqlCatchError } from "@/helpers/errors";
 import { toast } from "sonner";
 
@@ -25,10 +25,10 @@ export const CreateMessage = () => {
   ]);
 
   const form = useForm<CreateMessageInput>({
-    defaultValues:{
+    defaultValues: {
       roomId: roomId,
-      type: MessageType.Text // for now
-    }
+      type: MessageType.Text, // for now
+    },
   });
   const placeholder = room?.getRoomById?.name
     ? `Message # ${room.getRoomById.name}`
@@ -39,10 +39,11 @@ export const CreateMessage = () => {
       const modifiedData = {
         message: data,
       };
-      const res = await client.request<CreateMessageMutation>(
+      const res = await requestWithAuth<CreateMessageMutation>(
         CreateMessageDocument,
         modifiedData,
       );
+      return res;
     },
     onSuccess: () => {
       queryClient.refetchQueries({

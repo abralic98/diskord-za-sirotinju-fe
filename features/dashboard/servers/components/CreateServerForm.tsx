@@ -9,7 +9,7 @@ import {
 } from "@/generated/graphql";
 import { GraphqlCatchError } from "@/helpers/errors";
 import { queryKeys } from "@/helpers/queryKeys";
-import { client } from "@/lib/graphql/client";
+import { client, requestWithAuth } from "@/lib/graphql/client";
 import { queryClient } from "@/lib/react-query/queryClient";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -35,7 +35,7 @@ export const CreateServerForm = () => {
       const modifiedData: CreateServerMutationVariables = {
         server: data,
       };
-      const res = await client.request<CreateServerMutation>(
+      const res = await requestWithAuth<CreateServerMutation>(
         CreateServerDocument,
         modifiedData,
       );

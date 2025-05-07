@@ -17,7 +17,7 @@ import {
 } from "@/components/custom/form/FormRadioGroup";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
-import { client } from "@/lib/graphql/client";
+import { requestWithAuth } from "@/lib/graphql/client";
 import { toast } from "sonner";
 import { queryClient } from "@/lib/react-query/queryClient";
 import { queryKeys } from "@/helpers/queryKeys";
@@ -54,7 +54,7 @@ export const CreateRoomForm = ({ setOpen }: Props) => {
       const modifiedData: CreateRoomMutationVariables = {
         room: data,
       };
-      const res = await client.request<CreateRoomMutation>(
+      const res = await requestWithAuth<CreateRoomMutation>(
         CreateRoomDocument,
         modifiedData,
       );

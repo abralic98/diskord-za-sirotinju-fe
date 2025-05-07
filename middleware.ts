@@ -9,7 +9,6 @@ export async function middleware(request: NextRequest) {
 
   const kuki = await cookies();
   const token = kuki.get(LocalStorageKeys.TOKEN);
-  console.log(token, "token middleware");
   if (pathname.startsWith(routes.dashboard)) {
     if (!token) {
       return NextResponse.redirect(new URL(routes.login, request.url));

@@ -9,7 +9,7 @@ import {
   GetAllServersSidebarDocument,
   GetAllServersSidebarQuery,
 } from "@/generated/graphql";
-import { client } from "@/lib/graphql/client";
+import { client, requestWithAuth } from "@/lib/graphql/client";
 import { toast } from "sonner";
 import { GraphqlCatchError } from "@/helpers/errors";
 import { useServerListSidebarStore } from "./store";
@@ -20,7 +20,7 @@ export const ServerList = () => {
   const { data, error } = useQuery({
     queryKey: [queryKeys.getAllServersSidebar],
     queryFn: async (): Promise<GetAllServersSidebarQuery> => {
-      return await client.request<GetAllServersSidebarQuery>(
+      return await requestWithAuth<GetAllServersSidebarQuery>(
         GetAllServersSidebarDocument,
       );
     },

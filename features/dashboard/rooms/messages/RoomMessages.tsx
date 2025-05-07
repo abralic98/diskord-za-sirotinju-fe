@@ -6,7 +6,7 @@ import {
 } from "@/generated/graphql";
 import { GraphqlCatchError } from "@/helpers/errors";
 import { queryKeys } from "@/helpers/queryKeys";
-import { client } from "@/lib/graphql/client";
+import { requestWithAuth } from "@/lib/graphql/client";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { toast } from "sonner";
@@ -14,18 +14,16 @@ import { CreateMessage } from "./CreateMessage";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useWindowDimensions } from "@/hooks/useWindowDimensions";
 import { NoMessages } from "../../components/NoMessages";
-import { Center } from "@/components/custom/Center";
 import { useIds } from "@/hooks/useIds";
-
 
 export const RoomMessages = () => {
   const { height } = useWindowDimensions();
-  const {roomId} = useIds()
+  const { roomId } = useIds();
   const { data, error, isLoading } = useQuery({
     queryKey: [queryKeys.getMessagesByRoomId, roomId],
     enabled: Boolean(roomId),
     queryFn: async (): Promise<GetMessagesByRoomIdQuery> => {
-      return await client.request<GetMessagesByRoomIdQuery>(
+      return await requestWithAuth<GetMessagesByRoomIdQuery>(
         GetMessagesByRoomIdDocument,
         {
           id: roomId,

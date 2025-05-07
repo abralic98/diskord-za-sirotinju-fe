@@ -8,7 +8,7 @@ import {
 } from "@/generated/graphql";
 import { GraphqlCatchError } from "@/helpers/errors";
 import { queryKeys } from "@/helpers/queryKeys";
-import { client } from "@/lib/graphql/client";
+import { client, requestWithAuth } from "@/lib/graphql/client";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -39,7 +39,7 @@ export const RoomSidebar = () => {
       const variables: GetRoomsByServerIdQueryVariables = {
         id: String(serverId),
       };
-      return await client.request(GetRoomsByServerIdDocument, variables);
+      return await requestWithAuth(GetRoomsByServerIdDocument, variables);
     },
   });
 
