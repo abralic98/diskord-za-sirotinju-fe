@@ -16,8 +16,12 @@ import { useMutation } from "@tanstack/react-query";
 import { requestWithAuth } from "@/lib/graphql/client";
 import { GraphqlCatchError } from "@/helpers/errors";
 import { toast } from "sonner";
+import { scrollToBottom } from "@/helpers/scrollToBottom";
 
-export const CreateMessage = () => {
+interface Props {
+  scrollRef: React.RefObject<HTMLDivElement | null>;
+}
+export const CreateMessage = ({ scrollRef }: Props) => {
   const { roomId } = useIds();
   const room: GetRoomByIdQuery | undefined = queryClient.getQueryData([
     queryKeys.getRoomById,
@@ -49,6 +53,7 @@ export const CreateMessage = () => {
       queryClient.refetchQueries({
         queryKey: [queryKeys.getMessagesByRoomId, roomId],
       });
+      scrollToBottom(scrollRef.current);
       form.reset();
     },
     onError: (error) => {

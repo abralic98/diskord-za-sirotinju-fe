@@ -2,14 +2,21 @@ export const scrollToBottom = (
   container: HTMLElement | null,
   smooth = false,
 ) => {
-  if (container?.children.length) {
-    const lastElement = container?.lastChild as HTMLElement;
-
-    lastElement?.scrollIntoView({
+  if (container) {
+    // First try scrolling to the very bottom of the container
+    container.scrollTo({
+      top: container.scrollHeight,
       behavior: smooth ? "smooth" : "auto",
-      block: "end",
-      inline: "nearest",
     });
+
+    // As a fallback, scroll the last child into view
+    if (container.children.length > 0) {
+      const lastChild = container.lastElementChild as HTMLElement;
+      lastChild?.scrollIntoView({
+        behavior: smooth ? "smooth" : "auto",
+        block: "end",
+      });
+    }
   }
 };
 

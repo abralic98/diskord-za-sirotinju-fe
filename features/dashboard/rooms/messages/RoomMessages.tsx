@@ -22,12 +22,12 @@ export const RoomMessages = () => {
   const { roomId } = useIds();
   const [firstScroll, setFirstScroll] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [scrollHeightBeforeLoad, setScrollHeightBeforeLoad] = useState(0);
 
-  const query = usePagination<GetMessagesByRoomIdQuery>({
+  const query = usePagination<GetMessagesByRoomIdQuery, "getMessagesByRoomId">({
     queryKey: [queryKeys.getMessagesByRoomId, roomId],
     document: GetMessagesByRoomIdDocument,
     variables: { id: roomId },
+    dataField: "getMessagesByRoomId",
     pageSize: 20,
   });
 
@@ -75,7 +75,7 @@ export const RoomMessages = () => {
         {renderMessages()}
       </div>
       <div className="pb-4 pl-2 pr-2">
-        <CreateMessage />
+        <CreateMessage scrollRef={scrollRef} />
       </div>
     </div>
   );
