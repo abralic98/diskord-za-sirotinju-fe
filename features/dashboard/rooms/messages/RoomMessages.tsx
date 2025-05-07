@@ -9,19 +9,21 @@ import { queryKeys } from "@/helpers/queryKeys";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { CreateMessage } from "./CreateMessage";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { useWindowDimensions } from "@/hooks/useWindowDimensions";
 import { NoMessages } from "../../components/NoMessages";
 import { useIds } from "@/hooks/useIds";
 import { usePagination } from "@/hooks/usePagination";
 import { PaginationTrigger } from "@/features/shared/PaginationTrigger";
 import { scrollToBottom } from "@/helpers/scrollToBottom";
+import { usePaginationScrolling } from "@/hooks/usePaginationScrolling";
 
 export const RoomMessages = () => {
   const { height } = useWindowDimensions();
   const { roomId } = useIds();
-  const [firstScroll, setfirstScroll] = useState(true);
+  const [firstScroll, setFirstScroll] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [scrollHeightBeforeLoad, setScrollHeightBeforeLoad] = useState(0);
+
   const query = usePagination<GetMessagesByRoomIdQuery>({
     queryKey: [queryKeys.getMessagesByRoomId, roomId],
     document: GetMessagesByRoomIdDocument,
@@ -29,9 +31,12 @@ export const RoomMessages = () => {
     pageSize: 20,
   });
 
+  usePaginationScrolling(scrollRef, query);
+
+  //initial scroll
   useEffect(() => {
     if (query.data && firstScroll) {
-      setfirstScroll(false);
+      setFirstScroll(false);
       scrollToBottom(scrollRef.current);
     }
   }, [query.data]);
@@ -62,18 +67,13 @@ export const RoomMessages = () => {
       style={{ height: height - 64 }} // height of RoomHeader
       className="flex flex-col justify-between"
     >
-      <ScrollArea
-        style={{ height: height - 140 }} // roomheader i create message + padding
-        className="bg-sidebar-accent w-full"
+      <div
+        ref={scrollRef}
+        className="overflow-y-scroll w-full p-2 flex flex-col gap-sm"
       >
-        <div
-          ref={scrollRef}
-          className="overflow-y-scroll w-full p-2 flex flex-col gap-sm"
-        >
-          {query.hasNextPage && <PaginationTrigger query={query} />}
-          {renderMessages()}
-        </div>
-      </ScrollArea>
+        {query.hasNextPage && <PaginationTrigger query={query} />}
+        {renderMessages()}
+      </div>
       <div className="pb-4 pl-2 pr-2">
         <CreateMessage />
       </div>

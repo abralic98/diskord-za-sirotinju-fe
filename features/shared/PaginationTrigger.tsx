@@ -14,13 +14,13 @@ export const PaginationTrigger: React.FC<PaginationTriggerProps> = ({
   const { ref, inView } = useInView({
     threshold: 0,
     triggerOnce: false,
+    rootMargin: "200px", // Add some margin to prevent triggering too early
   });
 
   const { hasNextPage, isFetchingNextPage, fetchNextPage } = query;
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
-      console.log(hasNextPage, "imalib");
       fetchNextPage();
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
