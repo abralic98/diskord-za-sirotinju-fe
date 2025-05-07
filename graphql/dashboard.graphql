@@ -23,14 +23,14 @@ query getRoomsByServerId($id: ID!) {
     name
     maxLimit
     type
-    messages {
-      author {
-        username
-        id
-      }
-      text
-      imgPath
-    }
+    # messages {
+    #   author {
+    #     username
+    #     id
+    #   }
+    #   text
+    #   imgPath
+    # }
     createdBy {
       id
       username
@@ -44,16 +44,24 @@ mutation createRoom($room: CreateRoomInput) {
   }
 }
 
-query getMessagesByRoomId($id: ID!) {
-  getMessagesByRoomId(id: $id) {
-    id
-    author {
+query getMessagesByRoomId($id: ID!, $page: Int!, $size: Int!) {
+  getMessagesByRoomId(id: $id, page: $page, size: $size) {
+    content {
       id
-      username
+      author {
+        id
+        username
+      }
+      text
+      imgPath
+      type
+      dateCreated
+      dateUpdated
     }
-    text
-    imgPath
-    type
+    size
+    number
+    totalElements
+    totalPages
   }
 }
 

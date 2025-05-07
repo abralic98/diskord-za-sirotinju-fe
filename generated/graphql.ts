@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { useMutation, useQuery, UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -67,10 +66,21 @@ export type CreateUserInput = {
 export type Message = {
   __typename?: 'Message';
   author?: Maybe<User>;
+  dateCreated?: Maybe<Scalars['String']['output']>;
+  dateUpdated?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   imgPath?: Maybe<Scalars['String']['output']>;
   text?: Maybe<Scalars['String']['output']>;
   type?: Maybe<MessageType>;
+};
+
+export type MessagePage = {
+  __typename?: 'MessagePage';
+  content: Array<Message>;
+  number: Scalars['Int']['output'];
+  size: Scalars['Int']['output'];
+  totalElements: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
 };
 
 export enum MessageType {
@@ -122,7 +132,8 @@ export type Query = {
   __typename?: 'Query';
   getAllServers?: Maybe<Array<Maybe<Server>>>;
   getAllUsers?: Maybe<Array<Maybe<User>>>;
-  getMessagesByRoomId?: Maybe<Array<Maybe<Message>>>;
+  /**  getMessagesByRoomId(id: ID!): [Message] */
+  getMessagesByRoomId: MessagePage;
   getRoomById?: Maybe<Room>;
   getRoomsByServerId?: Maybe<Array<Maybe<Room>>>;
   getUserById?: Maybe<User>;
@@ -132,6 +143,8 @@ export type Query = {
 
 export type QueryGetMessagesByRoomIdArgs = {
   id: Scalars['ID']['input'];
+  page: Scalars['Int']['input'];
+  size: Scalars['Int']['input'];
 };
 
 
@@ -229,7 +242,7 @@ export type GetRoomsByServerIdQueryVariables = Exact<{
 }>;
 
 
-export type GetRoomsByServerIdQuery = { __typename?: 'Query', getRoomsByServerId?: Array<{ __typename?: 'Room', id: string, name: string, maxLimit?: number | null, type?: RoomType | null, messages?: Array<{ __typename?: 'Message', text?: string | null, imgPath?: string | null, author?: { __typename?: 'User', username?: string | null, id?: string | null } | null } | null> | null, createdBy?: { __typename?: 'User', id?: string | null, username?: string | null } | null } | null> | null };
+export type GetRoomsByServerIdQuery = { __typename?: 'Query', getRoomsByServerId?: Array<{ __typename?: 'Room', id: string, name: string, maxLimit?: number | null, type?: RoomType | null, createdBy?: { __typename?: 'User', id?: string | null, username?: string | null } | null } | null> | null };
 
 export type CreateRoomMutationVariables = Exact<{
   room?: InputMaybe<CreateRoomInput>;
@@ -240,10 +253,12 @@ export type CreateRoomMutation = { __typename?: 'Mutation', createRoom?: { __typ
 
 export type GetMessagesByRoomIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
+  page: Scalars['Int']['input'];
+  size: Scalars['Int']['input'];
 }>;
 
 
-export type GetMessagesByRoomIdQuery = { __typename?: 'Query', getMessagesByRoomId?: Array<{ __typename?: 'Message', id?: string | null, text?: string | null, imgPath?: string | null, type?: MessageType | null, author?: { __typename?: 'User', id?: string | null, username?: string | null } | null } | null> | null };
+export type GetMessagesByRoomIdQuery = { __typename?: 'Query', getMessagesByRoomId: { __typename?: 'MessagePage', size: number, number: number, totalElements: number, totalPages: number, content: Array<{ __typename?: 'Message', id?: string | null, text?: string | null, imgPath?: string | null, type?: MessageType | null, dateCreated?: string | null, dateUpdated?: string | null, author?: { __typename?: 'User', id?: string | null, username?: string | null } | null }> } };
 
 export type GetRoomByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -370,14 +385,6 @@ export const GetRoomsByServerIdDocument = `
     name
     maxLimit
     type
-    messages {
-      author {
-        username
-        id
-      }
-      text
-      imgPath
-    }
     createdBy {
       id
       username
@@ -424,16 +431,24 @@ export const useCreateRoomMutation = <
     )};
 
 export const GetMessagesByRoomIdDocument = `
-    query getMessagesByRoomId($id: ID!) {
-  getMessagesByRoomId(id: $id) {
-    id
-    author {
+    query getMessagesByRoomId($id: ID!, $page: Int!, $size: Int!) {
+  getMessagesByRoomId(id: $id, page: $page, size: $size) {
+    content {
       id
-      username
+      author {
+        id
+        username
+      }
+      text
+      imgPath
+      type
+      dateCreated
+      dateUpdated
     }
-    text
-    imgPath
-    type
+    size
+    number
+    totalElements
+    totalPages
   }
 }
     `;
