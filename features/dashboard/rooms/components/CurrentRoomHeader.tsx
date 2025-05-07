@@ -13,11 +13,11 @@ import { SearchMessages } from "./SearchMessages";
 import { useUserListSidebarStore } from "../../servers/store";
 import { UsersIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-interface Props {
-  roomId?: string;
-}
-export const CurrentRoomHeader = ({ roomId }: Props) => {
+import { useIds } from "@/hooks/useIds";
+
+export const CurrentRoomHeader = () => {
   const { toggle, isOpen } = useUserListSidebarStore();
+  const {roomId} = useIds()
   const { data, error } = useQuery({
     queryKey: [queryKeys.getRoomById, roomId],
     enabled: Boolean(roomId),

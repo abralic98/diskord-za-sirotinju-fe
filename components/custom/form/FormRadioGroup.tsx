@@ -25,7 +25,6 @@ export const FormRadioGroup = <T extends FieldValues>({
   classNameOptions,
 }: FormRadioGroupProps<T>) => {
   const {
-    register,
     setValue,
     getValues,
     formState: { errors },

@@ -15,13 +15,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useWindowDimensions } from "@/hooks/useWindowDimensions";
 import { NoMessages } from "../../components/NoMessages";
 import { Center } from "@/components/custom/Center";
+import { useIds } from "@/hooks/useIds";
 
-interface Props {
-  roomId?: string;
-}
 
-export const RoomMessages = ({ roomId }: Props) => {
+export const RoomMessages = () => {
   const { height } = useWindowDimensions();
+  const {roomId} = useIds()
   const { data, error, isLoading } = useQuery({
     queryKey: [queryKeys.getMessagesByRoomId, roomId],
     enabled: Boolean(roomId),

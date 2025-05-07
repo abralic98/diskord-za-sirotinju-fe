@@ -48,7 +48,7 @@ export const NoRooms = () => {
           <EmptyLayout
             title={title}
             description={description}
-            illustration={<NoMessagesIlustration />}
+            illustration={<NoMessagesIlustration className="w-[200px] h-[200px]" />}
           />
         }
       />

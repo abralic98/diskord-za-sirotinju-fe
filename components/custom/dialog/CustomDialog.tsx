@@ -6,7 +6,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import React, { Dispatch, ReactNode, SetStateAction, useState } from "react";
+import React, { Dispatch, ReactNode, SetStateAction } from "react";
 
 export interface CustomDialogProps {
   trigger?: ReactNode;

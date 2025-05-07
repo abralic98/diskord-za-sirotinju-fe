@@ -81,7 +81,7 @@ export const RoomSidebar = () => {
                 <CustomDialog
                   open={open}
                   header={header}
-                  content={<CreateRoomForm serverId={serverId} setOpen={setOpen} />}
+                  content={<CreateRoomForm setOpen={setOpen} />}
                 />
               </div>
             }

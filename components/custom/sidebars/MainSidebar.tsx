@@ -1,5 +1,5 @@
 "use client";
-import { H2, H3 } from "@/components/typography";
+import { H3 } from "@/components/typography";
 import {
   Sidebar,
   SidebarContent,
