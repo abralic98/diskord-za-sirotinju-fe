@@ -1,10 +1,15 @@
-"use client"
+"use client";
 import React from "react";
 import { EmptyLayout } from "./EmptyLayout";
 import { Center } from "@/components/custom/Center";
-import { CustomDialog, CustomDialogProps } from "@/components/custom/dialog/CustomDialog";
+import {
+  CustomDialog,
+  CustomDialogProps,
+} from "@/components/custom/dialog/CustomDialog";
 import NoMessagesIlustration from "@/assets/illustrations/NoMessagesIlustration";
 import { CreateRoomForm } from "../rooms/components/CreateRoomForm";
+import { useRoomListSidebarStore } from "../rooms/store";
+import { H3 } from "@/components/typography";
 
 const noRoomsStates = [
   {
@@ -38,7 +43,14 @@ export const NoRooms = () => {
     title: "Create new room",
   };
 
-  <EmptyLayout title={title} description={description} />;
+  const { rooms } = useRoomListSidebarStore();
+  if (Boolean(rooms?.length > 0))
+    return (
+      <Center>
+        <H3>Join Room</H3>
+      </Center>
+    );
+
   return (
     <Center>
       <CustomDialog
@@ -48,7 +60,9 @@ export const NoRooms = () => {
           <EmptyLayout
             title={title}
             description={description}
-            illustration={<NoMessagesIlustration className="w-[200px] h-[200px]" />}
+            illustration={
+              <NoMessagesIlustration className="w-[200px] h-[200px]" />
+            }
           />
         }
       />
