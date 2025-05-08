@@ -3,17 +3,29 @@ import { H3, H4, Text } from "@/components/typography";
 import { cn } from "@/lib/utils";
 import React, { ReactNode } from "react";
 
+export interface EmptyLayoutRedirection {
+  title: string;
+  action: () => void;
+}
 interface Props {
   title: string;
   description?: string;
   illustration?: ReactNode;
-  className?: string
+  redirection?: EmptyLayoutRedirection;
+  className?: string;
 }
-export const EmptyLayout = ({ title, description, illustration, className }: Props) => {
+export const EmptyLayout = ({
+  title,
+  description,
+  illustration,
+  redirection,
+  className,
+}: Props) => {
   return (
     <div className="relative w-[500px]  h-[500px] bg-sidebar-border rounded-xl p-6 flex flex-col items-center gap-md border-8 border-sidebar cursor-pointer">
       <H3>{title}</H3>
       <H4>{description}</H4>
+      {redirection && <H4>{redirection.title}</H4>}
       <div className={cn("absolute bottom-30", className)}>
         {illustration ? (
           illustration

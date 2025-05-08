@@ -8,7 +8,7 @@ import {
 } from "@/generated/graphql";
 import { GraphqlCatchError } from "@/helpers/errors";
 import { queryKeys } from "@/helpers/queryKeys";
-import { client, requestWithAuth } from "@/lib/graphql/client";
+import { requestWithAuth } from "@/lib/graphql/client";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -21,10 +21,13 @@ import {
 } from "@/components/custom/dialog/CustomDialog";
 import { CreateRoomForm } from "./components/CreateRoomForm";
 import { useRoomListSidebarStore } from "./store";
+import routes from "@/lib/routes";
+import { useRouter } from "next/navigation";
 
 export const RoomSidebar = () => {
   const { serverId } = useIds();
   const { setRooms } = useRoomListSidebarStore();
+  const { replace } = useRouter();
   const [open, setOpen] = useState(false);
   const header: CustomDialogProps["header"] = {
     title: "Create new room",
@@ -52,6 +55,9 @@ export const RoomSidebar = () => {
   if (error) {
     const err = error as unknown as GraphqlCatchError;
     toast(err.response.errors[0].message);
+    if (err.response.errors[0].message.includes("not found")) {
+      replace(routes.dashboard);
+    }
   }
 
   const renderRooms = () => {

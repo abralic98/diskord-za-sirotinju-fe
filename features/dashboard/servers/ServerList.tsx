@@ -14,9 +14,12 @@ import { toast } from "sonner";
 import { GraphqlCatchError } from "@/helpers/errors";
 import { useServerListSidebarStore } from "./store";
 import { useEffect } from "react";
+import routes from "@/lib/routes";
+import { useRouter } from "next/navigation";
 
 export const ServerList = () => {
   const { setServers } = useServerListSidebarStore();
+  const { push } = useRouter();
   const { data, error } = useQuery({
     queryKey: [queryKeys.getAllServersSidebar],
     queryFn: async (): Promise<GetAllServersSidebarQuery> => {

@@ -4,7 +4,7 @@ import {
   GetMessagesByRoomIdDocument,
   GetMessagesByRoomIdQuery,
 } from "@/generated/graphql";
-import { GraphqlCatchError } from "@/helpers/errors";
+import { ErrorMessages, GraphqlCatchError } from "@/helpers/errors";
 import { queryKeys } from "@/helpers/queryKeys";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -16,6 +16,7 @@ import { usePagination } from "@/hooks/usePagination";
 import { PaginationTrigger } from "@/features/shared/PaginationTrigger";
 import { scrollToBottom } from "@/helpers/scrollToBottom";
 import { usePaginationScrolling } from "@/hooks/usePaginationScrolling";
+import { AccessDenied } from "@/features/shared/AccessDenied";
 
 export const RoomMessages = () => {
   const { height } = useWindowDimensions();
@@ -47,6 +48,15 @@ export const RoomMessages = () => {
   }
 
   const renderMessages = () => {
+    console.log(query.error?.message);
+    if (
+      query.error?.message.includes(ErrorMessages.ACCESS_DENIED) ||
+      query.error?.message.includes(ErrorMessages.INTERNAL_ERROR)
+    )
+      return <AccessDenied type="no permission" />;
+    if (query.error?.message.includes(ErrorMessages.NOT_FOUND)) {
+      return <AccessDenied type="not found" />;
+    }
     if (!query.data?.pages?.length) return <NoMessages />;
 
     const allMessages = query.data.pages.flatMap(

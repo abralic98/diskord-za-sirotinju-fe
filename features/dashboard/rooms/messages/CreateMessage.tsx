@@ -73,17 +73,19 @@ export const CreateMessage = ({ scrollRef }: Props) => {
         className="w-full"
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault(); // prevent new line and form refresh
+            e.preventDefault(); 
             form.handleSubmit(onSubmit)();
           }
         }}
       >
-        <FormChatInput<CreateMessageInput>
-          name="text"
-          placeholder={placeholder}
-          inputClassName="h-14"
-          containerClassName="bg-sidebar-hover"
-        />
+        {room && (
+          <FormChatInput<CreateMessageInput>
+            name="text"
+            placeholder={placeholder}
+            inputClassName="h-14"
+            containerClassName="bg-sidebar-hover"
+          />
+        )}
       </form>
     </FormProvider>
   );

@@ -1,4 +1,3 @@
-
 export interface GraphqlCatchError<T = any> {
   response: GraphQLErrorResponse<T>;
 }
@@ -22,4 +21,10 @@ export interface GraphQLErrorItem {
 export interface GraphQLErrorResponse<T = any> {
   errors: GraphQLErrorItem[];
   data?: T | null;
+}
+
+export enum ErrorMessages {
+  INTERNAL_ERROR = "INTERNAL_ERROR",
+  NOT_FOUND = "not found",
+  ACCESS_DENIED = "Access denied",
 }
