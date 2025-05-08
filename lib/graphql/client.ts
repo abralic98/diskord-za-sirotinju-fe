@@ -1,12 +1,12 @@
 import { GraphQLClient } from "graphql-request";
 import { getCookie } from "cookies-next/client";
-import { LocalStorageKeys } from "@/helpers/LocalStorage";
 import { GraphqlCatchError } from "@/helpers/errors";
+import { CookieKeys } from "@/helpers/cookies";
 
 const endpoint = "http://localhost:8080/graphql";
 
 const getToken = (): string | undefined => {
-  return getCookie(LocalStorageKeys.TOKEN);
+  return getCookie(CookieKeys.TOKEN);
 };
 
 export const client = new GraphQLClient(endpoint, {

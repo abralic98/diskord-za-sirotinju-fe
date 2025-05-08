@@ -138,6 +138,7 @@ export type Query = {
   getRoomsByServerId?: Maybe<Array<Maybe<Room>>>;
   getUserById?: Maybe<User>;
   getUsersByServerId?: Maybe<Array<Maybe<User>>>;
+  meQuery?: Maybe<User>;
 };
 
 
@@ -224,6 +225,11 @@ export type CreateUserMutationVariables = Exact<{
 
 
 export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', id?: string | null } | null };
+
+export type MeQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQueryQuery = { __typename?: 'Query', meQuery?: { __typename?: 'User', id?: string | null, username?: string | null, email?: string | null } | null };
 
 export type GetAllServersSidebarQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -329,6 +335,31 @@ export const useCreateUserMutation = <
     return useMutation<CreateUserMutation, TError, CreateUserMutationVariables, TContext>(
       ['CreateUser'],
       (variables?: CreateUserMutationVariables) => fetcher<CreateUserMutation, CreateUserMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, CreateUserDocument, variables)(),
+      options
+    )};
+
+export const MeQueryDocument = `
+    query meQuery {
+  meQuery {
+    id
+    username
+    email
+  }
+}
+    `;
+
+export const useMeQueryQuery = <
+      TData = MeQueryQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      variables?: MeQueryQueryVariables,
+      options?: UseQueryOptions<MeQueryQuery, TError, TData>
+    ) => {
+    
+    return useQuery<MeQueryQuery, TError, TData>(
+      variables === undefined ? ['meQuery'] : ['meQuery', variables],
+      fetcher<MeQueryQuery, MeQueryQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, MeQueryDocument, variables),
       options
     )};
 

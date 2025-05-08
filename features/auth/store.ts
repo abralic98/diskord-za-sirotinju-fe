@@ -1,10 +1,8 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { User } from "@/generated/graphql"; // Import the User type
-import {
-  getFromLocalStorage,
-  LocalStorageKeys,
-} from "../../helpers/LocalStorage";
+import { getCookie } from "cookies-next/client";
+import { CookieKeys } from "@/helpers/cookies";
 
 interface AuthStore {
   token: string | null;
@@ -16,7 +14,7 @@ interface AuthStore {
 export const useAuthStore = create<AuthStore>()(
   devtools(
     (set) => ({
-      token: getFromLocalStorage(LocalStorageKeys.TOKEN) || null,
+      token: getCookie(CookieKeys.TOKEN) || null,
       user: null,
       setAuth: (token, user) => {
         set({ token, user }, false, "setAuth");

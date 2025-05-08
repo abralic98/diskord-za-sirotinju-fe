@@ -7,12 +7,14 @@ import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { getRoomIcon } from "../helpers";
+import { useUserListSidebarStore } from "../../servers/store";
 
 interface Props {
   room?: Room | null | undefined;
 }
 export const SingleRoom = ({ room }: Props) => {
   const { open } = useSidebar();
+  const { close } = useUserListSidebarStore();
   const { push } = useRouter();
   const { serverId, roomId } = useIds();
 
@@ -25,7 +27,10 @@ export const SingleRoom = ({ room }: Props) => {
   return (
     <div
       onContextMenu={handleContextMenu}
-      onClick={() => push(`${routes.dashboard}/${serverId}/${room?.id}`)}
+      onClick={() => {
+        close();
+        push(`${routes.dashboard}/${serverId}/${room?.id}`);
+      }}
       className={cn(
         currentRoom
           ? "bg-active-room hover:bg-active-room-hover"

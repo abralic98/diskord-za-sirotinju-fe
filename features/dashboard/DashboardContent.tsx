@@ -1,15 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useServerListSidebarStore } from "./servers/store";
 import { useIds } from "@/hooks/useIds";
 import { NoServers } from "./components/NoServers";
+import { useAuthenticator } from "@/hooks/useAuthenticator";
 
 export const DashboardContent = () => {
   const router = useRouter();
   const { serverId, roomId } = useIds();
   const [storeFetch, setStoreFetch] = useState(true);
   const { servers } = useServerListSidebarStore();
+  useAuthenticator();
 
   useEffect(() => {
     if (roomId && serverId) return;

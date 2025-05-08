@@ -25,9 +25,8 @@ import { GraphqlCatchError } from "@/helpers/errors";
 import { useMutation } from "@tanstack/react-query";
 import { useAuthStore } from "../store";
 import { loginSchema } from "../zod";
-import { useSetCookie } from "cookies-next";
-import { getCookies, setCookie, useGetCookie } from "cookies-next/client";
-import { LocalStorageKeys } from "@/helpers/LocalStorage";
+import { setCookie } from "cookies-next/client";
+import { CookieKeys } from "@/helpers/cookies";
 
 export const Login = () => {
   const form = useForm<CreateSessionInput>({
@@ -37,7 +36,6 @@ export const Login = () => {
   const theme = useTheme();
 
   const { push } = useRouter();
-  const getCookie = useGetCookie();
 
   const createSessionMutation = useMutation({
     mutationFn: async (data: CreateSessionInput) => {
@@ -52,7 +50,7 @@ export const Login = () => {
         useAuthStore
           .getState()
           .setAuth(res.createSession.token, res.createSession.user);
-        setCookie(LocalStorageKeys.TOKEN, res.createSession.token);
+        setCookie(CookieKeys.TOKEN, res.createSession.token);
         push(routes.dashboard);
       }
     },

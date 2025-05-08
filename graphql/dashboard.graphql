@@ -1,3 +1,10 @@
+query meQuery{
+  meQuery{
+    id
+    username
+    email
+  }
+}
 query getAllServersSidebar {
   getAllServers {
     id
