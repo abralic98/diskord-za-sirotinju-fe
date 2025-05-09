@@ -20,3 +20,9 @@ mutation UpdateUser($user: UpdateUserInput) {
     id
   }
 }
+
+mutation UpdateUserPassword($credentials: UpdateUserPasswordInput) {
+  updateUserPassword(credentials: $credentials) {
+    id
+  }
+}

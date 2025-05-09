@@ -98,6 +98,7 @@ export type Mutation = {
   createUser?: Maybe<User>;
   deactivateUser?: Maybe<User>;
   updateUser?: Maybe<User>;
+  updateUserPassword?: Maybe<User>;
 };
 
 
@@ -133,6 +134,11 @@ export type MutationDeactivateUserArgs = {
 
 export type MutationUpdateUserArgs = {
   user?: InputMaybe<UpdateUserInput>;
+};
+
+
+export type MutationUpdateUserPasswordArgs = {
+  credentials?: InputMaybe<UpdateUserPasswordInput>;
 };
 
 export type Query = {
@@ -211,6 +217,12 @@ export type UpdateUserInput = {
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdateUserPasswordInput = {
+  confirmNewPassword: Scalars['String']['input'];
+  currentPassword: Scalars['String']['input'];
+  newPassword: Scalars['String']['input'];
+};
+
 /**  USERS ############################## */
 export type User = {
   __typename?: 'User';
@@ -246,6 +258,13 @@ export type UpdateUserMutationVariables = Exact<{
 
 
 export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'User', id?: string | null } | null };
+
+export type UpdateUserPasswordMutationVariables = Exact<{
+  credentials?: InputMaybe<UpdateUserPasswordInput>;
+}>;
+
+
+export type UpdateUserPasswordMutation = { __typename?: 'Mutation', updateUserPassword?: { __typename?: 'User', id?: string | null } | null };
 
 export type MeQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -378,6 +397,28 @@ export const useUpdateUserMutation = <
     return useMutation<UpdateUserMutation, TError, UpdateUserMutationVariables, TContext>(
       ['UpdateUser'],
       (variables?: UpdateUserMutationVariables) => fetcher<UpdateUserMutation, UpdateUserMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, UpdateUserDocument, variables)(),
+      options
+    )};
+
+export const UpdateUserPasswordDocument = `
+    mutation UpdateUserPassword($credentials: UpdateUserPasswordInput) {
+  updateUserPassword(credentials: $credentials) {
+    id
+  }
+}
+    `;
+
+export const useUpdateUserPasswordMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      options?: UseMutationOptions<UpdateUserPasswordMutation, TError, UpdateUserPasswordMutationVariables, TContext>
+    ) => {
+    
+    return useMutation<UpdateUserPasswordMutation, TError, UpdateUserPasswordMutationVariables, TContext>(
+      ['UpdateUserPassword'],
+      (variables?: UpdateUserPasswordMutationVariables) => fetcher<UpdateUserPasswordMutation, UpdateUserPasswordMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, UpdateUserPasswordDocument, variables)(),
       options
     )};
 
