@@ -6,10 +6,13 @@ import { requestWithAuth } from "@/lib/graphql/client";
 import { useQuery } from "@tanstack/react-query";
 import { getCookie } from "cookies-next/client";
 import { CookieKeys } from "@/helpers/cookies";
+import { useRouter } from "next/navigation";
+import routes from "@/lib/routes";
 
 export const useAuthenticator = () => {
   const { user, setAuth, clearAuth } = useAuthStore();
   const token = getCookie(CookieKeys.TOKEN);
+  const { replace } = useRouter();
 
   const { refetch } = useQuery({
     queryKey: [queryKeys.meQuery],
@@ -19,12 +22,29 @@ export const useAuthenticator = () => {
     enabled: false,
   });
 
+  const refreshUserInfo = () => {
+    if (!token) return;
+    refetch()
+      .then((res) => {
+        const user = res.data?.meQuery;
+        if (user?.id) {
+          setAuth(token, user);
+        } else {
+          clearAuth();
+        }
+      })
+      .catch(() => {
+        clearAuth();
+        replace(routes.login);
+      });
+  };
+
   useEffect(() => {
     if (token && !user) {
       refetch()
         .then((res) => {
           const user = res.data?.meQuery;
-          if (user) {
+          if (user?.id) {
             setAuth(token, user);
           } else {
             clearAuth();
@@ -32,7 +52,10 @@ export const useAuthenticator = () => {
         })
         .catch(() => {
           clearAuth();
+          replace(routes.login);
         });
     }
   }, [token, user, refetch, setAuth, clearAuth]);
+
+  return { refreshUserInfo };
 };

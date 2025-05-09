@@ -6,6 +6,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 import React, { Dispatch, ReactNode, SetStateAction } from "react";
 
 export interface CustomDialogProps {
@@ -13,6 +14,7 @@ export interface CustomDialogProps {
   header: {
     title?: string;
     description?: string;
+    descriptionWarning?: boolean // neda mi se prepravljat
   };
   content: ReactNode;
   open?: boolean;
@@ -42,7 +44,7 @@ export const CustomDialog = ({
         {header.title && (
           <DialogHeader>
             <DialogTitle>{header.title}</DialogTitle>
-            <DialogDescription>{header.description}</DialogDescription>
+            <DialogDescription className={cn(header.descriptionWarning && "font-bold text-red-500")}>{header.description}</DialogDescription>
           </DialogHeader>
         )}
         {content}

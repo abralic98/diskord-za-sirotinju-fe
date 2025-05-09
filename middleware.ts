@@ -14,4 +14,9 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL(routes.login, request.url));
     }
   }
+  if (pathname.startsWith(routes.settings)) {
+    if (!token) {
+      return NextResponse.redirect(new URL(routes.login, request.url));
+    }
+  }
 }

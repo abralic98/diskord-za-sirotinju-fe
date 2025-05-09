@@ -14,3 +14,9 @@ mutation CreateUser($user: CreateUserInput!) {
     id
   }
 }
+
+mutation UpdateUser($user: UpdateUserInput) {
+  updateUser(user: $user) {
+    id
+  }
+}

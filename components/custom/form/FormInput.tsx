@@ -35,7 +35,9 @@ export const FormInput = <T extends FieldValues>({
       <Input
         secure={secure}
         icon={icon}
-        {...register(name)}
+        {...register(name, {
+          valueAsNumber: rest.type === "number" ? true : false,
+        })}
         className={cn("border", error && "border-red-500", className)}
         {...rest}
       />

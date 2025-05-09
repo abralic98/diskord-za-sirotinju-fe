@@ -33,6 +33,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  Long: { input: any; output: any; }
 };
 
 export type CreateMessageInput = {
@@ -96,6 +97,7 @@ export type Mutation = {
   createSession?: Maybe<UserWithToken>;
   createUser?: Maybe<User>;
   deactivateUser?: Maybe<User>;
+  updateUser?: Maybe<User>;
 };
 
 
@@ -126,6 +128,11 @@ export type MutationCreateUserArgs = {
 
 export type MutationDeactivateUserArgs = {
   id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type MutationUpdateUserArgs = {
+  user?: InputMaybe<UpdateUserInput>;
 };
 
 export type Query = {
@@ -198,11 +205,18 @@ export type Server = {
   users?: Maybe<Array<Maybe<User>>>;
 };
 
+export type UpdateUserInput = {
+  email?: InputMaybe<Scalars['String']['input']>;
+  phoneNumber?: InputMaybe<Scalars['Long']['input']>;
+  username?: InputMaybe<Scalars['String']['input']>;
+};
+
 /**  USERS ############################## */
 export type User = {
   __typename?: 'User';
   email?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
+  phoneNumber?: Maybe<Scalars['Long']['output']>;
   username?: Maybe<Scalars['String']['output']>;
 };
 
@@ -226,10 +240,17 @@ export type CreateUserMutationVariables = Exact<{
 
 export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', id?: string | null } | null };
 
+export type UpdateUserMutationVariables = Exact<{
+  user?: InputMaybe<UpdateUserInput>;
+}>;
+
+
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'User', id?: string | null } | null };
+
 export type MeQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQueryQuery = { __typename?: 'Query', meQuery?: { __typename?: 'User', id?: string | null, username?: string | null, email?: string | null } | null };
+export type MeQueryQuery = { __typename?: 'Query', meQuery?: { __typename?: 'User', id?: string | null, username?: string | null, email?: string | null, phoneNumber?: any | null } | null };
 
 export type GetAllServersSidebarQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -338,12 +359,35 @@ export const useCreateUserMutation = <
       options
     )};
 
+export const UpdateUserDocument = `
+    mutation UpdateUser($user: UpdateUserInput) {
+  updateUser(user: $user) {
+    id
+  }
+}
+    `;
+
+export const useUpdateUserMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      options?: UseMutationOptions<UpdateUserMutation, TError, UpdateUserMutationVariables, TContext>
+    ) => {
+    
+    return useMutation<UpdateUserMutation, TError, UpdateUserMutationVariables, TContext>(
+      ['UpdateUser'],
+      (variables?: UpdateUserMutationVariables) => fetcher<UpdateUserMutation, UpdateUserMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, UpdateUserDocument, variables)(),
+      options
+    )};
+
 export const MeQueryDocument = `
     query meQuery {
   meQuery {
     id
     username
     email
+    phoneNumber
   }
 }
     `;

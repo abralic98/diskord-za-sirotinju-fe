@@ -1,13 +1,10 @@
 "use client";
 
-import EZLogoDark from "@/assets/logo/EZLogoDark";
-import EZLogoWhite from "@/assets/logo/EZLogoWhite";
 import { FormInput } from "@/components/custom/form/FormInput";
-import { H3, Text } from "@/components/typography";
+import { Text } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import routes from "@/lib/routes";
-import { useTheme } from "next-themes";
 import Link from "next/link";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -27,13 +24,12 @@ import { useAuthStore } from "../store";
 import { loginSchema } from "../zod";
 import { setCookie } from "cookies-next/client";
 import { CookieKeys } from "@/helpers/cookies";
+import { Logo } from "@/features/shared/Logo";
 
 export const Login = () => {
   const form = useForm<CreateSessionInput>({
     resolver: zodResolver(loginSchema),
   });
-
-  const theme = useTheme();
 
   const { push } = useRouter();
 
@@ -67,10 +63,7 @@ export const Login = () => {
   return (
     <FormProvider {...form}>
       <div className="flex flex-col gap-md min-w-[500px] bg-sidebar-accent p-5 rounded-md">
-        <div className="w-full flex flex-col items-center gap-md justify-center">
-          {theme.theme === "dark" ? <EZLogoDark /> : <EZLogoWhite />}
-          <H3>EZComms</H3>
-        </div>
+        <Logo />
 
         <FormInput<CreateSessionInput> name="username" label="Username" />
         <FormInput<CreateSessionInput>

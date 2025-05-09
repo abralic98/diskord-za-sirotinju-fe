@@ -1,13 +1,10 @@
 "use client";
 
-import EZLogoDark from "@/assets/logo/EZLogoDark";
-import EZLogoWhite from "@/assets/logo/EZLogoWhite";
 import { FormInput } from "@/components/custom/form/FormInput";
-import { H3, Text } from "@/components/typography";
+import {  Text } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import routes from "@/lib/routes";
-import { useTheme } from "next-themes";
 import Link from "next/link";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -24,6 +21,7 @@ import { toast } from "sonner";
 import { GraphqlCatchError } from "@/helpers/errors";
 import { registerSchema } from "../zod";
 import { useMutation } from "@tanstack/react-query";
+import { Logo } from "@/features/shared/Logo";
 
 type CreateUserInputModified = {
   confirmPassword: string;
@@ -46,6 +44,7 @@ export const Register = () => {
         CreateUserDocument,
         modifiedData,
       );
+      return res;
     },
     onSuccess: () => {
       push(routes.dashboard);
@@ -60,15 +59,10 @@ export const Register = () => {
     createUserMutation.mutateAsync(data);
   };
 
-  const theme = useTheme();
-
   return (
     <FormProvider {...form}>
       <div className="flex flex-col gap-md min-w-[500px] bg-sidebar-accent p-5 rounded-md">
-        <div className="w-full flex flex-col items-center gap-md justify-center">
-          {theme.theme === "dark" ? <EZLogoDark /> : <EZLogoWhite />}
-          <H3>EZComms</H3>
-        </div>
+        <Logo />
 
         <FormInput<CreateUserInputModified> name="username" label="Username" />
         <FormInput<CreateUserInputModified> name="email" label="Email" />

@@ -1,9 +1,13 @@
 import { cn } from "@/lib/utils";
 import React from "react";
 
-export const H4 = ({ children }: { children: React.ReactNode }) => (
-  <h4 className="text-xl font-semibold">{children}</h4>
-);
+export const H4 = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => <h4 className={cn("text-xl font-semibold", className)}>{children}</h4>;
 
 export const H3 = ({ children }: { children: React.ReactNode }) => (
   <h3 className="text-2xl font-semibold">{children}</h3>

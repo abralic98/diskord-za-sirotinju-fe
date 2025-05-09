@@ -3,6 +3,7 @@ query meQuery{
     id
     username
     email
+    phoneNumber
   }
 }
 query getAllServersSidebar {
