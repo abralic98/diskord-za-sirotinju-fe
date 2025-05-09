@@ -10,9 +10,12 @@ export const useVoiceConnection = (
   const peerRef = useRef<RTCPeerConnection | null>(null);
   const localStreamRef = useRef<MediaStream | null>(null);
   const [remoteAudio, setRemoteAudio] = useState<HTMLAudioElement | null>(null);
+  const [users, setUsers] = useState<string[]>([]);
+  const [globalUsers, setGlobalUsers] = useState<Record<string, string[]>>({}); // 🆕 All users in all rooms
 
   useEffect(() => {
     if (!activateSocket || !isVoiceRoom || !room || !userId) return;
+    setUsers([]);
 
     const socket = new WebSocket("ws://localhost:8080/ws/voice");
     socketRef.current = socket;
@@ -20,11 +23,10 @@ export const useVoiceConnection = (
     let isCleanedUp = false;
 
     socket.onopen = async () => {
-      console.log("WEBSOCKET CONNECTED");
+      console.log("🔌 WebSocket connected");
       socket.send(
         JSON.stringify({ type: "join", room, sender: { id: userId } }),
       );
-      console.log("Sent join message ✅");
 
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       localStreamRef.current = stream;
@@ -72,8 +74,18 @@ export const useVoiceConnection = (
 
     socket.onmessage = async (event) => {
       const data = JSON.parse(event.data);
+      console.log(data, "onmessage");
+
       const peer = peerRef.current;
       if (!peer || isCleanedUp) return;
+
+      if (data.type === "user-list") {
+        setUsers(data.users);
+      }
+
+      if (data.type === "global-user-list") {
+        setGlobalUsers(data.rooms); // 🆕 rooms = { roomId: [user1, user2] }
+      }
 
       if (data.type === "offer") {
         await peer.setRemoteDescription(new RTCSessionDescription(data.sdp));
@@ -96,10 +108,19 @@ export const useVoiceConnection = (
 
     return () => {
       isCleanedUp = true;
+
+      if (socketRef.current?.readyState === WebSocket.OPEN) {
+        socketRef.current.send(
+          JSON.stringify({
+            type: "leave",
+            room,
+            sender: { id: userId },
+          }),
+        );
+      }
+
       socketRef.current?.close();
       peerRef.current?.close();
-
-      // Stop and release media tracks
       localStreamRef.current?.getTracks().forEach((track) => track.stop());
 
       socketRef.current = null;
@@ -107,8 +128,9 @@ export const useVoiceConnection = (
       localStreamRef.current = null;
 
       setRemoteAudio(null);
+      setUsers([]);
     };
-  }, [activateSocket, room, userId, isVoiceRoom]); // 🧠 KEY FIX
+  }, [activateSocket, room, userId, isVoiceRoom]);
 
-  return { remoteAudio };
+  return { remoteAudio, users, globalUsers }; // 🧠 expose global users too
 };

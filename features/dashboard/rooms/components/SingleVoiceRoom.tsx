@@ -22,7 +22,7 @@ export const SingleVoiceRoom = ({ room }: Props) => {
   const { serverId, roomId } = useIds(); // from URL
   const isCurrentRoom = room?.id === roomId;
 
-  const { remoteAudio } = useVoiceConnection(
+  const { remoteAudio, users, globalUsers } = useVoiceConnection(
     room?.id,
     user?.id ?? "anon",
     room?.type === RoomType.Voice,
@@ -32,7 +32,6 @@ export const SingleVoiceRoom = ({ room }: Props) => {
   const handleContextMenu = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
-  console.log(remoteAudio, 'remote audio')
 
   const handleClick = () => {
     if (!room) return;
@@ -41,27 +40,28 @@ export const SingleVoiceRoom = ({ room }: Props) => {
   };
 
   const renderUsers = () => {
-
-  }
+    return users.map((userId) => (
+      <div key={userId} className="user-item">
+        <Text>{userId}</Text> {/* Display user ID or user name */}
+      </div>
+    ));
+  };
 
   return (
-    <div
-      onContextMenu={handleContextMenu}
-      onClick={handleClick}
-      className={cn(
-        isCurrentRoom
-          ? "bg-active-room hover:bg-active-room-hover"
-          : "bg-sidebar-accent hover:bg-sidebar-hover",
-        open ? "justify-start" : "justify-center",
-        "w-full h-10 flex flex-row gap-md items-center p-3 rounded-md cursor-pointer",
-      )}
-    >
-      {getRoomIcon({ room })}
-      {open && <Text className="truncate max-w-full">{room?.name}</Text>}
-      <div>
-
+    <div onContextMenu={handleContextMenu} onClick={handleClick}>
+      <div
+        className={cn(
+          isCurrentRoom
+            ? "bg-active-room hover:bg-active-room-hover"
+            : "bg-sidebar-accent hover:bg-sidebar-hover",
+          open ? "justify-start" : "justify-center",
+          "w-full h-10 flex flex-row gap-md items-center p-3 rounded-md cursor-pointer",
+        )}
+      >
+        {getRoomIcon({ room })}
+        {open && <Text className="truncate max-w-full">{room?.name}</Text>}
       </div>
+      <div className="flex flex-col gap-md bg-green-900">{renderUsers()}</div>
     </div>
   );
 };
-
