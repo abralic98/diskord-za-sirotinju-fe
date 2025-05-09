@@ -1,36 +1,44 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import { Room } from "@/generated/graphql";
+import { Room, Rooms } from "@/generated/graphql";
 
 interface RoomListSidebarStore {
-  rooms: (Room | null)[];
-  setRooms: (rooms?: (Room | null)[] ) => void;
-  addRoom: (room: Room) => void;
-  removeRoom: (roomId: string) => void;
-  currentRoom?: Room;
-  setCurrentRoom: (room: Room) => void;
+  rooms: Rooms;
+  setRooms: (rooms?: Rooms) => void;
+  addRoom: (room: Room, type: "text" | "voice") => void;
+  removeRoom: (roomId: string, type: "text" | "voice") => void;
 }
 
 export const useRoomListSidebarStore = create<RoomListSidebarStore>()(
   devtools(
     (set) => ({
-      roomList: [],
+      rooms: { text: [], voice: [] },
       setRooms: (rooms) =>
-        set({ rooms: rooms ?? [] }, false, "setRoomList"),
-      addRoom: (room) =>
-        set((state) => ({ rooms: [...state.rooms, room] }), false, "addRoom"),
-      removeRoom: (roomId) =>
+        set({ rooms: rooms ?? { text: [], voice: [] } }, false, "setRoomList"),
+      addRoom: (room, type) =>
         set(
           (state) => ({
-            rooms: state.rooms.filter((r) => r?.id !== roomId),
+            rooms: {
+              ...state.rooms,
+              [type]: [...(state.rooms[type] || []), room],
+            },
+          }),
+          false,
+          "addRoom",
+        ),
+      removeRoom: (roomId, type) =>
+        set(
+          (state) => ({
+            rooms: {
+              ...state.rooms,
+              [type]: (state.rooms[type] || []).filter((r) => r?.id !== roomId),
+            },
           }),
           false,
           "removeRoom",
         ),
-      currentRoom: undefined,
-      setCurrentRoom: (room) =>
-        set({ currentRoom: room }, false, "setCurrentRoom"),
     }),
     { name: "RoomListSidebarStore" },
   ),
 );
+

@@ -1,5 +1,5 @@
-query meQuery{
-  meQuery{
+query meQuery {
+  meQuery {
     id
     username
     email
@@ -27,21 +27,25 @@ mutation createServer($server: CreateServerInput) {
 
 query getRoomsByServerId($id: ID!) {
   getRoomsByServerId(id: $id) {
-    id
-    name
-    maxLimit
-    type
-    # messages {
-    #   author {
-    #     username
-    #     id
-    #   }
-    #   text
-    #   imgPath
-    # }
-    createdBy {
+    voice {
       id
-      username
+      name
+      maxLimit
+      type
+      createdBy {
+        id
+        username
+      }
+    }
+    text {
+      id
+      name
+      maxLimit
+      type
+      createdBy {
+        id
+        username
+      }
     }
   }
 }

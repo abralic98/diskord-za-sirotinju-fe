@@ -145,10 +145,9 @@ export type Query = {
   __typename?: 'Query';
   getAllServers?: Maybe<Array<Maybe<Server>>>;
   getAllUsers?: Maybe<Array<Maybe<User>>>;
-  /**  getMessagesByRoomId(id: ID!): [Message] */
   getMessagesByRoomId: MessagePage;
   getRoomById?: Maybe<Room>;
-  getRoomsByServerId?: Maybe<Array<Maybe<Room>>>;
+  getRoomsByServerId?: Maybe<Rooms>;
   getUserById?: Maybe<User>;
   getUsersByServerId?: Maybe<Array<Maybe<User>>>;
   meQuery?: Maybe<User>;
@@ -196,6 +195,12 @@ export enum RoomType {
   Text = 'TEXT',
   Voice = 'VOICE'
 }
+
+export type Rooms = {
+  __typename?: 'Rooms';
+  text?: Maybe<Array<Maybe<Room>>>;
+  voice?: Maybe<Array<Maybe<Room>>>;
+};
 
 /**
  * #####################################
@@ -288,7 +293,7 @@ export type GetRoomsByServerIdQueryVariables = Exact<{
 }>;
 
 
-export type GetRoomsByServerIdQuery = { __typename?: 'Query', getRoomsByServerId?: Array<{ __typename?: 'Room', id: string, name: string, maxLimit?: number | null, type?: RoomType | null, createdBy?: { __typename?: 'User', id?: string | null, username?: string | null } | null } | null> | null };
+export type GetRoomsByServerIdQuery = { __typename?: 'Query', getRoomsByServerId?: { __typename?: 'Rooms', voice?: Array<{ __typename?: 'Room', id: string, name: string, maxLimit?: number | null, type?: RoomType | null, createdBy?: { __typename?: 'User', id?: string | null, username?: string | null } | null } | null> | null, text?: Array<{ __typename?: 'Room', id: string, name: string, maxLimit?: number | null, type?: RoomType | null, createdBy?: { __typename?: 'User', id?: string | null, username?: string | null } | null } | null> | null } | null };
 
 export type CreateRoomMutationVariables = Exact<{
   room?: InputMaybe<CreateRoomInput>;
@@ -497,13 +502,25 @@ export const useCreateServerMutation = <
 export const GetRoomsByServerIdDocument = `
     query getRoomsByServerId($id: ID!) {
   getRoomsByServerId(id: $id) {
-    id
-    name
-    maxLimit
-    type
-    createdBy {
+    voice {
       id
-      username
+      name
+      maxLimit
+      type
+      createdBy {
+        id
+        username
+      }
+    }
+    text {
+      id
+      name
+      maxLimit
+      type
+      createdBy {
+        id
+        username
+      }
     }
   }
 }

@@ -44,7 +44,8 @@ export const NoRooms = () => {
   };
 
   const { rooms } = useRoomListSidebarStore();
-  if (Boolean(rooms?.length > 0))
+  const noRooms = rooms.voice?.length === 0 && rooms.text?.length === 0;
+  if (noRooms)
     return (
       <Center>
         <H3>Join Room</H3>
