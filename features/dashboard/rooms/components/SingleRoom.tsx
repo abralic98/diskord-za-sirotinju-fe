@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { getRoomIcon } from "../helpers";
 import { useUserListSidebarStore } from "../../servers/store";
+import { useVoiceRoomStore } from "@/features/voice/store";
 
 interface Props {
   room?: Room | null | undefined;
@@ -17,6 +18,7 @@ export const SingleRoom = ({ room }: Props) => {
   const { close } = useUserListSidebarStore();
   const { push } = useRouter();
   const { serverId, roomId } = useIds();
+  const { setIsUserInVoiceRoom } = useVoiceRoomStore();
 
   const currentRoom = roomId === room?.id;
 
@@ -29,6 +31,7 @@ export const SingleRoom = ({ room }: Props) => {
       onContextMenu={handleContextMenu}
       onClick={() => {
         close();
+        setIsUserInVoiceRoom(false);
         push(`${routes.dashboard}/${serverId}/${room?.id}`);
       }}
       className={cn(

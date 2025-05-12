@@ -26,7 +26,7 @@ const NoAvatar = ({className}:{className?: string}) => {
   };
   return (
     <div className={cn(getRandomColor(), "w-11 h-11 rounded-full flex items-center justify-center", className)}>
-      <H4>EZ</H4>
+      <H4 className="text-sm">EZ</H4>
     </div>
   );
 };

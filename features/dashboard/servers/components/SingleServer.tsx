@@ -6,6 +6,8 @@ import routes from "@/lib/routes";
 import { cn } from "@/lib/utils";
 import { useIds } from "@/hooks/useIds";
 import { useUserListSidebarStore } from "../store";
+import { useVoiceRoomStore } from "@/features/voice/store";
+import { useAuthStore } from "@/features/auth/store";
 
 type SidebarServer = Omit<Server, "createdBy" | "rooms" | "users">;
 
@@ -17,6 +19,8 @@ export const SingleServer = ({ server }: Props) => {
   const { push } = useRouter();
   const { serverId } = useIds();
   const { close } = useUserListSidebarStore();
+  const { user } = useAuthStore();
+  const { removeUserFromAllRooms } = useVoiceRoomStore();
 
   if (!server) return null;
 
@@ -25,6 +29,8 @@ export const SingleServer = ({ server }: Props) => {
     <div
       onClick={() => {
         close();
+        removeUserFromAllRooms(String(user?.id));
+
         push(`${routes.dashboard}/${server.id}`);
       }}
       className={cn(

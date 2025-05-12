@@ -23,8 +23,7 @@ import { CreateRoomForm } from "./components/CreateRoomForm";
 import { useRoomListSidebarStore } from "./store";
 import routes from "@/lib/routes";
 import { useRouter } from "next/navigation";
-import { SingleVoiceRoom } from "./components/SingleVoiceRoom";
-import { VoiceRoomList } from "./VoiceRoomList";
+import { VoiceRoomList } from "@/features/voice/components/VoiceRoomList";
 
 export const RoomSidebar = () => {
   const { serverId } = useIds();
