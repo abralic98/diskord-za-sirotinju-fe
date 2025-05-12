@@ -10,7 +10,7 @@ import { useAuthStore } from "@/features/auth/store";
 
 interface Props {
   room?: Room | null | undefined;
-  users?: string[];
+  users?: User[];
 }
 
 export const SingleVoiceRoom = ({ room, users }: Props) => {
@@ -31,8 +31,8 @@ export const SingleVoiceRoom = ({ room, users }: Props) => {
 
   const renderUsers = () => {
     return users?.map((user) => (
-      <div key={user} className="user-item">
-        <Text>{user}</Text>
+      <div key={user.id} className="user-item">
+        <Text>{user.username}</Text>
       </div>
     ));
   };
