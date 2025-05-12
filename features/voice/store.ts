@@ -1,37 +1,41 @@
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
-import { Room } from "@/generated/graphql";
 
-interface VoiceRoomStore {
-  currentJoinedVoiceRoom?: Room;
-  setCurrentJoinedVoiceRoom: (room: Room) => void;
-  leaveVoiceRoom: () => void;
-  switchVoiceRoom: (room: Room) => void;
+interface VoiceRoomState {
+  roomUsers: Record<string, string[]>;
+  addUserToRoom: (roomId: string, userId: string) => void;
+  removeUserFromRoom: (roomId: string, userId: string) => void;
+  setUsersInRoom: (roomId: string, userIds: string[]) => void;
 }
 
-export const useVoiceRoomStore = create<VoiceRoomStore>()(
-  devtools(
-    (set, get) => ({
-      currentJoinedVoiceRoom: undefined,
-
-      setCurrentJoinedVoiceRoom: (room) =>
-        set(
-          { currentJoinedVoiceRoom: room },
-          false,
-          "setCurrentJoinedVoiceRoom",
-        ),
-
-      leaveVoiceRoom: () =>
-        set({ currentJoinedVoiceRoom: undefined }, false, "leaveVoiceRoom"),
-
-      switchVoiceRoom: (room) => {
-        const current = get().currentJoinedVoiceRoom;
-        if (current?.id !== room.id) {
-          // Optionally: call a `disconnectFromVoiceRoom(current)` here
-          set({ currentJoinedVoiceRoom: room }, false, "switchVoiceRoom");
-        }
-      },
+export const useVoiceRoomStore = create<VoiceRoomState>((set) => ({
+  roomUsers: {},
+  addUserToRoom: (roomId, userId) =>
+    set((state) => {
+      const users = new Set(state.roomUsers[roomId] ?? []);
+      users.add(userId);
+      return {
+        roomUsers: {
+          ...state.roomUsers,
+          [roomId]: Array.from(users),
+        },
+      };
     }),
-    { name: "VoiceRoomStore" },
-  ),
-);
+  removeUserFromRoom: (roomId, userId) =>
+    set((state) => {
+      const users = new Set(state.roomUsers[roomId] ?? []);
+      users.delete(userId);
+      return {
+        roomUsers: {
+          ...state.roomUsers,
+          [roomId]: Array.from(users),
+        },
+      };
+    }),
+  setUsersInRoom: (roomId, userIds) =>
+    set((state) => ({
+      roomUsers: {
+        ...state.roomUsers,
+        [roomId]: userIds,
+      },
+    })),
+}));

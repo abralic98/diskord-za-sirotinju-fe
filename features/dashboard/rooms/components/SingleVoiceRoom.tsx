@@ -1,33 +1,24 @@
 import { Text } from "@/components/typography";
 import { useSidebar } from "@/components/ui/sidebar";
-import { Room, RoomType } from "@/generated/graphql";
+import { Room, RoomType, User } from "@/generated/graphql";
 import { useIds } from "@/hooks/useIds";
 import routes from "@/lib/routes";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { getRoomIcon } from "../helpers";
-import { useVoiceConnection } from "@/features/voice/hooks/useVoiceConnection";
 import { useAuthStore } from "@/features/auth/store";
-import { useVoiceRoomStore } from "@/features/voice/store";
 
 interface Props {
   room?: Room | null | undefined;
+  users?: string[];
 }
 
-export const SingleVoiceRoom = ({ room }: Props) => {
+export const SingleVoiceRoom = ({ room, users }: Props) => {
   const { open } = useSidebar();
-  const { switchVoiceRoom } = useVoiceRoomStore();
   const { push } = useRouter();
   const { user } = useAuthStore();
   const { serverId, roomId } = useIds(); // from URL
   const isCurrentRoom = room?.id === roomId;
-
-  const { remoteAudio, users, globalUsers } = useVoiceConnection(
-    room?.id,
-    user?.id ?? "anon",
-    room?.type === RoomType.Voice,
-    isCurrentRoom,
-  );
 
   const handleContextMenu = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -35,14 +26,13 @@ export const SingleVoiceRoom = ({ room }: Props) => {
 
   const handleClick = () => {
     if (!room) return;
-    switchVoiceRoom(room);
     push(`${routes.dashboard}/${serverId}/${room.id}`);
   };
 
   const renderUsers = () => {
-    return users.map((userId) => (
-      <div key={userId} className="user-item">
-        <Text>{userId}</Text> {/* Display user ID or user name */}
+    return users?.map((user) => (
+      <div key={user} className="user-item">
+        <Text>{user}</Text>
       </div>
     ));
   };

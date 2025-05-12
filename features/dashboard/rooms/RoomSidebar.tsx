@@ -24,6 +24,7 @@ import { useRoomListSidebarStore } from "./store";
 import routes from "@/lib/routes";
 import { useRouter } from "next/navigation";
 import { SingleVoiceRoom } from "./components/SingleVoiceRoom";
+import { VoiceRoomList } from "./VoiceRoomList";
 
 export const RoomSidebar = () => {
   const { serverId } = useIds();
@@ -66,11 +67,6 @@ export const RoomSidebar = () => {
       return <SingleRoom key={room?.id} room={room} />;
     });
   };
-  const renderVoiceRooms = () => {
-    return data?.getRoomsByServerId?.voice?.map((room) => {
-      return <SingleVoiceRoom key={room?.id} room={room} />;
-    });
-  };
   const showDialog = () => {
     setOpen(true);
   };
@@ -90,7 +86,7 @@ export const RoomSidebar = () => {
             trigger={
               <div className="flex flex-col gap-md p-2 h-full">
                 {renderTextRooms()}
-                {renderVoiceRooms()}
+                <VoiceRoomList rooms={data?.getRoomsByServerId?.voice ?? []}/>
                 <CustomDialog
                   open={open}
                   header={header}

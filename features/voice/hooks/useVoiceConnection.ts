@@ -1,136 +1,109 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useAuthStore } from "@/features/auth/store";
+import { useIds } from "@/hooks/useIds";
+import { useRtc } from "./useRtc";
+import { useVoiceRoomStore } from "../store";
 
-export const useVoiceConnection = (
-  room: string | undefined,
-  userId: string,
-  isVoiceRoom: boolean,
-  activateSocket: boolean,
-) => {
+export function useVoiceConnection() {
+  const { user } = useAuthStore();
+  const { roomId } = useIds();
+  const { createPeerConnection, handleSocketMessage, getMicrophoneStream } =
+    useRtc();
+
+  const { addUserToRoom, setUsersInRoom, removeUserFromRoom } =
+    useVoiceRoomStore();
+
   const socketRef = useRef<WebSocket | null>(null);
-  const peerRef = useRef<RTCPeerConnection | null>(null);
+  const pcRef = useRef<RTCPeerConnection | null>(null);
   const localStreamRef = useRef<MediaStream | null>(null);
-  const [remoteAudio, setRemoteAudio] = useState<HTMLAudioElement | null>(null);
-  const [users, setUsers] = useState<string[]>([]);
-  const [globalUsers, setGlobalUsers] = useState<Record<string, string[]>>({}); // 🆕 All users in all rooms
 
   useEffect(() => {
-    if (!activateSocket || !isVoiceRoom || !room || !userId) return;
-    setUsers([]);
+    if (!user?.id || !roomId) return;
 
-    const socket = new WebSocket("ws://localhost:8080/ws/voice");
-    socketRef.current = socket;
+    const start = async () => {
+      const socket = new WebSocket("ws://localhost:8080/ws/voice");
+      socketRef.current = socket;
 
-    let isCleanedUp = false;
+      socket.onopen = async () => {
+        // First request presence information
+        socket.send(
+          JSON.stringify({
+            type: "getPresence",
+            room: "all", // Special keyword for all rooms
+            sender: { id: user.id },
+          }),
+        );
 
-    socket.onopen = async () => {
-      console.log("🔌 WebSocket connected");
-      socket.send(
-        JSON.stringify({ type: "join", room, sender: { id: userId } }),
-      );
+        // Get microphone stream
+        const stream = await getMicrophoneStream();
+        if (!stream) return;
 
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      localStreamRef.current = stream;
+        localStreamRef.current = stream;
 
-      const peer = new RTCPeerConnection({
-        iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-      });
+        // Create peer connection with ICE servers
+        const pc = createPeerConnection(socket, roomId, String(user.id));
+        pcRef.current = pc;
 
-      peerRef.current = peer;
+        // Add tracks to connection
+        stream.getTracks().forEach((track) => {
+          pc.addTrack(track, stream);
+          console.log(`Added ${track.kind} track to peer connection`);
+        });
 
-      peer.onicecandidate = (event) => {
-        if (event.candidate) {
-          socket.send(
-            JSON.stringify({
-              type: "ice",
-              candidate: event.candidate,
-              sender: { id: userId },
-              room,
-            }),
+        // Join the room
+        socket.send(
+          JSON.stringify({
+            type: "join",
+            room: roomId,
+            sender: { id: user.id },
+          }),
+        );
+      };
+
+      socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log("📨 Message received:", data);
+
+        if (data.type === "presence") {
+          const { room, users } = data;
+          if (room && Array.isArray(users)) {
+            setUsersInRoom(room, users);
+          }
+        } else {
+          handleSocketMessage(
+            data,
+            pcRef.current,
+            socketRef.current,
+            String(user.id),
+            roomId,
           );
         }
       };
 
-      peer.ontrack = (event) => {
-        const remoteStream = event.streams[0];
-        const audio = new Audio();
-        audio.srcObject = remoteStream;
-        audio.autoplay = true;
-        setRemoteAudio(audio);
+      socket.onclose = () => {
+        console.log("❌ Socket closed");
+        removeUserFromRoom(roomId, String(user.id));
       };
 
-      stream.getTracks().forEach((track) => peer.addTrack(track, stream));
-
-      const offer = await peer.createOffer();
-      await peer.setLocalDescription(offer);
-      socket.send(
-        JSON.stringify({
-          type: "offer",
-          sdp: offer,
-          sender: { id: userId },
-          room,
-        }),
-      );
+      socket.onerror = (err) => {
+        console.error("❗ Socket error", err);
+      };
     };
 
-    socket.onmessage = async (event) => {
-      const data = JSON.parse(event.data);
-      console.log(data, "onmessage");
-
-      const peer = peerRef.current;
-      if (!peer || isCleanedUp) return;
-
-      if (data.type === "user-list") {
-        setUsers(data.users);
-      }
-
-      if (data.type === "global-user-list") {
-        setGlobalUsers(data.rooms); // 🆕 rooms = { roomId: [user1, user2] }
-      }
-
-      if (data.type === "offer") {
-        await peer.setRemoteDescription(new RTCSessionDescription(data.sdp));
-        const answer = await peer.createAnswer();
-        await peer.setLocalDescription(answer);
-        socket.send(
-          JSON.stringify({
-            type: "answer",
-            sdp: answer,
-            sender: { id: userId },
-            room,
-          }),
-        );
-      } else if (data.type === "answer") {
-        await peer.setRemoteDescription(new RTCSessionDescription(data.sdp));
-      } else if (data.type === "ice" && data.candidate) {
-        await peer.addIceCandidate(new RTCIceCandidate(data.candidate));
-      }
-    };
+    start();
 
     return () => {
-      isCleanedUp = true;
-
+      console.log("Cleaning up voice connection");
       if (socketRef.current?.readyState === WebSocket.OPEN) {
-        socketRef.current.send(
-          JSON.stringify({
-            type: "leave",
-            room,
-            sender: { id: userId },
-          }),
-        );
+        socketRef.current.close();
       }
-
-      socketRef.current?.close();
-      peerRef.current?.close();
+      pcRef.current?.close();
       localStreamRef.current?.getTracks().forEach((track) => track.stop());
-
-      socketRef.current = null;
-      peerRef.current = null;
-      localStreamRef.current = null;
-
-      setRemoteAudio(null);
-      setUsers([]);
+      if (roomId && user?.id) {
+        removeUserFromRoom(roomId, user.id);
+      }
     };
-  }, [activateSocket, room, userId, isVoiceRoom]);
+  }, [user?.id, roomId]);
 
-  return { remoteAudio, users, globalUsers }; // 🧠 expose global users too
-};
+  return {};
+}
