@@ -3,10 +3,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/helpers/queryKeys";
-import {
-  GetUsersByServerIdDocument,
-  GetUsersByServerIdQuery,
-} from "@/generated/graphql";
+import { GetServerByIdDocument, GetServerByIdQuery } from "@/generated/graphql";
 import { toast } from "sonner";
 import { GraphqlCatchError } from "@/helpers/errors";
 import { SingleUser } from "./components/SingleUser";
@@ -20,13 +17,12 @@ export const ServerUsersSidebar = () => {
   const { serverId } = useIds();
 
   const { data, error } = useQuery({
-    queryKey: [queryKeys.getUsersByServerId],
+    queryKey: [queryKeys.getServerById],
     enabled: Boolean(serverId) && isOpen,
-    queryFn: async (): Promise<GetUsersByServerIdQuery> => {
-      return await requestWithAuth<GetUsersByServerIdQuery>(
-        GetUsersByServerIdDocument,
-        { id: serverId },
-      );
+    queryFn: async (): Promise<GetServerByIdQuery> => {
+      return await requestWithAuth<GetServerByIdQuery>(GetServerByIdDocument, {
+        id: serverId,
+      });
     },
   });
 
@@ -36,8 +32,10 @@ export const ServerUsersSidebar = () => {
   }
 
   const renderUsers = () => {
-    return data?.getUsersByServerId?.map((user) => {
-      return <SingleUser key={user?.id} user={user} />;
+    const ownerId = data?.getServerById?.createdBy?.id;
+    return data?.getServerById?.joinedUsers?.map((user) => {
+      const isOwner = user?.id === ownerId;
+      return <SingleUser isOwner={isOwner} key={user?.id} user={user} />;
     });
   };
 

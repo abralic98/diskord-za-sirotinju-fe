@@ -10,7 +10,8 @@ const routes = {
   settings: settings,
   notifications: `${settings}/notifications`,
   account: `${settings}/account`,
-  voice: `${settings}/voice`
+  voice: `${settings}/voice`,
+  discover: `/discover`
 };
 
 export default routes;

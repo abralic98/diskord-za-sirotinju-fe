@@ -38,10 +38,11 @@ export const SingleVoiceRoom = ({ room, users }: Props) => {
     push(`${routes.dashboard}/${serverId}/${room.id}`);
   };
 
-  console.log(users, "úseri jebeni")
   const renderUsers = () => {
     return users?.map((user) => <VoiceRoomUser key={user.id} user={user} />);
   };
+
+  console.log(users, "úseri jebeni")
 
   return (
     <div onContextMenu={handleContextMenu} onClick={handleClick}>

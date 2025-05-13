@@ -4,10 +4,11 @@ query meQuery {
     username
     email
     phoneNumber
+    avatar
   }
 }
-query getAllServersSidebar {
-  getAllServers {
+query getAllUserServersSidebar {
+  getAllUserServers {
     id
     name
   }
@@ -63,6 +64,7 @@ query getMessagesByRoomId($id: ID!, $page: Int!, $size: Int!) {
       author {
         id
         username
+        avatar
       }
       text
       imgPath
@@ -85,15 +87,35 @@ query getRoomById($id: ID!) {
   }
 }
 
-query getUsersByServerId($id: ID!) {
-  getUsersByServerId(id: $id) {
+query getServerById($id: ID!) {
+  getServerById(id: $id) {
     id
-    username
+    createdBy {
+      id
+    }
+    joinedUsers {
+      id
+      username
+      avatar
+    }
   }
 }
 
 mutation createMessage($message: CreateMessageInput) {
   createMessage(message: $message) {
     id
+  }
+}
+
+query getAllServers($page: Int!, $size: Int!) {
+  getAllServers(page: $page, size: $size) {
+    content {
+      id
+      name
+    }
+    size
+    number
+    totalElements
+    totalPages
   }
 }

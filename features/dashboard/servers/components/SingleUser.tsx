@@ -3,21 +3,24 @@ import { Label } from "@/components/ui/label";
 import { UserAvatar } from "@/features/user/components/UserAvatar";
 import { User } from "@/generated/graphql";
 import { cn } from "@/lib/utils";
+import { CrownIcon } from "lucide-react";
 import React from "react";
 
 interface Props {
   user?: User | null;
+  isOwner: boolean;
 }
 
-export const SingleUser = ({ user }: Props) => {
+export const SingleUser = ({ user, isOwner }: Props) => {
   const online = false;
   return (
     <div className="hover:bg-sidebar-accent flex items-center justify-start gap-md p-3 rounded-md cursor-pointer">
       <div className="relative">
-        <UserAvatar />
+        <UserAvatar userAvatar={user?.avatar} />
         <OnlineStatus online={online} />
       </div>
       <Text>{user?.username}</Text>
+      {isOwner && <CrownIcon className="text-yellow-500" />}
     </div>
   );
 };

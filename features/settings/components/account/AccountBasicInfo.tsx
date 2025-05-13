@@ -13,7 +13,7 @@ export const AccountBasicInfo = () => {
     <div className="w-[500px] min-h-[370px] bg-sidebar border border-sidebar p-10 rounded-xl flex flex-col gap-md">
       <div className="flex flex-row gap-md items-center justify-between">
         <div className="flex flex-row gap-md items-center">
-          <UserAvatar className="w-[70px] h-[70px]" />
+          <UserAvatar userAvatar={user?.avatar} className="w-[70px] h-[70px]" />
           <H4>{user?.username}</H4>
         </div>
         <EditAvatar />

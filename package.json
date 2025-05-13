@@ -28,6 +28,7 @@
     "@radix-ui/react-tooltip": "^1.2.4",
     "@tanstack/react-query": "^5.75.1",
     "@tanstack/react-query-devtools": "^5.75.4",
+    "appwrite": "^17.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cookies-next": "^5.1.0",

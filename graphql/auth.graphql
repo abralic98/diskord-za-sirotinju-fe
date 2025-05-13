@@ -5,6 +5,7 @@ mutation CreateSession($credentials: CreateSessionInput!) {
       id
       username
       email
+      avatar
     }
   }
 }
@@ -26,3 +27,4 @@ mutation UpdateUserPassword($credentials: UpdateUserPasswordInput) {
     id
   }
 }
+

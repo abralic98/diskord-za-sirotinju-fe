@@ -5,33 +5,30 @@ import { CreateServer } from "./components/CreateServer";
 import { SingleServer } from "./components/SingleServer";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/helpers/queryKeys";
-import {
-  GetAllServersSidebarDocument,
-  GetAllServersSidebarQuery,
-} from "@/generated/graphql";
-import { client, requestWithAuth } from "@/lib/graphql/client";
+import { GetAllUserServersSidebarDocument, GetAllUserServersSidebarQuery } from "@/generated/graphql";
+import {  requestWithAuth } from "@/lib/graphql/client";
 import { toast } from "sonner";
 import { GraphqlCatchError } from "@/helpers/errors";
 import { useServerListSidebarStore } from "./store";
 import { useEffect } from "react";
-import routes from "@/lib/routes";
 import { useRouter } from "next/navigation";
+import { DiscoverServers } from "./components/discovery/DiscoverServers";
 
 export const ServerList = () => {
   const { setServers } = useServerListSidebarStore();
   const { push } = useRouter();
   const { data, error } = useQuery({
-    queryKey: [queryKeys.getAllServersSidebar],
-    queryFn: async (): Promise<GetAllServersSidebarQuery> => {
-      return await requestWithAuth<GetAllServersSidebarQuery>(
-        GetAllServersSidebarDocument,
+    queryKey: [queryKeys.getAllUserServersSidebar],
+    queryFn: async (): Promise<GetAllUserServersSidebarQuery> => {
+      return await requestWithAuth<GetAllUserServersSidebarQuery>(
+        GetAllUserServersSidebarDocument,
       );
     },
   });
 
   useEffect(() => {
-    if (data?.getAllServers) {
-      setServers(data.getAllServers);
+    if (data?.getAllUserServers) {
+      setServers(data.getAllUserServers);
     }
   }, [data]);
 
@@ -40,7 +37,7 @@ export const ServerList = () => {
     toast(err.response.errors[0].message);
   }
   const renderServers = () => {
-    return data?.getAllServers?.map((server) => {
+    return data?.getAllUserServers?.map((server) => {
       return <SingleServer key={server?.id} server={server} />;
     });
   };
@@ -49,6 +46,7 @@ export const ServerList = () => {
     <ScrollArea className="h-full w-[60px] rounded-md">
       <div className="overflow-y-scroll w-full flex flex-col gap-md items-center">
         <CreateServer />
+        <DiscoverServers />
         {renderServers()}
       </div>
     </ScrollArea>

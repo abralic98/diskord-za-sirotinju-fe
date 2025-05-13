@@ -6,7 +6,7 @@ import { SingleSetting } from "./SingleSetting";
 import { Logo } from "@/features/shared/Logo";
 
 export const SettingsList = () => {
-  const { push } = useRouter();
+  const { push, back } = useRouter();
   const settings = [
     {
       name: "Account",
@@ -26,13 +26,18 @@ export const SettingsList = () => {
         push(routes.notifications);
       },
     },
+    {
+      name: "Back",
+      action: () => {
+        push(routes.dashboard);
+      },
+    },
   ];
   const renderSettings = () => {
     return settings.map((s) => {
       return <SingleSetting setting={s} key={s.name} />;
     });
   };
-
 
   return (
     <ScrollArea className="h-full w-full rounded-md">

@@ -12,7 +12,7 @@ export const SingleMessage = ({ message }: Props) => {
   return (
     <div className="hover:bg-sidebar-border w-full flex flex-row justify-between items-center border border-sidebar-border p-2">
       <div className=" flex items-center justify-start gap-md">
-        <UserAvatar />
+        <UserAvatar userAvatar={message?.author?.avatar} />
         <div>
           <H4>{message?.author?.username}</H4>
           <Text>{message?.text}</Text>

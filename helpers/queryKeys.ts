@@ -1,8 +1,9 @@
 export const queryKeys = {
   meQuery: "meQuery",
-  getAllServersSidebar: "getAllServerSidebar",
+  getAllUserServersSidebar: "getAllUserServersSidebar",
   getRoomsByServerId: "getRoomsByServerId",
   getMessagesByRoomId: "getMessagesByRoomId",
   getRoomById: "getRoomById",
-  getUsersByServerId: "getUsersByServerId"
-}
+  getServerById: "getServerById",
+  getAllServersDiscovery: "getAllServersDiscovery",
+};

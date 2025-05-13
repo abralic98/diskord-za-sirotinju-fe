@@ -9,9 +9,13 @@ export const H4 = ({
   className?: string;
 }) => <h4 className={cn("text-xl font-semibold", className)}>{children}</h4>;
 
-export const H3 = ({ children }: { children: React.ReactNode }) => (
-  <h3 className="text-2xl font-semibold">{children}</h3>
-);
+export const H3 = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className: string;
+}) => <h3 className={cn("text-2xl font-semibold", className)}>{children}</h3>;
 
 export const H2 = ({ children }: { children: React.ReactNode }) => (
   <h2 className="text-3xl font-bold">{children}</h2>

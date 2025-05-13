@@ -15,13 +15,14 @@ export const UserInfoFooter = () => {
   const { open } = useSidebar();
   const { push } = useRouter();
   const { serverId, roomId } = useIds();
-  const { handleLeaveRoom, isUserInVoiceRoom, setIsUserInVoiceRoom } = useVoiceRoomStore();
+  const { handleLeaveRoom, isUserInVoiceRoom, setIsUserInVoiceRoom } =
+    useVoiceRoomStore();
   const audio = new Audio("/assets/sound/leave-room.mp3");
 
   return (
     <div className="bg-sidebar border border-sidebar-accent w-full h-15 flex flex-row gap-md items-center justify-between p-2">
       <div className="flex flex-row gap-md justify-start items-center">
-        <UserAvatar />
+        <UserAvatar userAvatar={user?.avatar} className="w-7 h-7" />
         {open && <UserInfo user={user} />}
       </div>
       <div className="flex flex-row gap-md">

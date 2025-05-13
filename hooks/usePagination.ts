@@ -4,7 +4,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 type PaginationArgs<TData, TField extends keyof TData> = {
   queryKey: any[];
   document: any;
-  variables: Record<string, any>;
+  variables?: Record<string, any>;
   dataField: TField;
   getPageParam?: (lastPage: TData) => number | undefined;
   pageSize?: number;
