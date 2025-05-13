@@ -18,7 +18,7 @@ export function useVoiceConnection() {
   const localStreamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
-    if (!user?.id || !roomId) return;
+    if (!user?.id) return;
 
     const start = async () => {
       const socket = new WebSocket("ws://localhost:8080/ws/voice");
@@ -33,6 +33,7 @@ export function useVoiceConnection() {
             sender: { id: user.id },
           }),
         );
+        if(!roomId) return;
 
         // Get microphone stream
         const stream = await getMicrophoneStream();

@@ -30,6 +30,7 @@ export const RoomMessages = () => {
     variables: { id: roomId },
     dataField: "getMessagesByRoomId",
     pageSize: 20,
+    gcTime:0, //temp fix
   });
 
   usePaginationScrolling(scrollRef, query);

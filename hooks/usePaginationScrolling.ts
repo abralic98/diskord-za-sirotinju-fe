@@ -2,13 +2,13 @@ import { useEffect, useState, RefObject } from "react";
 import { UseInfiniteQueryResult } from "@tanstack/react-query";
 
 export const usePaginationScrolling = (
-  scrollRef: RefObject<HTMLElement | null>, // Allow null here
+  scrollRef: RefObject<HTMLElement | null>, 
   query: UseInfiniteQueryResult,
 ) => {
   const [scrollHeightBeforeLoad, setScrollHeightBeforeLoad] = useState(0);
 
   useEffect(() => {
-    if (!scrollRef.current) return; // Early return if null
+    if (!scrollRef.current) return; 
 
     if (query.isFetchingNextPage) {
       setScrollHeightBeforeLoad(scrollRef.current.scrollHeight);

@@ -53,8 +53,11 @@ export const CreateMessage = ({ scrollRef }: Props) => {
       queryClient.refetchQueries({
         queryKey: [queryKeys.getMessagesByRoomId, roomId],
       });
-      scrollToBottom(scrollRef.current);
       form.reset();
+      //timeut da normalno skrolne a ne uvijek zadnji element ostane nevidljiv
+      setTimeout(() => {
+        scrollToBottom(scrollRef.current);
+      }, 100);
     },
     onError: (error) => {
       const err = error as unknown as GraphqlCatchError;
@@ -73,7 +76,7 @@ export const CreateMessage = ({ scrollRef }: Props) => {
         className="w-full"
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault(); 
+            e.preventDefault();
             form.handleSubmit(onSubmit)();
           }
         }}

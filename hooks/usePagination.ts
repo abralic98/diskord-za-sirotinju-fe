@@ -8,6 +8,7 @@ type PaginationArgs<TData, TField extends keyof TData> = {
   dataField: TField;
   getPageParam?: (lastPage: TData) => number | undefined;
   pageSize?: number;
+  gcTime?: number
 };
 
 export function usePagination<TData, TField extends keyof TData>({
@@ -17,6 +18,7 @@ export function usePagination<TData, TField extends keyof TData>({
   dataField,
   getPageParam,
   pageSize = 10,
+  gcTime,
 }: PaginationArgs<TData, TField>) {
   return useInfiniteQuery<TData>({
     queryKey,
@@ -27,6 +29,7 @@ export function usePagination<TData, TField extends keyof TData>({
         size: pageSize,
       });
     },
+    gcTime:gcTime,
     getNextPageParam:
       getPageParam ??
       ((lastPage: TData) => {
