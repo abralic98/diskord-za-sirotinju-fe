@@ -66,7 +66,7 @@ export const CreateRoomForm = ({ setOpen }: Props) => {
         queryKey: [queryKeys.getRoomsByServerId],
       });
       setOpen && setOpen(false);
-      push(`${routes.dashboard}/${serverId}/${data.createRoom?.id}`);
+      push(`${routes.dashboard}/${serverId}`);
     },
     onError: (error) => {
       const err = error as unknown as GraphqlCatchError;

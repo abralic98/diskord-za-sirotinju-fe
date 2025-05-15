@@ -47,7 +47,7 @@ export const Register = () => {
       return res;
     },
     onSuccess: () => {
-      push(routes.dashboard);
+      push(routes.login);
     },
     onError: (error) => {
       const err = error as unknown as GraphqlCatchError;

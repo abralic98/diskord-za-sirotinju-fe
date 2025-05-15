@@ -64,6 +64,11 @@ export type CreateUserInput = {
   username: Scalars['String']['input'];
 };
 
+export type JoinServerInput = {
+  id: Scalars['ID']['input'];
+  invitationLink?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Message = {
   __typename?: 'Message';
   author?: Maybe<User>;
@@ -97,6 +102,7 @@ export type Mutation = {
   createSession?: Maybe<UserWithToken>;
   createUser?: Maybe<User>;
   deactivateUser?: Maybe<User>;
+  joinServer?: Maybe<Server>;
   updateUser?: Maybe<User>;
   updateUserPassword?: Maybe<User>;
 };
@@ -129,6 +135,11 @@ export type MutationCreateUserArgs = {
 
 export type MutationDeactivateUserArgs = {
   id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type MutationJoinServerArgs = {
+  input?: InputMaybe<JoinServerInput>;
 };
 
 
@@ -252,8 +263,16 @@ export type User = {
   email?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   phoneNumber?: Maybe<Scalars['Long']['output']>;
+  userPresence?: Maybe<UserPresenceType>;
   username?: Maybe<Scalars['String']['output']>;
 };
+
+export enum UserPresenceType {
+  Away = 'AWAY',
+  Busy = 'BUSY',
+  Offline = 'OFFLINE',
+  Online = 'ONLINE'
+}
 
 export type UserWithToken = {
   __typename?: 'UserWithToken';
@@ -356,7 +375,14 @@ export type GetAllServersQueryVariables = Exact<{
 }>;
 
 
-export type GetAllServersQuery = { __typename?: 'Query', getAllServers: { __typename?: 'ServerPage', size: number, number: number, totalElements: number, totalPages: number, content: Array<{ __typename?: 'Server', id?: string | null, name?: string | null }> } };
+export type GetAllServersQuery = { __typename?: 'Query', getAllServers: { __typename?: 'ServerPage', size: number, number: number, totalElements: number, totalPages: number, content: Array<{ __typename?: 'Server', id?: string | null, name?: string | null, joinedUsers?: Array<{ __typename?: 'User', id?: string | null, userPresence?: UserPresenceType | null } | null> | null }> } };
+
+export type JoinServerMutationVariables = Exact<{
+  input?: InputMaybe<JoinServerInput>;
+}>;
+
+
+export type JoinServerMutation = { __typename?: 'Mutation', joinServer?: { __typename?: 'Server', id?: string | null } | null };
 
 
 
@@ -714,6 +740,10 @@ export const GetAllServersDocument = `
     content {
       id
       name
+      joinedUsers {
+        id
+        userPresence
+      }
     }
     size
     number
@@ -735,5 +765,27 @@ export const useGetAllServersQuery = <
     return useQuery<GetAllServersQuery, TError, TData>(
       ['getAllServers', variables],
       fetcher<GetAllServersQuery, GetAllServersQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetAllServersDocument, variables),
+      options
+    )};
+
+export const JoinServerDocument = `
+    mutation joinServer($input: JoinServerInput) {
+  joinServer(input: $input) {
+    id
+  }
+}
+    `;
+
+export const useJoinServerMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      options?: UseMutationOptions<JoinServerMutation, TError, JoinServerMutationVariables, TContext>
+    ) => {
+    
+    return useMutation<JoinServerMutation, TError, JoinServerMutationVariables, TContext>(
+      ['joinServer'],
+      (variables?: JoinServerMutationVariables) => fetcher<JoinServerMutation, JoinServerMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, JoinServerDocument, variables)(),
       options
     )};

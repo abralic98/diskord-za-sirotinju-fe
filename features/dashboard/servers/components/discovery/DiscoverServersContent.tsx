@@ -7,7 +7,7 @@ import { FormServerList } from "./components/FormServerList";
 export const DiscoverServersContent = () => {
   return (
     <Center>
-      <div className="flex flex-col gap-md">
+      <div className="flex flex-col items-center gap-md p-10">
         <div className="flex flex-row gap-md items-center">
           <EZLogoDark />
           <H1>EZComms</H1>

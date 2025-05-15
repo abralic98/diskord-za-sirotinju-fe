@@ -5,35 +5,51 @@ import { useServerListSidebarStore } from "./servers/store";
 import { useIds } from "@/hooks/useIds";
 import { NoServers } from "./components/NoServers";
 import { useAuthenticator } from "@/hooks/useAuthenticator";
+import routes from "@/lib/routes";
 
 export const DashboardContent = () => {
   const router = useRouter();
   const { serverId, roomId } = useIds();
-  const [storeFetch, setStoreFetch] = useState(true);
   const { servers } = useServerListSidebarStore();
   useAuthenticator();
 
+  const [loading, setLoading] = useState(true);
+  const hasServers = Boolean(servers && servers.length);
+
   useEffect(() => {
-    if (roomId && serverId) return;
-    const firstServer = servers?.[0];
-    const id = firstServer?.id;
-    if (!id) return;
+    if (roomId && serverId) {
+      setLoading(false);
+      return;
+    }
 
-    router.replace(`/dashboard/${id}`);
-    setStoreFetch(false);
-  }, [servers]);
+    if (!hasServers) {
+      router.replace(routes.discover);
+      return;
+    }
 
-  if (storeFetch) {
+    const firstServer = servers[0];
+    if (firstServer?.id) {
+      router.replace(`/dashboard/${firstServer.id}`);
+    }
+
+    setLoading(false);
+  }, [servers, serverId, roomId]);
+
+  if (loading) {
     return (
       <div className="p-[12px] w-full bg-sidebar-border">
         Redirecting to your first available server...
       </div>
     );
   }
-  if (!storeFetch)
+
+  if (!hasServers) {
     return (
       <div className="bg-sidebar-border w-full">
         <NoServers />
       </div>
     );
+  }
+
+  return null;
 };

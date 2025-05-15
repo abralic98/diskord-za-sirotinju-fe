@@ -13,7 +13,7 @@ export const ServerList = () => {
     document: GetAllServersDocument,
     dataField: "getAllServers",
     pageSize: 10,
-    gcTime: 0, //temp fix
+    gcTime: 0,
   });
 
   // usePaginationScrolling(scrollRef, query);

@@ -112,10 +112,20 @@ query getAllServers($page: Int!, $size: Int!) {
     content {
       id
       name
+      joinedUsers {
+        id
+        userPresence
+      }
     }
     size
     number
     totalElements
     totalPages
+  }
+}
+
+mutation joinServer($input: JoinServerInput){
+  joinServer(input: $input){
+    id
   }
 }
