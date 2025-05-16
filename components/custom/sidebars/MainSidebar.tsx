@@ -8,12 +8,15 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useAuthStore } from "@/features/auth/store";
 import { UserInfoFooter } from "@/features/user/UserInfoFooter";
 import { GetServerByIdQuery } from "@/generated/graphql";
 import { queryKeys } from "@/helpers/queryKeys";
 import { useIds } from "@/hooks/useIds";
 import { queryClient } from "@/lib/react-query/queryClient";
+import routes from "@/lib/routes";
 import { SettingsIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 
 interface Props {
@@ -22,12 +25,17 @@ interface Props {
 export const MainSidebar = ({ content }: Props) => {
   const { open } = useSidebar();
   const { serverId } = useIds();
+  const { user } = useAuthStore();
+  const {push} = useRouter()
 
   const server: GetServerByIdQuery | undefined = queryClient.getQueryData([
     queryKeys.getServerById,
     serverId,
   ]);
   const name = server?.getServerById?.name;
+  const showSettings =
+    server?.getServerById?.id &&
+    server.getServerById.createdBy?.id === user?.id;
 
   const serverName = open ? name : name?.slice(0, 2);
   console.log(name, "name");
@@ -36,12 +44,14 @@ export const MainSidebar = ({ content }: Props) => {
       <SidebarHeader className="h-20 flex items-start justify-center">
         <div className="flex flex-row gap-md w-full items-center justify-between">
           <H3>{serverName}</H3>
-          <SettingsIcon
-          className="cursor-pointer hover:animate-spin"
-            onClick={() => {
-              //
-            }}
-          />
+          {showSettings && (
+            <SettingsIcon
+              className="cursor-pointer hover:animate-spin"
+              onClick={() => {
+                push(`${routes.serverSettings}/${server.getServerById?.id}`)
+              }}
+            />
+          )}
         </div>
       </SidebarHeader>
       <SidebarContent>{content}</SidebarContent>

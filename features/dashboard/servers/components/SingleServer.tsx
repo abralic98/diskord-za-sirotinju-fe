@@ -8,6 +8,7 @@ import { useIds } from "@/hooks/useIds";
 import { useUserListSidebarStore } from "../store";
 import { useVoiceRoomStore } from "@/features/voice/store";
 import { useAuthStore } from "@/features/auth/store";
+import Image from "next/image";
 
 type SidebarServer = Omit<Server, "createdBy" | "rooms" | "users">;
 
@@ -25,6 +26,20 @@ export const SingleServer = ({ server }: Props) => {
   if (!server) return null;
 
   const isServerSelected = server.id === serverId;
+
+  const renderIcon = () => {
+    if (server?.serverImg) {
+      return (
+        <Image
+          alt="server icon"
+          fill
+          src={server.serverImg}
+        />
+      );
+    } else {
+      if (server?.name) return <H4>{server?.name.slice(0, 2)}</H4>;
+    }
+  };
   return (
     <div
       onClick={() => {
@@ -37,10 +52,10 @@ export const SingleServer = ({ server }: Props) => {
         isServerSelected
           ? "rounded-xl bg-sidebar-hover"
           : "rounded-full bg-sidebar-accent",
-        "hover:bg-sidebar-hover transition-colors duration-200  flex items-center justify-center w-14 h-14 cursor-pointer",
+        "hover:bg-sidebar-hover transition-colors duration-200 flex items-center justify-center w-14 h-14 cursor-pointer overflow-hidden relative",
       )}
     >
-      <H4>{server?.name?.slice(0, 2)}</H4>
+      {renderIcon()}
     </div>
   );
 };

@@ -334,7 +334,7 @@ export type MeQueryQuery = { __typename?: 'Query', meQuery?: { __typename?: 'Use
 export type GetAllUserServersSidebarQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllUserServersSidebarQuery = { __typename?: 'Query', getAllUserServers?: Array<{ __typename?: 'Server', id?: string | null, name?: string | null } | null> | null };
+export type GetAllUserServersSidebarQuery = { __typename?: 'Query', getAllUserServers?: Array<{ __typename?: 'Server', id?: string | null, name?: string | null, serverImg?: string | null } | null> | null };
 
 export type CreateServerMutationVariables = Exact<{
   server?: InputMaybe<CreateServerInput>;
@@ -537,6 +537,7 @@ export const GetAllUserServersSidebarDocument = `
   getAllUserServers {
     id
     name
+    serverImg
   }
 }
     `;

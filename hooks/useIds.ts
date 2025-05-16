@@ -5,6 +5,7 @@ export const useIds = () => {
 
   const serverId = params.serverId as string | undefined;
   const roomId = params.roomId as string | undefined;
+  const serverSettingsId = params.serverSettingsId as string | undefined;
 
-  return { serverId, roomId };
+  return { serverId, roomId, serverSettingsId };
 };

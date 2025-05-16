@@ -53,12 +53,14 @@ export const SingleServer = ({ server }: Props) => {
   };
 
   return (
-    <div className="w-[350px] h-[350px] bg-sidebar-accent rounded-lg">
-      <ServerImage />
-      <div className="p-4 flex flex-col gap-md">
+    <div className="w-[350px] h-[400px] bg-sidebar-accent rounded-lg">
+      <ServerImage server={server} />
+      <div className="p-4 flex flex-col gap-md mt-[50px]">
         <H4>{server.name}</H4>
         <ServerUsers serverUsers={server.joinedUsers ?? []} />
-        <Text className="h-[90px]">{server.description}</Text>
+        <Text className="h-[90px] break-words whitespace-pre-wrap">
+          {server.description}
+        </Text>
         <Button type="button" onClick={() => joinServer()}>
           Join server
         </Button>
