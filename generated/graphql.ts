@@ -103,6 +103,7 @@ export type Mutation = {
   createUser?: Maybe<User>;
   deactivateUser?: Maybe<User>;
   joinServer?: Maybe<Server>;
+  updateServer?: Maybe<Server>;
   updateUser?: Maybe<User>;
   updateUserPassword?: Maybe<User>;
 };
@@ -140,6 +141,11 @@ export type MutationDeactivateUserArgs = {
 
 export type MutationJoinServerArgs = {
   input?: InputMaybe<JoinServerInput>;
+};
+
+
+export type MutationUpdateServerArgs = {
+  server?: InputMaybe<UpdateServerInput>;
 };
 
 
@@ -226,12 +232,15 @@ export type Rooms = {
  */
 export type Server = {
   __typename?: 'Server';
+  banner?: Maybe<Scalars['String']['output']>;
   createdBy?: Maybe<User>;
+  description?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   joinedUsers?: Maybe<Array<Maybe<User>>>;
   name?: Maybe<Scalars['String']['output']>;
   publicServer?: Maybe<Scalars['Boolean']['output']>;
   rooms?: Maybe<Array<Maybe<Room>>>;
+  serverImg?: Maybe<Scalars['String']['output']>;
 };
 
 export type ServerPage = {
@@ -241,6 +250,15 @@ export type ServerPage = {
   size: Scalars['Int']['output'];
   totalElements: Scalars['Int']['output'];
   totalPages: Scalars['Int']['output'];
+};
+
+export type UpdateServerInput = {
+  banner?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  publicServer?: InputMaybe<Scalars['Boolean']['input']>;
+  serverImg?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateUserInput = {
@@ -325,6 +343,13 @@ export type CreateServerMutationVariables = Exact<{
 
 export type CreateServerMutation = { __typename?: 'Mutation', createServer?: { __typename?: 'Server', id?: string | null } | null };
 
+export type UpdateServerMutationVariables = Exact<{
+  server?: InputMaybe<UpdateServerInput>;
+}>;
+
+
+export type UpdateServerMutation = { __typename?: 'Mutation', updateServer?: { __typename?: 'Server', id?: string | null } | null };
+
 export type GetRoomsByServerIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
@@ -360,7 +385,7 @@ export type GetServerByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetServerByIdQuery = { __typename?: 'Query', getServerById?: { __typename?: 'Server', id?: string | null, createdBy?: { __typename?: 'User', id?: string | null } | null, joinedUsers?: Array<{ __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null> | null } | null };
+export type GetServerByIdQuery = { __typename?: 'Query', getServerById?: { __typename?: 'Server', id?: string | null, name?: string | null, description?: string | null, serverImg?: string | null, banner?: string | null, createdBy?: { __typename?: 'User', id?: string | null } | null, joinedUsers?: Array<{ __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null> | null } | null };
 
 export type CreateMessageMutationVariables = Exact<{
   message?: InputMaybe<CreateMessageInput>;
@@ -375,7 +400,7 @@ export type GetAllServersQueryVariables = Exact<{
 }>;
 
 
-export type GetAllServersQuery = { __typename?: 'Query', getAllServers: { __typename?: 'ServerPage', size: number, number: number, totalElements: number, totalPages: number, content: Array<{ __typename?: 'Server', id?: string | null, name?: string | null, joinedUsers?: Array<{ __typename?: 'User', id?: string | null, userPresence?: UserPresenceType | null } | null> | null }> } };
+export type GetAllServersQuery = { __typename?: 'Query', getAllServers: { __typename?: 'ServerPage', size: number, number: number, totalElements: number, totalPages: number, content: Array<{ __typename?: 'Server', id?: string | null, name?: string | null, description?: string | null, banner?: string | null, serverImg?: string | null, joinedUsers?: Array<{ __typename?: 'User', id?: string | null, userPresence?: UserPresenceType | null } | null> | null }> } };
 
 export type JoinServerMutationVariables = Exact<{
   input?: InputMaybe<JoinServerInput>;
@@ -553,6 +578,28 @@ export const useCreateServerMutation = <
       options
     )};
 
+export const UpdateServerDocument = `
+    mutation updateServer($server: UpdateServerInput) {
+  updateServer(server: $server) {
+    id
+  }
+}
+    `;
+
+export const useUpdateServerMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      options?: UseMutationOptions<UpdateServerMutation, TError, UpdateServerMutationVariables, TContext>
+    ) => {
+    
+    return useMutation<UpdateServerMutation, TError, UpdateServerMutationVariables, TContext>(
+      ['updateServer'],
+      (variables?: UpdateServerMutationVariables) => fetcher<UpdateServerMutation, UpdateServerMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, UpdateServerDocument, variables)(),
+      options
+    )};
+
 export const GetRoomsByServerIdDocument = `
     query getRoomsByServerId($id: ID!) {
   getRoomsByServerId(id: $id) {
@@ -685,6 +732,10 @@ export const GetServerByIdDocument = `
     query getServerById($id: ID!) {
   getServerById(id: $id) {
     id
+    name
+    description
+    serverImg
+    banner
     createdBy {
       id
     }
@@ -740,6 +791,9 @@ export const GetAllServersDocument = `
     content {
       id
       name
+      description
+      banner
+      serverImg
       joinedUsers {
         id
         userPresence

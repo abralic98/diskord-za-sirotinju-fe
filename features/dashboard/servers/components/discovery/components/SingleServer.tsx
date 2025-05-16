@@ -58,10 +58,7 @@ export const SingleServer = ({ server }: Props) => {
       <div className="p-4 flex flex-col gap-md">
         <H4>{server.name}</H4>
         <ServerUsers serverUsers={server.joinedUsers ?? []} />
-        <Text className="h-[90px]">
-          Descritpion of server bla bla blaba labalbalbalbal balbalbab
-          abalbalbab blababab lababal abalbalbab blababab lababal
-        </Text>
+        <Text className="h-[90px]">{server.description}</Text>
         <Button type="button" onClick={() => joinServer()}>
           Join server
         </Button>

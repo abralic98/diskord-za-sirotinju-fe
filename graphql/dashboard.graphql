@@ -26,6 +26,12 @@ mutation createServer($server: CreateServerInput) {
   }
 }
 
+mutation updateServer($server: UpdateServerInput) {
+  updateServer(server: $server) {
+    id
+  }
+}
+
 query getRoomsByServerId($id: ID!) {
   getRoomsByServerId(id: $id) {
     voice {
@@ -90,6 +96,10 @@ query getRoomById($id: ID!) {
 query getServerById($id: ID!) {
   getServerById(id: $id) {
     id
+    name
+    description
+    serverImg
+    banner
     createdBy {
       id
     }
@@ -112,6 +122,9 @@ query getAllServers($page: Int!, $size: Int!) {
     content {
       id
       name
+      description
+      banner
+      serverImg
       joinedUsers {
         id
         userPresence

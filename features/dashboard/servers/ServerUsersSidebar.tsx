@@ -17,8 +17,8 @@ export const ServerUsersSidebar = () => {
   const { serverId } = useIds();
 
   const { data, error } = useQuery({
-    queryKey: [queryKeys.getServerById],
-    enabled: Boolean(serverId) && isOpen,
+    queryKey: [queryKeys.getServerById, serverId],
+    enabled: Boolean(serverId),
     queryFn: async (): Promise<GetServerByIdQuery> => {
       return await requestWithAuth<GetServerByIdQuery>(GetServerByIdDocument, {
         id: serverId,

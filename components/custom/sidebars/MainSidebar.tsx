@@ -9,6 +9,11 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { UserInfoFooter } from "@/features/user/UserInfoFooter";
+import { GetServerByIdQuery } from "@/generated/graphql";
+import { queryKeys } from "@/helpers/queryKeys";
+import { useIds } from "@/hooks/useIds";
+import { queryClient } from "@/lib/react-query/queryClient";
+import { SettingsIcon } from "lucide-react";
 import { ReactNode } from "react";
 
 interface Props {
@@ -16,11 +21,28 @@ interface Props {
 }
 export const MainSidebar = ({ content }: Props) => {
   const { open } = useSidebar();
-  const appName = open ? "EZComms" : "EZ";
+  const { serverId } = useIds();
+
+  const server: GetServerByIdQuery | undefined = queryClient.getQueryData([
+    queryKeys.getServerById,
+    serverId,
+  ]);
+  const name = server?.getServerById?.name;
+
+  const serverName = open ? name : name?.slice(0, 2);
+  console.log(name, "name");
   return (
     <Sidebar collapsible="icon" className="relative h-full">
-      <SidebarHeader className="bg-red-500 h-10 flex items-start justify-center">
-        <H3>{appName}</H3>
+      <SidebarHeader className="h-20 flex items-start justify-center">
+        <div className="flex flex-row gap-md w-full items-center justify-between">
+          <H3>{serverName}</H3>
+          <SettingsIcon
+          className="cursor-pointer hover:animate-spin"
+            onClick={() => {
+              //
+            }}
+          />
+        </div>
       </SidebarHeader>
       <SidebarContent>{content}</SidebarContent>
       <SidebarFooter>

@@ -7,7 +7,7 @@ export const UserOptions = () => {
   const { push } = useRouter();
   return (
     <div>
-      <SettingsIcon onClick={() => push(routes.account)} />
+      <SettingsIcon className="cursor-pointer hover:animate-spin" onClick={() => push(routes.account)} />
     </div>
   );
 };
