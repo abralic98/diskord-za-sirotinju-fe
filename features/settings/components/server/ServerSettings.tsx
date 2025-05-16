@@ -1,6 +1,5 @@
 "use client";
-import { H3, H4 } from "@/components/typography";
-import { EditBasicServerInfoForm } from "./EditBasicServerInfo";
+import { H3 } from "@/components/typography";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/helpers/queryKeys";
 import { useIds } from "@/hooks/useIds";
@@ -13,9 +12,11 @@ import { Center } from "@/components/custom/Center";
 import { useAuthStore } from "@/features/auth/store";
 import routes from "@/lib/routes";
 import { useRouter } from "next/navigation";
-import { EditServerImg } from "./EditServerImg";
-import { EditServerBanner } from "./EditServerBanner";
 import { ServerSettingCard } from "./components/ServerSettingCard";
+import { EditBasicServerInfoForm } from "./components/EditBasicServerInfo";
+import { EditServerImg } from "./components/EditServerImg";
+import { EditServerBanner } from "./components/EditServerBanner";
+import { ServerUserTable } from "./components/ServerUserTable";
 
 export const ServerSettings = () => {
   const { serverSettingsId } = useIds();
@@ -56,6 +57,12 @@ export const ServerSettings = () => {
           description="Upload server banner"
           className="w-full"
           content={<EditServerBanner server={data?.getServerById} />}
+        />
+        <ServerSettingCard
+          title="Users List"
+          description="Manage users"
+          className="w-full"
+          content={<ServerUserTable server={data?.getServerById}/>}
         />
       </div>
     );

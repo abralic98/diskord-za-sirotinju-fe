@@ -4,7 +4,6 @@ import { FormTextarea } from "@/components/custom/form/FormTextArea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { updateServerSchema } from "./zod";
 import {
   Server,
   UpdateServerDocument,
@@ -18,6 +17,7 @@ import { toast } from "sonner";
 import { queryClient } from "@/lib/react-query/queryClient";
 import { queryKeys } from "@/helpers/queryKeys";
 import { GraphqlCatchError } from "@/helpers/errors";
+import { updateServerSchema } from "../zod";
 
 interface ModifiedServerInput {
   name: string;

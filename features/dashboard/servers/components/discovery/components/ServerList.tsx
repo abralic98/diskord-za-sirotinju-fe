@@ -1,9 +1,8 @@
 import { GetAllServersDocument, GetAllServersQuery } from "@/generated/graphql";
 import { queryKeys } from "@/helpers/queryKeys";
 import { usePagination } from "@/hooks/usePagination";
-import React, { RefObject, useRef } from "react";
+import React, { useRef } from "react";
 import { SingleServer } from "./SingleServer";
-import { usePaginationScrolling } from "@/hooks/usePaginationScrolling";
 import { PaginationTrigger } from "@/features/shared/PaginationTrigger";
 
 export const ServerList = () => {
@@ -15,8 +14,6 @@ export const ServerList = () => {
     pageSize: 10,
     gcTime: 0,
   });
-
-  // usePaginationScrolling(scrollRef, query);
 
   const renderServers = () => {
     const allServers = query.data?.pages.flatMap(
