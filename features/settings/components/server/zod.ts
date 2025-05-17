@@ -6,3 +6,8 @@ export const updateServerSchema = z.object({
   description: z.string().optional()
 });
 
+
+export const banUserSchema = z.object({
+  reason: z.string().min(1, { message: "Reason must not be empty" }),
+});
+

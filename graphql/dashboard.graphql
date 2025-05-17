@@ -108,6 +108,7 @@ query getServerById($id: ID!) {
       id
       username
       avatar
+      userPresence
     }
   }
 }
@@ -138,8 +139,32 @@ query getAllServers($page: Int!, $size: Int!) {
   }
 }
 
-mutation joinServer($input: JoinServerInput){
-  joinServer(input: $input){
+mutation joinServer($input: JoinServerInput) {
+  joinServer(input: $input) {
     id
+  }
+}
+
+mutation kickUserFromServer($input: KickUserInput) {
+  kickUserFromServer(input: $input)
+}
+
+mutation banUserFromServer($input: BanUserInput) {
+  banUserFromServer(input: $input)
+}
+
+query getBannedUsersByServerId($id: ID!) {
+  getBannedUsersByServerId(id: $id) {
+    user {
+      id
+      username
+      avatar
+    }
+    reason
+    dateCreated
+    banAuthor {
+      id
+      username
+    }
   }
 }

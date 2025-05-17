@@ -44,7 +44,7 @@ export const CreateServerForm = () => {
     onSuccess: (data) => {
       toast("Server Created!");
       queryClient.refetchQueries({
-        queryKey: [queryKeys.getAllServersSidebar],
+        queryKey: [queryKeys.getAllUserServersSidebar],
       });
       push(`${routes.dashboard}/${data.createServer?.id}`)
 

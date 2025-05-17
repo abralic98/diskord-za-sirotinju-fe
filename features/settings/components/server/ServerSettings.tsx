@@ -16,7 +16,8 @@ import { ServerSettingCard } from "./components/ServerSettingCard";
 import { EditBasicServerInfoForm } from "./components/EditBasicServerInfo";
 import { EditServerImg } from "./components/EditServerImg";
 import { EditServerBanner } from "./components/EditServerBanner";
-import { ServerUserTable } from "./components/ServerUserTable";
+import { ServerUserTable } from "./components/ServerUserTable/ServerUserTable";
+import { BannedUserTable } from "./components/ServerUserTable/BannedUserTable";
 
 export const ServerSettings = () => {
   const { serverSettingsId } = useIds();
@@ -62,7 +63,14 @@ export const ServerSettings = () => {
           title="Users List"
           description="Manage users"
           className="w-full"
-          content={<ServerUserTable server={data?.getServerById}/>}
+          content={<ServerUserTable server={data?.getServerById} />}
+        />
+
+        <ServerSettingCard
+          title="Bans"
+          description="Manage bans"
+          className="w-full"
+          content={<BannedUserTable />}
         />
       </div>
     );
@@ -81,6 +89,8 @@ export const ServerSettings = () => {
   };
 
   const isUserAllowedHere = data?.getServerById?.createdBy?.id === user?.id;
+  console.log(data?.getServerById?.createdBy?.id, "server idAAAAAAAAAAAAAAAAAAA")
+  console.log(user?.id, "user idAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 
   if (isLoading) {
     return (
@@ -96,7 +106,7 @@ export const ServerSettings = () => {
   }
 
   return (
-    <div className="bg-sidebar-accent w-full p-4">
+    <div className="bg-sidebar-accent w-full p-4 overflow-y-scroll">
       {isUserAllowedHere && (
         <div className="flex flex-col gap-md">
           {renderHeader()}

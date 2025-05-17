@@ -6,4 +6,5 @@ export const queryKeys = {
   getRoomById: "getRoomById",
   getServerById: "getServerById",
   getAllServersDiscovery: "getAllServersDiscovery",
+  getBannedUsersByServerId: "getBannedUsersByServerId"
 };
