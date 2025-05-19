@@ -153,6 +153,10 @@ mutation banUserFromServer($input: BanUserInput) {
   banUserFromServer(input: $input)
 }
 
+mutation unbanUserFromServer($input: UnbanUserInput) {
+  unbanUserFromServer(input: $input)
+}
+
 query getBannedUsersByServerId($id: ID!) {
   getBannedUsersByServerId(id: $id) {
     user {

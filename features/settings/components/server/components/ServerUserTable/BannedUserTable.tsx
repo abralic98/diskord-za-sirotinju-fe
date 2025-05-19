@@ -8,7 +8,7 @@ import { Table } from "@/components/custom/table/Table";
 import { UserAvatar } from "@/features/user/components/UserAvatar";
 import { Button } from "@/components/ui/button";
 import { H4, Text } from "@/components/typography";
-import { ReactNode } from "react";
+import { ReactNode, useRef } from "react";
 import { CustomDialog } from "@/components/custom/dialog/CustomDialog";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/helpers/queryKeys";
@@ -64,11 +64,7 @@ export const BannedUserTable = () => {
       <Text>{user?.user.username}</Text>,
       <Text>{user?.banAuthor.username}</Text>,
       <Text>{formatDate(user?.dateCreated)}</Text>,
-      <CustomDialog
-        header={{ title: "Unban user" }}
-        trigger={<Button variant={"destructive"}>Unban</Button>}
-        content={<UnbanUser user={user} />}
-      />,
+      <UnbanUser user={user} />,
     ]);
   };
 

@@ -32,7 +32,7 @@ export const BanUser = ({ user, closeRef }: Props) => {
   const form = useForm<BanUserInputModified>({
     resolver: zodResolver(banUserSchema),
   });
-  const createServerMutation = useMutation({
+  const banUserMutation = useMutation({
     mutationFn: async (data: BanUserInputModified) => {
       const modifiedData: BanUserFromServerMutationVariables = {
         input: {
@@ -66,7 +66,7 @@ export const BanUser = ({ user, closeRef }: Props) => {
   const handleBan = (data: BanUserInputModified) => {
     if (!serverSettingsId) return;
     if (!user?.id) return;
-    createServerMutation.mutateAsync(data);
+    banUserMutation.mutateAsync(data);
   };
 
   return (
@@ -82,7 +82,9 @@ export const BanUser = ({ user, closeRef }: Props) => {
           <FormTextarea<BanUserInputModified> name="reason" label="Reason" />
           <div className="w-full flex flex-row gap-md items-center">
             <DialogClose>
-              <Button className="w-[150px]">Cancel</Button>
+              <Button type="button" className="w-[150px]">
+                Cancel
+              </Button>
             </DialogClose>
             <Button
               className="w-[150px]"

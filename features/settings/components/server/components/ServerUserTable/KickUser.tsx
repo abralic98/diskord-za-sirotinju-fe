@@ -19,7 +19,7 @@ import { toast } from "sonner";
 
 interface Props {
   user?: User | null;
-  closeRef: RefObject<HTMLButtonElement | null>
+  closeRef: RefObject<HTMLButtonElement | null>;
 }
 export const KickUser = ({ user, closeRef }: Props) => {
   const { serverSettingsId } = useIds();
@@ -64,7 +64,9 @@ export const KickUser = ({ user, closeRef }: Props) => {
       </div>
       <div className="w-full flex flex-row gap-md items-center">
         <DialogClose>
-          <Button className="w-[150px]">Cancel</Button>
+          <Button type="button" className="w-[150px]">
+            Cancel
+          </Button>
         </DialogClose>
         <Button
           className="w-[150px]"

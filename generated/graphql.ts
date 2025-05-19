@@ -125,6 +125,7 @@ export type Mutation = {
   deactivateUser?: Maybe<User>;
   joinServer?: Maybe<Server>;
   kickUserFromServer?: Maybe<Scalars['Boolean']['output']>;
+  unbanUserFromServer?: Maybe<Scalars['Boolean']['output']>;
   updateServer?: Maybe<Server>;
   updateUser?: Maybe<User>;
   updateUserPassword?: Maybe<User>;
@@ -173,6 +174,11 @@ export type MutationJoinServerArgs = {
 
 export type MutationKickUserFromServerArgs = {
   input?: InputMaybe<KickUserInput>;
+};
+
+
+export type MutationUnbanUserFromServerArgs = {
+  input?: InputMaybe<UnbanUserInput>;
 };
 
 
@@ -288,6 +294,11 @@ export type ServerPage = {
   size: Scalars['Int']['output'];
   totalElements: Scalars['Int']['output'];
   totalPages: Scalars['Int']['output'];
+};
+
+export type UnbanUserInput = {
+  serverId: Scalars['ID']['input'];
+  userId: Scalars['ID']['input'];
 };
 
 export type UpdateServerInput = {
@@ -460,6 +471,13 @@ export type BanUserFromServerMutationVariables = Exact<{
 
 
 export type BanUserFromServerMutation = { __typename?: 'Mutation', banUserFromServer?: boolean | null };
+
+export type UnbanUserFromServerMutationVariables = Exact<{
+  input?: InputMaybe<UnbanUserInput>;
+}>;
+
+
+export type UnbanUserFromServerMutation = { __typename?: 'Mutation', unbanUserFromServer?: boolean | null };
 
 export type GetBannedUsersByServerIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -942,6 +960,26 @@ export const useBanUserFromServerMutation = <
     return useMutation<BanUserFromServerMutation, TError, BanUserFromServerMutationVariables, TContext>(
       ['banUserFromServer'],
       (variables?: BanUserFromServerMutationVariables) => fetcher<BanUserFromServerMutation, BanUserFromServerMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, BanUserFromServerDocument, variables)(),
+      options
+    )};
+
+export const UnbanUserFromServerDocument = `
+    mutation unbanUserFromServer($input: UnbanUserInput) {
+  unbanUserFromServer(input: $input)
+}
+    `;
+
+export const useUnbanUserFromServerMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      options?: UseMutationOptions<UnbanUserFromServerMutation, TError, UnbanUserFromServerMutationVariables, TContext>
+    ) => {
+    
+    return useMutation<UnbanUserFromServerMutation, TError, UnbanUserFromServerMutationVariables, TContext>(
+      ['unbanUserFromServer'],
+      (variables?: UnbanUserFromServerMutationVariables) => fetcher<UnbanUserFromServerMutation, UnbanUserFromServerMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, UnbanUserFromServerDocument, variables)(),
       options
     )};
 
