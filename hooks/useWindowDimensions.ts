@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 type WindowDimensions = {
   width: number;
@@ -12,8 +12,7 @@ export function useWindowDimensions(): WindowDimensions {
   });
 
   useEffect(() => {
-    // Prevents errors during server-side rendering in Next.js
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     const handleResize = () => {
       setWindowDimensions({
@@ -22,10 +21,10 @@ export function useWindowDimensions(): WindowDimensions {
       });
     };
 
-    handleResize(); // Set initial size
+    handleResize();
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return windowDimensions;

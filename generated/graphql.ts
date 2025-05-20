@@ -123,6 +123,7 @@ export type Mutation = {
   createSession?: Maybe<UserWithToken>;
   createUser?: Maybe<User>;
   deactivateUser?: Maybe<User>;
+  deleteServer?: Maybe<Scalars['Boolean']['output']>;
   joinServer?: Maybe<Server>;
   kickUserFromServer?: Maybe<Scalars['Boolean']['output']>;
   unbanUserFromServer?: Maybe<Scalars['Boolean']['output']>;
@@ -164,6 +165,11 @@ export type MutationCreateUserArgs = {
 
 export type MutationDeactivateUserArgs = {
   id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type MutationDeleteServerArgs = {
+  serverId: Scalars['ID']['input'];
 };
 
 
@@ -485,6 +491,13 @@ export type GetBannedUsersByServerIdQueryVariables = Exact<{
 
 
 export type GetBannedUsersByServerIdQuery = { __typename?: 'Query', getBannedUsersByServerId?: Array<{ __typename?: 'BannedUser', reason: string, dateCreated?: string | null, user: { __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null }, banAuthor: { __typename?: 'User', id?: string | null, username?: string | null } } | null> | null };
+
+export type DeleteServerMutationVariables = Exact<{
+  serverId: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteServerMutation = { __typename?: 'Mutation', deleteServer?: boolean | null };
 
 
 
@@ -1013,5 +1026,25 @@ export const useGetBannedUsersByServerIdQuery = <
     return useQuery<GetBannedUsersByServerIdQuery, TError, TData>(
       ['getBannedUsersByServerId', variables],
       fetcher<GetBannedUsersByServerIdQuery, GetBannedUsersByServerIdQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetBannedUsersByServerIdDocument, variables),
+      options
+    )};
+
+export const DeleteServerDocument = `
+    mutation deleteServer($serverId: ID!) {
+  deleteServer(serverId: $serverId)
+}
+    `;
+
+export const useDeleteServerMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      options?: UseMutationOptions<DeleteServerMutation, TError, DeleteServerMutationVariables, TContext>
+    ) => {
+    
+    return useMutation<DeleteServerMutation, TError, DeleteServerMutationVariables, TContext>(
+      ['deleteServer'],
+      (variables?: DeleteServerMutationVariables) => fetcher<DeleteServerMutation, DeleteServerMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, DeleteServerDocument, variables)(),
       options
     )};

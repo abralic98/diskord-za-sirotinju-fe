@@ -172,3 +172,7 @@ query getBannedUsersByServerId($id: ID!) {
     }
   }
 }
+
+mutation deleteServer($serverId: ID!){
+  deleteServer(serverId: $serverId)
+}

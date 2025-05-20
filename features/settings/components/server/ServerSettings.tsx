@@ -1,5 +1,5 @@
 "use client";
-import { H3 } from "@/components/typography";
+import { H3, H4 } from "@/components/typography";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/helpers/queryKeys";
 import { useIds } from "@/hooks/useIds";
@@ -18,6 +18,7 @@ import { EditServerImg } from "./components/EditServerImg";
 import { EditServerBanner } from "./components/EditServerBanner";
 import { ServerUserTable } from "./components/ServerUserTable/ServerUserTable";
 import { BannedUserTable } from "./components/ServerUserTable/BannedUserTable";
+import { DeleteServerDialog } from "./components/ServerUserTable/DeleteServerDialog";
 
 export const ServerSettings = () => {
   const { serverSettingsId } = useIds();
@@ -65,13 +66,16 @@ export const ServerSettings = () => {
           className="w-full"
           content={<ServerUserTable server={data?.getServerById} />}
         />
-
         <ServerSettingCard
           title="Bans"
           description="Manage bans"
           className="w-full"
           content={<BannedUserTable />}
         />
+        <div className="flex flex-col gap-md">
+          <H4>Server settings</H4>
+          <DeleteServerDialog />
+        </div>
       </div>
     );
   };
@@ -89,8 +93,11 @@ export const ServerSettings = () => {
   };
 
   const isUserAllowedHere = data?.getServerById?.createdBy?.id === user?.id;
-  console.log(data?.getServerById?.createdBy?.id, "server idAAAAAAAAAAAAAAAAAAA")
-  console.log(user?.id, "user idAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+  console.log(
+    data?.getServerById?.createdBy?.id,
+    "server idAAAAAAAAAAAAAAAAAAA",
+  );
+  console.log(user?.id, "user idAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
   if (isLoading) {
     return (
