@@ -5,8 +5,11 @@ import { CreateServer } from "./components/CreateServer";
 import { SingleServer } from "./components/SingleServer";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/helpers/queryKeys";
-import { GetAllUserServersSidebarDocument, GetAllUserServersSidebarQuery } from "@/generated/graphql";
-import {  requestWithAuth } from "@/lib/graphql/client";
+import {
+  GetAllUserServersSidebarDocument,
+  GetAllUserServersSidebarQuery,
+} from "@/generated/graphql";
+import { requestWithAuth } from "@/lib/graphql/client";
 import { toast } from "sonner";
 import { GraphqlCatchError } from "@/helpers/errors";
 import { useServerListSidebarStore } from "./store";

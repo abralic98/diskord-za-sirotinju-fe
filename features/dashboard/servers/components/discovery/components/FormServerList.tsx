@@ -6,14 +6,14 @@ import { FormInput } from "@/components/custom/form/FormInput";
 import { Center } from "@/components/custom/Center";
 
 export const FormServerList = () => {
-  const form = useForm();
+  const form = useForm<{ search: string }>();
   return (
     <div>
       <FormProvider {...form}>
         <form>
           <div className="flex flex-col gap-md">
             <Center>
-              <FormInput
+              <FormInput<{ search: string }>
                 className="max-w-[300px]"
                 placeholder="Search servers..."
                 name="search"

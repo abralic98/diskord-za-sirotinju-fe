@@ -119,8 +119,8 @@ mutation createMessage($message: CreateMessageInput) {
   }
 }
 
-query getAllServers($page: Int!, $size: Int!) {
-  getAllServers(page: $page, size: $size) {
+query getAllServers($page: Int!, $size: Int!, $search: String) {
+  getAllServers(page: $page, size: $size, search: $search) {
     content {
       id
       name

@@ -219,6 +219,7 @@ export type Query = {
 
 export type QueryGetAllServersArgs = {
   page: Scalars['Int']['input'];
+  search?: InputMaybe<Scalars['String']['input']>;
   size: Scalars['Int']['input'];
 };
 
@@ -452,6 +453,7 @@ export type CreateMessageMutation = { __typename?: 'Mutation', createMessage?: {
 export type GetAllServersQueryVariables = Exact<{
   page: Scalars['Int']['input'];
   size: Scalars['Int']['input'];
+  search?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -878,8 +880,8 @@ export const useCreateMessageMutation = <
     )};
 
 export const GetAllServersDocument = `
-    query getAllServers($page: Int!, $size: Int!) {
-  getAllServers(page: $page, size: $size) {
+    query getAllServers($page: Int!, $size: Int!, $search: String) {
+  getAllServers(page: $page, size: $size, search: $search) {
     content {
       id
       name
