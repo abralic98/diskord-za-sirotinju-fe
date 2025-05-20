@@ -6,3 +6,7 @@ export type DynamicPages = {
 export interface CustomPageProps {
   params: DynamicPages;
 }
+
+export interface SearchInput {
+  search?: string
+}
