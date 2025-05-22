@@ -64,8 +64,8 @@ mutation createRoom($room: CreateRoomInput) {
   }
 }
 
-query getMessagesByRoomId($id: ID!, $page: Int!, $size: Int!) {
-  getMessagesByRoomId(id: $id, page: $page, size: $size) {
+query getMessagesByRoomId($id: ID!, $page: Int!, $size: Int!, $search: String) {
+  getMessagesByRoomId(id: $id, page: $page, size: $size, search: $search) {
     content {
       id
       author {

@@ -232,6 +232,7 @@ export type QueryGetBannedUsersByServerIdArgs = {
 export type QueryGetMessagesByRoomIdArgs = {
   id: Scalars['ID']['input'];
   page: Scalars['Int']['input'];
+  search?: InputMaybe<Scalars['String']['input']>;
   size: Scalars['Int']['input'];
 };
 
@@ -424,6 +425,7 @@ export type GetMessagesByRoomIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
   page: Scalars['Int']['input'];
   size: Scalars['Int']['input'];
+  search?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -758,8 +760,8 @@ export const useCreateRoomMutation = <
     )};
 
 export const GetMessagesByRoomIdDocument = `
-    query getMessagesByRoomId($id: ID!, $page: Int!, $size: Int!) {
-  getMessagesByRoomId(id: $id, page: $page, size: $size) {
+    query getMessagesByRoomId($id: ID!, $page: Int!, $size: Int!, $search: String) {
+  getMessagesByRoomId(id: $id, page: $page, size: $size, search: $search) {
     content {
       id
       author {

@@ -14,9 +14,10 @@ export interface CustomDialogProps {
   header: {
     title?: string;
     description?: string;
-    descriptionWarning?: boolean // neda mi se prepravljat
+    descriptionWarning?: boolean; // neda mi se prepravljat
   };
   content: ReactNode;
+  contentClassName?: string;
   open?: boolean;
   setOpen?: Dispatch<SetStateAction<boolean>>;
 }
@@ -26,6 +27,7 @@ export const CustomDialog = ({
   trigger,
   open,
   setOpen,
+  contentClassName,
 }: CustomDialogProps) => {
   return (
     <Dialog open={open ?? open}>
@@ -40,11 +42,17 @@ export const CustomDialog = ({
           {trigger}
         </DialogTrigger>
       )}
-      <DialogContent>
+      <DialogContent className={contentClassName}>
         {header.title && (
           <DialogHeader>
             <DialogTitle>{header.title}</DialogTitle>
-            <DialogDescription className={cn(header.descriptionWarning && "font-bold text-red-500")}>{header.description}</DialogDescription>
+            <DialogDescription
+              className={cn(
+                header.descriptionWarning && "font-bold text-red-500",
+              )}
+            >
+              {header.description}
+            </DialogDescription>
           </DialogHeader>
         )}
         {content}

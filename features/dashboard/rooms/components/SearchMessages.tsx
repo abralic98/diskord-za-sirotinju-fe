@@ -40,6 +40,7 @@ export const SearchMessages = () => {
 
       <CustomDialog
         header={header}
+        contentClassName="min-w-[1000px] max-h-[800px] overflow-hidden"
         content={<SearchedMessagesList search={search} />}
         trigger={<Button type="button" className="hidden" ref={triggerRef} />}
       />
