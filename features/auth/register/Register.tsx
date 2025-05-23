@@ -1,7 +1,7 @@
 "use client";
 
 import { FormInput } from "@/components/custom/form/FormInput";
-import {  Text } from "@/components/typography";
+import { Text } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import routes from "@/lib/routes";
@@ -22,6 +22,7 @@ import { GraphqlCatchError } from "@/helpers/errors";
 import { registerSchema } from "../zod";
 import { useMutation } from "@tanstack/react-query";
 import { Logo } from "@/features/shared/Logo";
+import { BaseCard } from "@/components/custom/card/BaseCard";
 
 type CreateUserInputModified = {
   confirmPassword: string;
@@ -61,7 +62,7 @@ export const Register = () => {
 
   return (
     <FormProvider {...form}>
-      <div className="flex flex-col gap-md min-w-[500px] bg-sidebar-accent p-5 rounded-md">
+      <BaseCard>
         <Logo />
 
         <FormInput<CreateUserInputModified> name="username" label="Username" />
@@ -87,7 +88,7 @@ export const Register = () => {
         >
           Submit
         </Button>
-      </div>
+      </BaseCard>
     </FormProvider>
   );
 };

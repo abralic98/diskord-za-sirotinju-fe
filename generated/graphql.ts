@@ -124,7 +124,9 @@ export type Mutation = {
   createUser?: Maybe<User>;
   deactivateUser?: Maybe<User>;
   deleteServer?: Maybe<Scalars['Boolean']['output']>;
+  generateInviteLink?: Maybe<Scalars['String']['output']>;
   joinServer?: Maybe<Server>;
+  joinServerWithInvite?: Maybe<Server>;
   kickUserFromServer?: Maybe<Scalars['Boolean']['output']>;
   unbanUserFromServer?: Maybe<Scalars['Boolean']['output']>;
   updateServer?: Maybe<Server>;
@@ -173,8 +175,18 @@ export type MutationDeleteServerArgs = {
 };
 
 
+export type MutationGenerateInviteLinkArgs = {
+  serverId: Scalars['ID']['input'];
+};
+
+
 export type MutationJoinServerArgs = {
   input?: InputMaybe<JoinServerInput>;
+};
+
+
+export type MutationJoinServerWithInviteArgs = {
+  token?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -212,6 +224,7 @@ export type Query = {
   getRoomById?: Maybe<Room>;
   getRoomsByServerId?: Maybe<Rooms>;
   getServerById?: Maybe<Server>;
+  getServerByInvite?: Maybe<Server>;
   getUserById?: Maybe<User>;
   meQuery?: Maybe<User>;
 };
@@ -249,6 +262,11 @@ export type QueryGetRoomsByServerIdArgs = {
 
 export type QueryGetServerByIdArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type QueryGetServerByInviteArgs = {
+  token: Scalars['String']['input'];
 };
 
 
@@ -502,6 +520,27 @@ export type DeleteServerMutationVariables = Exact<{
 
 
 export type DeleteServerMutation = { __typename?: 'Mutation', deleteServer?: boolean | null };
+
+export type GenerateInviteLinkMutationVariables = Exact<{
+  serverId: Scalars['ID']['input'];
+}>;
+
+
+export type GenerateInviteLinkMutation = { __typename?: 'Mutation', generateInviteLink?: string | null };
+
+export type JoinServerWithInviteMutationVariables = Exact<{
+  token: Scalars['String']['input'];
+}>;
+
+
+export type JoinServerWithInviteMutation = { __typename?: 'Mutation', joinServerWithInvite?: { __typename?: 'Server', id?: string | null } | null };
+
+export type GetServerByInviteQueryVariables = Exact<{
+  token: Scalars['String']['input'];
+}>;
+
+
+export type GetServerByInviteQuery = { __typename?: 'Query', getServerByInvite?: { __typename?: 'Server', id?: string | null, name?: string | null, banner?: string | null, serverImg?: string | null } | null };
 
 
 
@@ -1050,5 +1089,73 @@ export const useDeleteServerMutation = <
     return useMutation<DeleteServerMutation, TError, DeleteServerMutationVariables, TContext>(
       ['deleteServer'],
       (variables?: DeleteServerMutationVariables) => fetcher<DeleteServerMutation, DeleteServerMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, DeleteServerDocument, variables)(),
+      options
+    )};
+
+export const GenerateInviteLinkDocument = `
+    mutation generateInviteLink($serverId: ID!) {
+  generateInviteLink(serverId: $serverId)
+}
+    `;
+
+export const useGenerateInviteLinkMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      options?: UseMutationOptions<GenerateInviteLinkMutation, TError, GenerateInviteLinkMutationVariables, TContext>
+    ) => {
+    
+    return useMutation<GenerateInviteLinkMutation, TError, GenerateInviteLinkMutationVariables, TContext>(
+      ['generateInviteLink'],
+      (variables?: GenerateInviteLinkMutationVariables) => fetcher<GenerateInviteLinkMutation, GenerateInviteLinkMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GenerateInviteLinkDocument, variables)(),
+      options
+    )};
+
+export const JoinServerWithInviteDocument = `
+    mutation joinServerWithInvite($token: String!) {
+  joinServerWithInvite(token: $token) {
+    id
+  }
+}
+    `;
+
+export const useJoinServerWithInviteMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      options?: UseMutationOptions<JoinServerWithInviteMutation, TError, JoinServerWithInviteMutationVariables, TContext>
+    ) => {
+    
+    return useMutation<JoinServerWithInviteMutation, TError, JoinServerWithInviteMutationVariables, TContext>(
+      ['joinServerWithInvite'],
+      (variables?: JoinServerWithInviteMutationVariables) => fetcher<JoinServerWithInviteMutation, JoinServerWithInviteMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, JoinServerWithInviteDocument, variables)(),
+      options
+    )};
+
+export const GetServerByInviteDocument = `
+    query getServerByInvite($token: String!) {
+  getServerByInvite(token: $token) {
+    id
+    name
+    banner
+    serverImg
+  }
+}
+    `;
+
+export const useGetServerByInviteQuery = <
+      TData = GetServerByInviteQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      variables: GetServerByInviteQueryVariables,
+      options?: UseQueryOptions<GetServerByInviteQuery, TError, TData>
+    ) => {
+    
+    return useQuery<GetServerByInviteQuery, TError, TData>(
+      ['getServerByInvite', variables],
+      fetcher<GetServerByInviteQuery, GetServerByInviteQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetServerByInviteDocument, variables),
       options
     )};

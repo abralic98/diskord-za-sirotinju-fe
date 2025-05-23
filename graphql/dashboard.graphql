@@ -173,6 +173,24 @@ query getBannedUsersByServerId($id: ID!) {
   }
 }
 
-mutation deleteServer($serverId: ID!){
+mutation deleteServer($serverId: ID!) {
   deleteServer(serverId: $serverId)
+}
+
+mutation generateInviteLink($serverId: ID!) {
+  generateInviteLink(serverId: $serverId)
+}
+
+mutation joinServerWithInvite($token: String!) {
+  joinServerWithInvite(token: $token) {
+    id
+  }
+}
+query getServerByInvite($token: String!) {
+  getServerByInvite(token: $token) {
+    id
+    name
+    banner
+    serverImg
+  }
 }

@@ -19,6 +19,7 @@ import { EditServerBanner } from "./components/EditServerBanner";
 import { ServerUserTable } from "./components/ServerUserTable/ServerUserTable";
 import { BannedUserTable } from "./components/ServerUserTable/BannedUserTable";
 import { DeleteServerDialog } from "./components/ServerUserTable/DeleteServerDialog";
+import { CreateInvitationLink } from "./components/CreateInvitationLink";
 
 export const ServerSettings = () => {
   const { serverSettingsId } = useIds();
@@ -82,7 +83,10 @@ export const ServerSettings = () => {
   const renderHeader = () => {
     return (
       <div>
-        <H3>Server Settings</H3>
+        <div className="flex flex-row justify-between items-center">
+          <H3>Server Settings</H3>
+          <CreateInvitationLink />
+        </div>
         {isLoading && (
           <Center>
             <Loader2Icon className="w-10 h-10 animate-spin" />

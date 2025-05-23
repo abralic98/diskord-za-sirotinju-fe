@@ -8,4 +8,5 @@ export const queryKeys = {
   getAllServersDiscovery: "getAllServersDiscovery",
   getBannedUsersByServerId: "getBannedUsersByServerId",
   getMessagesByRoomIdSearch: "getMessagesByRoomIdSearch",
+  getServerByInvite: "getServerByInvite",
 };

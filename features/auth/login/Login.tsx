@@ -25,6 +25,7 @@ import { loginSchema } from "../zod";
 import { setCookie } from "cookies-next/client";
 import { CookieKeys } from "@/helpers/cookies";
 import { Logo } from "@/features/shared/Logo";
+import { BaseCard } from "@/components/custom/card/BaseCard";
 
 export const Login = () => {
   const form = useForm<CreateSessionInput>({
@@ -62,7 +63,7 @@ export const Login = () => {
 
   return (
     <FormProvider {...form}>
-      <div className="flex flex-col gap-md min-w-[500px] bg-sidebar-accent p-5 rounded-md">
+      <BaseCard>
         <Logo />
 
         <FormInput<CreateSessionInput> name="username" label="Username" />
@@ -82,7 +83,7 @@ export const Login = () => {
         >
           Submit
         </Button>
-      </div>
+      </BaseCard>
     </FormProvider>
   );
 };
