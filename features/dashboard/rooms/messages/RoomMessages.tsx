@@ -3,6 +3,7 @@ import { SingleMessage } from "@/features/shared/messages/SingleMessage";
 import {
   GetMessagesByRoomIdDocument,
   GetMessagesByRoomIdQuery,
+  Message,
 } from "@/generated/graphql";
 import { ErrorMessages, GraphqlCatchError } from "@/helpers/errors";
 import { queryKeys } from "@/helpers/queryKeys";
@@ -17,12 +18,18 @@ import { PaginationTrigger } from "@/features/shared/PaginationTrigger";
 import { scrollToBottom } from "@/helpers/scrollToBottom";
 import { usePaginationScrolling } from "@/hooks/usePaginationScrolling";
 import { AccessDenied } from "@/features/shared/AccessDenied";
+import { useRoomMessageConnection } from "../hooks/useRoomMessageConnection";
 
 export const RoomMessages = () => {
   const { height } = useWindowDimensions();
   const { roomId } = useIds();
   const [firstScroll, setFirstScroll] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  useRoomMessageConnection((newMessage) => {
+    setMessages((prev) => [...prev, newMessage]);
+  });
 
   const query = usePagination<GetMessagesByRoomIdQuery, "getMessagesByRoomId">({
     queryKey: [queryKeys.getMessagesByRoomId, roomId],
@@ -30,7 +37,7 @@ export const RoomMessages = () => {
     variables: { id: roomId },
     dataField: "getMessagesByRoomId",
     pageSize: 20,
-    gcTime:0, //temp fix
+    gcTime: 0, //temp fix
   });
 
   usePaginationScrolling(scrollRef, query);
@@ -71,6 +78,13 @@ export const RoomMessages = () => {
       .map((message) => <SingleMessage key={message.id} message={message} />);
   };
 
+  const renderWebsocketMessages = () => {
+     return messages.map((msg) =>{
+       return <SingleMessage formatType="ws" message={msg}/>
+     }) 
+      
+  };
+
   if (query.isLoading) return null;
 
   return (
@@ -84,6 +98,7 @@ export const RoomMessages = () => {
       >
         {query.hasNextPage && <PaginationTrigger query={query} />}
         {renderMessages()}
+        {renderWebsocketMessages()}
       </div>
       <div className="pb-4 pl-2 pr-2">
         <CreateMessage scrollRef={scrollRef} />

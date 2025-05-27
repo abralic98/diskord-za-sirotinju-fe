@@ -13,7 +13,7 @@ export const VoiceRoomList = ({ rooms }: Props) => {
   const roomUsers = useVoiceRoomStore((s) => s.roomUsers);
 
   if (!rooms) return null;
-  console.log(roomUsers, "room users")
+  // console.log(roomUsers, "room users")
 
   return (
     <div className="flex flex-col">

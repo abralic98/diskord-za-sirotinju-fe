@@ -31,7 +31,7 @@ export const SingleVoiceRoom = ({ room, users }: Props) => {
     const audio = new Audio("/assets/sound/join-room.mp3");
     setIsUserInVoiceRoom(true);
     audio.play().catch((error) => {
-      console.error("Error playing the audio:", error);
+      // console.error("Error playing the audio:", error);
     });
 
     // Navigate to the room
@@ -41,8 +41,6 @@ export const SingleVoiceRoom = ({ room, users }: Props) => {
   const renderUsers = () => {
     return users?.map((user) => <VoiceRoomUser key={user.id} user={user} />);
   };
-
-  console.log(users, "úseri jebeni")
 
   return (
     <div onContextMenu={handleContextMenu} onClick={handleClick}>

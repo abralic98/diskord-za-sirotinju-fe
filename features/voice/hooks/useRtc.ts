@@ -9,7 +9,7 @@ export function useRtc() {
         },
       };
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      console.log("🎙️ Mic access granted - stream active:", stream.active);
+      // console.log("🎙️ Mic access granted - stream active:", stream.active);
       return stream;
     } catch (err) {
       console.error("Mic access denied:", err);
@@ -33,7 +33,7 @@ export function useRtc() {
     // ICE Candidate handling
     pc.onicecandidate = (event) => {
       if (event.candidate) {
-        console.log("Sending ICE candidate:", event.candidate);
+        // console.log("Sending ICE candidate:", event.candidate);
         socket.send(
           JSON.stringify({
             type: "candidate",
@@ -43,13 +43,13 @@ export function useRtc() {
           }),
         );
       } else {
-        console.log("ICE gathering complete");
+        // console.log("ICE gathering complete");
       }
     };
 
     // Track handling
     pc.ontrack = (event) => {
-      console.log("Received remote track:", event.track.kind);
+      // console.log("Received remote track:", event.track.kind);
       const remoteAudio = new Audio();
       remoteAudio.srcObject = event.streams[0];
       remoteAudio.autoplay = true;
@@ -58,24 +58,24 @@ export function useRtc() {
 
     // Connection state handling
     pc.oniceconnectionstatechange = () => {
-      console.log("ICE connection state:", pc.iceConnectionState);
+      // console.log("ICE connection state:", pc.iceConnectionState);
       if (pc.iceConnectionState === "failed") {
         pc.restartIce();
       }
     };
 
     pc.onconnectionstatechange = () => {
-      console.log("Connection state:", pc.connectionState);
+      // console.log("Connection state:", pc.connectionState);
     };
 
     pc.onsignalingstatechange = () => {
-      console.log("Signaling state:", pc.signalingState);
+      // console.log("Signaling state:", pc.signalingState);
     };
 
     // Automatically create offer when negotiation is needed
     pc.onnegotiationneeded = async () => {
       try {
-        console.log("Negotiation needed - creating offer");
+        // console.log("Negotiation needed - creating offer");
         const offer = await pc.createOffer({
           offerToReceiveAudio: true,
         });
@@ -106,12 +106,12 @@ export function useRtc() {
     if (!pc || !socket) return;
     if (data.sender.id === userId) return;
 
-    console.log("Handling message of type:", data.type);
+    // console.log("Handling message of type:", data.type);
 
     try {
       switch (data.type) {
         case "offer":
-          console.log("Received offer:", data.sdp);
+          // console.log("Received offer:", data.sdp);
           await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
           const answer = await pc.createAnswer();
           await pc.setLocalDescription(answer);
@@ -126,12 +126,12 @@ export function useRtc() {
           break;
 
         case "answer":
-          console.log("Received answer:", data.sdp);
+          // console.log("Received answer:", data.sdp);
           await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
           break;
 
         case "candidate":
-          console.log("Received ICE candidate:", data.candidate);
+          // console.log("Received ICE candidate:", data.candidate);
           try {
             await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
           } catch (err) {

@@ -48,7 +48,7 @@ export function useVoiceConnection() {
         // Add tracks to connection
         stream.getTracks().forEach((track) => {
           pc.addTrack(track, stream);
-          console.log(`Added ${track.kind} track to peer connection`);
+          // console.log(`Added ${track.kind} track to peer connection`);
         });
 
         // Join the room
@@ -63,7 +63,7 @@ export function useVoiceConnection() {
 
       socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log("📨 Message received:", data);
+        // console.log("📨 Message received:", data);
 
         if (data.type === "presence") {
           const { room, users } = data;
@@ -82,19 +82,19 @@ export function useVoiceConnection() {
       };
 
       socket.onclose = () => {
-        console.log("❌ Socket closed");
+        // console.log("❌ Socket closed");
         removeUserFromRoom(roomId, String(user.id));
       };
 
       socket.onerror = (err) => {
-        console.error("❗ Socket error", err);
+        // console.error("❗ Socket error", err);
       };
     };
 
     start();
 
     return () => {
-      console.log("Cleaning up voice connection");
+      // console.log("Cleaning up voice connection");
       if (socketRef.current?.readyState === WebSocket.OPEN) {
         socketRef.current.close();
       }
