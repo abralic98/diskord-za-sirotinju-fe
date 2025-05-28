@@ -322,6 +322,16 @@ export type ServerPage = {
   totalPages: Scalars['Int']['output'];
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  messageAdded?: Maybe<Message>;
+};
+
+
+export type SubscriptionMessageAddedArgs = {
+  roomId: Scalars['ID']['input'];
+};
+
 export type UnbanUserInput = {
   serverId: Scalars['ID']['input'];
   userId: Scalars['ID']['input'];

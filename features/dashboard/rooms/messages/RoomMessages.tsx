@@ -42,13 +42,17 @@ export const RoomMessages = () => {
 
   usePaginationScrolling(scrollRef, query);
 
-  //initial scroll
   useEffect(() => {
     if (query.data && firstScroll) {
       setFirstScroll(false);
       scrollToBottom(scrollRef.current);
     }
   }, [query.data]);
+
+  useEffect(() => {
+    if (firstScroll) return;
+    scrollToBottom(scrollRef.current);
+  }, [messages]);
 
   if (query.error) {
     const err = query.error as unknown as GraphqlCatchError;
@@ -79,10 +83,9 @@ export const RoomMessages = () => {
   };
 
   const renderWebsocketMessages = () => {
-     return messages.map((msg) =>{
-       return <SingleMessage formatType="ws" message={msg}/>
-     }) 
-      
+    return messages.map((msg) => {
+      return <SingleMessage ws={true} message={msg} />;
+    });
   };
 
   if (query.isLoading) return null;
