@@ -21,10 +21,10 @@ import { requestWithAuth } from "@/lib/graphql/client";
 import { toast } from "sonner";
 import { queryClient } from "@/lib/react-query/queryClient";
 import { queryKeys } from "@/helpers/queryKeys";
-import { GraphqlCatchError } from "@/helpers/errors";
 import { useIds } from "@/hooks/useIds";
 import { useRouter } from "next/navigation";
 import routes from "@/lib/routes";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 
 interface Props {
   setOpen?: Dispatch<SetStateAction<boolean>>;
@@ -60,7 +60,7 @@ export const CreateRoomForm = ({ setOpen }: Props) => {
       );
       return res;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast("Room Created!");
       queryClient.refetchQueries({
         queryKey: [queryKeys.getRoomsByServerId],
@@ -69,8 +69,7 @@ export const CreateRoomForm = ({ setOpen }: Props) => {
       push(`${routes.dashboard}/${serverId}`);
     },
     onError: (error) => {
-      const err = error as unknown as GraphqlCatchError;
-      toast(err.response.errors[0].message);
+      handleGraphqlError(error);
     },
   });
 

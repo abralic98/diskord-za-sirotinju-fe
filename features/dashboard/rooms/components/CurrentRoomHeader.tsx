@@ -2,18 +2,17 @@
 
 import { H4 } from "@/components/typography";
 import { GetRoomByIdDocument, GetRoomByIdQuery } from "@/generated/graphql";
-import { GraphqlCatchError } from "@/helpers/errors";
 import { queryKeys } from "@/helpers/queryKeys";
 import { requestWithAuth } from "@/lib/graphql/client";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import { toast } from "sonner";
 import { getRoomIcon } from "../helpers";
 import { SearchMessages } from "./SearchMessages";
 import { useUserListSidebarStore } from "../../servers/store";
 import { UsersIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useIds } from "@/hooks/useIds";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 
 export const CurrentRoomHeader = () => {
   const { toggle } = useUserListSidebarStore();
@@ -29,8 +28,7 @@ export const CurrentRoomHeader = () => {
   });
 
   if (error) {
-    const err = error as unknown as GraphqlCatchError;
-    toast(err.response.errors[0].message);
+    handleGraphqlError(error);
   }
   const icon = getRoomIcon({ room: data?.getRoomById });
   return (

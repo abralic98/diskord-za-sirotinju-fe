@@ -16,8 +16,8 @@ import { requestWithAuth } from "@/lib/graphql/client";
 import { toast } from "sonner";
 import { queryClient } from "@/lib/react-query/queryClient";
 import { queryKeys } from "@/helpers/queryKeys";
-import { GraphqlCatchError } from "@/helpers/errors";
 import { updateServerSchema } from "../zod";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 
 interface ModifiedServerInput {
   name: string;
@@ -59,8 +59,7 @@ export const EditBasicServerInfoForm = ({
       });
     },
     onError: (error) => {
-      const err = error as unknown as GraphqlCatchError;
-      toast(err.response.errors[0].message);
+      handleGraphqlError(error);
     },
   });
 

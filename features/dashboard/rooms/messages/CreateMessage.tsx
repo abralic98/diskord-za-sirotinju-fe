@@ -14,9 +14,8 @@ import { FormProvider, useForm } from "react-hook-form";
 import { FormChatInput } from "./FormChatInput";
 import { useMutation } from "@tanstack/react-query";
 import { requestWithAuth } from "@/lib/graphql/client";
-import { GraphqlCatchError } from "@/helpers/errors";
-import { toast } from "sonner";
 import { scrollToBottom } from "@/helpers/scrollToBottom";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 
 interface Props {
   scrollRef: React.RefObject<HTMLDivElement | null>;
@@ -60,8 +59,7 @@ export const CreateMessage = ({ scrollRef }: Props) => {
       }, 100);
     },
     onError: (error) => {
-      const err = error as unknown as GraphqlCatchError;
-      toast(err.response.errors[0].message);
+      handleGraphqlError(error)
     },
   });
 

@@ -14,7 +14,7 @@ import { updateUserPasswordSchema } from "./zod";
 import { useMutation } from "@tanstack/react-query";
 import { requestWithAuth } from "@/lib/graphql/client";
 import { toast } from "sonner";
-import { GraphqlCatchError } from "@/helpers/errors";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 
 export const ChangePasswordForm = () => {
   const form = useForm<UpdateUserPasswordInput>({
@@ -36,8 +36,7 @@ export const ChangePasswordForm = () => {
       toast("Password Updated!");
     },
     onError: (error) => {
-      const err = error as unknown as GraphqlCatchError;
-      toast(err.response.errors[0].message);
+      handleGraphqlError(error);
     },
   });
 

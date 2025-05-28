@@ -4,13 +4,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/helpers/queryKeys";
 import { GetServerByIdDocument, GetServerByIdQuery } from "@/generated/graphql";
-import { toast } from "sonner";
-import { GraphqlCatchError } from "@/helpers/errors";
 import { SingleUser } from "./components/SingleUser";
 import { useIds } from "@/hooks/useIds";
 import { useUserListSidebarStore } from "./store";
 import { motion, AnimatePresence } from "framer-motion";
 import { requestWithAuth } from "@/lib/graphql/client";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 
 export const ServerUsersSidebar = () => {
   const { isOpen } = useUserListSidebarStore();
@@ -27,8 +26,7 @@ export const ServerUsersSidebar = () => {
   });
 
   if (error) {
-    const err = error as unknown as GraphqlCatchError;
-    toast(err.response.errors[0].message);
+    handleGraphqlError(error);
   }
 
   const renderUsers = () => {

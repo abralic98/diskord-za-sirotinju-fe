@@ -55,10 +55,12 @@ export const RoomSidebar = () => {
 
   if (error) {
     const err = error as unknown as GraphqlCatchError;
-    toast(err.response.errors[0].message);
-    if (err.response.errors[0].message.includes("not found")) {
-      replace(routes.dashboard);
-    }
+    try {
+      toast(err.response.errors[0].message);
+      if (err.response.errors[0].message.includes("not found")) {
+        replace(routes.dashboard);
+      }
+    } catch {}
   }
 
   const renderTextRooms = () => {
@@ -85,7 +87,7 @@ export const RoomSidebar = () => {
             trigger={
               <div className="flex flex-col gap-md p-2 h-full">
                 {renderTextRooms()}
-                <VoiceRoomList rooms={data?.getRoomsByServerId?.voice ?? []}/>
+                <VoiceRoomList rooms={data?.getRoomsByServerId?.voice ?? []} />
                 <CustomDialog
                   open={open}
                   header={header}

@@ -3,7 +3,7 @@ import {
   GenerateInviteLinkDocument,
   GenerateInviteLinkMutation,
 } from "@/generated/graphql";
-import { GraphqlCatchError } from "@/helpers/errors";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 import { useIds } from "@/hooks/useIds";
 import { requestWithAuth } from "@/lib/graphql/client";
 import { useMutation } from "@tanstack/react-query";
@@ -31,13 +31,12 @@ export const CreateInvitationLink = () => {
       }
     },
     onError: (error) => {
-      const err = error as unknown as GraphqlCatchError;
-      toast(err.response.errors[0].message);
+      handleGraphqlError(error);
     },
   });
   return (
     <Button
-    className="w-[150px]"
+      className="w-[150px]"
       onClick={() => {
         createInvitationMutation.mutateAsync();
       }}

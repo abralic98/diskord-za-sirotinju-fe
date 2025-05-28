@@ -4,7 +4,7 @@ import {
   JoinServerWithInviteMutation,
   JoinServerWithInviteMutationVariables,
 } from "@/generated/graphql";
-import { GraphqlCatchError } from "@/helpers/errors";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 import { queryKeys } from "@/helpers/queryKeys";
 import { useIds } from "@/hooks/useIds";
 import { requestWithAuth } from "@/lib/graphql/client";
@@ -13,7 +13,6 @@ import routes from "@/lib/routes";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { toast } from "sonner";
 
 export const JoinServerByInvite = () => {
   const { replace } = useRouter();
@@ -33,8 +32,7 @@ export const JoinServerByInvite = () => {
       replace(`${routes.dashboard}/${data.joinServerWithInvite?.id}`);
     },
     onError: (error) => {
-      const err = error as unknown as GraphqlCatchError;
-      toast(err.response.errors[0].message);
+      handleGraphqlError(error)
       replace(routes.dashboard);
     },
   });

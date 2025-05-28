@@ -6,7 +6,7 @@ import {
   UpdateServerMutationVariables,
   Server,
 } from "@/generated/graphql";
-import { GraphqlCatchError } from "@/helpers/errors";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 import { queryKeys } from "@/helpers/queryKeys";
 import { useCloudStorage } from "@/hooks/useCloudStorage";
 import { requestWithAuth } from "@/lib/graphql/client";
@@ -20,7 +20,7 @@ import { toast } from "sonner";
 export const EditServerImg = ({ server }: { server?: Server | null }) => {
   const [file, setFile] = useState<File | null>(null);
 
-  const { isLoading, error, uploadedImage } = useCloudStorage({
+  const { uploadedImage } = useCloudStorage({
     file,
   });
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -47,8 +47,7 @@ export const EditServerImg = ({ server }: { server?: Server | null }) => {
       });
     },
     onError: (error) => {
-      const err = error as unknown as GraphqlCatchError;
-      toast(err.response.errors[0].message);
+      handleGraphqlError(error);
     },
   });
 

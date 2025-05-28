@@ -7,17 +7,16 @@ import {
   GetServerByInviteDocument,
   GetServerByInviteQuery,
 } from "@/generated/graphql";
-import { GraphqlCatchError } from "@/helpers/errors";
 import { queryKeys } from "@/helpers/queryKeys";
 import { useIds } from "@/hooks/useIds";
 import { requestWithAuth } from "@/lib/graphql/client";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import React from "react";
-import { toast } from "sonner";
 import { JoinServerByInvite } from "./JoinServerByInvite";
 import routes from "@/lib/routes";
 import { useRouter } from "next/navigation";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 
 export const Invite = () => {
   const { inviteToken } = useIds();
@@ -37,8 +36,7 @@ export const Invite = () => {
   });
 
   if (error) {
-    const err = error as unknown as GraphqlCatchError;
-    toast(err.response.errors[0].message);
+    handleGraphqlError(error);
   }
 
   const server = data?.getServerByInvite;

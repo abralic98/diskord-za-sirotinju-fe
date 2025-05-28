@@ -10,16 +10,13 @@ import {
   GetAllUserServersSidebarQuery,
 } from "@/generated/graphql";
 import { requestWithAuth } from "@/lib/graphql/client";
-import { toast } from "sonner";
-import { GraphqlCatchError } from "@/helpers/errors";
 import { useServerListSidebarStore } from "./store";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { DiscoverServers } from "./components/discovery/DiscoverServers";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 
 export const ServerList = () => {
   const { setServers } = useServerListSidebarStore();
-  const { push } = useRouter();
   const { data, error } = useQuery({
     queryKey: [queryKeys.getAllUserServersSidebar],
     queryFn: async (): Promise<GetAllUserServersSidebarQuery> => {
@@ -36,8 +33,7 @@ export const ServerList = () => {
   }, [data]);
 
   if (error) {
-    const err = error as unknown as GraphqlCatchError;
-    toast(err.response.errors[0].message);
+    handleGraphqlError(error);
   }
   const renderServers = () => {
     return data?.getAllUserServers?.map((server) => {

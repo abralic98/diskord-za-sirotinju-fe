@@ -17,8 +17,6 @@ import {
   MutationCreateSessionArgs,
 } from "@/generated/graphql";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { GraphqlCatchError } from "@/helpers/errors";
 import { useMutation } from "@tanstack/react-query";
 import { useAuthStore } from "../store";
 import { loginSchema } from "../zod";
@@ -26,6 +24,7 @@ import { setCookie } from "cookies-next/client";
 import { CookieKeys } from "@/helpers/cookies";
 import { Logo } from "@/features/shared/Logo";
 import { BaseCard } from "@/components/custom/card/BaseCard";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 
 export const Login = () => {
   const form = useForm<CreateSessionInput>({
@@ -52,8 +51,7 @@ export const Login = () => {
       }
     },
     onError: (error) => {
-      const err = error as unknown as GraphqlCatchError;
-      toast(err.response.errors[0].message);
+      handleGraphqlError(error);
     },
   });
 

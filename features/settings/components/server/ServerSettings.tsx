@@ -5,7 +5,6 @@ import { queryKeys } from "@/helpers/queryKeys";
 import { useIds } from "@/hooks/useIds";
 import { GetServerByIdDocument, GetServerByIdQuery } from "@/generated/graphql";
 import { requestWithAuth } from "@/lib/graphql/client";
-import { GraphqlCatchError } from "@/helpers/errors";
 import { toast } from "sonner";
 import { Loader2Icon } from "lucide-react";
 import { Center } from "@/components/custom/Center";
@@ -20,6 +19,7 @@ import { ServerUserTable } from "./components/ServerUserTable/ServerUserTable";
 import { BannedUserTable } from "./components/ServerUserTable/BannedUserTable";
 import { DeleteServerDialog } from "./components/ServerUserTable/DeleteServerDialog";
 import { CreateInvitationLink } from "./components/CreateInvitationLink";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 
 export const ServerSettings = () => {
   const { serverSettingsId } = useIds();
@@ -36,8 +36,7 @@ export const ServerSettings = () => {
   });
 
   if (error) {
-    const err = error as unknown as GraphqlCatchError;
-    toast(err.response.errors[0].message);
+    handleGraphqlError(error)
   }
 
   const renderContent = () => {

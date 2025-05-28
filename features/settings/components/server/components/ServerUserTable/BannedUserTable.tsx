@@ -6,18 +6,15 @@ import {
 } from "@/generated/graphql";
 import { Table } from "@/components/custom/table/Table";
 import { UserAvatar } from "@/features/user/components/UserAvatar";
-import { Button } from "@/components/ui/button";
 import { H4, Text } from "@/components/typography";
-import { ReactNode, useRef } from "react";
-import { CustomDialog } from "@/components/custom/dialog/CustomDialog";
+import { ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/helpers/queryKeys";
 import { useIds } from "@/hooks/useIds";
 import { requestWithAuth } from "@/lib/graphql/client";
-import { toast } from "sonner";
-import { GraphqlCatchError } from "@/helpers/errors";
 import { UnbanUser } from "./UnbanUser";
 import { formatDate } from "@/helpers/date";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 
 export const BannedUserTable = () => {
   const { serverSettingsId } = useIds();
@@ -36,8 +33,7 @@ export const BannedUserTable = () => {
   });
 
   if (error) {
-    const err = error as unknown as GraphqlCatchError;
-    toast(err.response.errors[0].message);
+    handleGraphqlError(error);
   }
   const bannedUsers = data?.getBannedUsersByServerId ?? [];
   const columns = ["Avatar", "Username", "Ban Author", "Ban Date", "Manage"];

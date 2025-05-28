@@ -17,12 +17,11 @@ import {
   CreateUserMutationVariables,
 } from "@/generated/graphql";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { GraphqlCatchError } from "@/helpers/errors";
 import { registerSchema } from "../zod";
 import { useMutation } from "@tanstack/react-query";
 import { Logo } from "@/features/shared/Logo";
 import { BaseCard } from "@/components/custom/card/BaseCard";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 
 type CreateUserInputModified = {
   confirmPassword: string;
@@ -51,8 +50,7 @@ export const Register = () => {
       push(routes.login);
     },
     onError: (error) => {
-      const err = error as unknown as GraphqlCatchError;
-      toast(err.response.errors[0].message);
+      handleGraphqlError(error);
     },
   });
 

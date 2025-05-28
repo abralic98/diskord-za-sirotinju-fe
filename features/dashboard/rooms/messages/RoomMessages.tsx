@@ -5,10 +5,9 @@ import {
   GetMessagesByRoomIdQuery,
   Message,
 } from "@/generated/graphql";
-import { ErrorMessages, GraphqlCatchError } from "@/helpers/errors";
+import { ErrorMessages } from "@/helpers/errors";
 import { queryKeys } from "@/helpers/queryKeys";
 import React, { useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
 import { CreateMessage } from "./CreateMessage";
 import { useWindowDimensions } from "@/hooks/useWindowDimensions";
 import { NoMessages } from "../../components/NoMessages";
@@ -19,6 +18,7 @@ import { scrollToBottom } from "@/helpers/scrollToBottom";
 import { usePaginationScrolling } from "@/hooks/usePaginationScrolling";
 import { AccessDenied } from "@/features/shared/AccessDenied";
 import { useRoomMessageConnection } from "../hooks/useRoomMessageConnection";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 
 export const RoomMessages = () => {
   const { height } = useWindowDimensions();
@@ -55,8 +55,7 @@ export const RoomMessages = () => {
   }, [messages]);
 
   if (query.error) {
-    const err = query.error as unknown as GraphqlCatchError;
-    toast(err.response.errors[0].message);
+    handleGraphqlError(query.error);
   }
 
   const renderMessages = () => {

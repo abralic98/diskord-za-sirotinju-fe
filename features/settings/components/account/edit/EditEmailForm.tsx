@@ -1,7 +1,12 @@
 import { FormInput } from "@/components/custom/form/FormInput";
 import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
-import { UpdateUserDocument, UpdateUserInput, UpdateUserMutation, UpdateUserMutationVariables } from "@/generated/graphql";
+import {
+  UpdateUserDocument,
+  UpdateUserInput,
+  UpdateUserMutation,
+  UpdateUserMutationVariables,
+} from "@/generated/graphql";
 import { useAuthenticator } from "@/hooks/useAuthenticator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
@@ -10,11 +15,11 @@ import { updateUserSchema } from "./zod";
 import { useMutation } from "@tanstack/react-query";
 import { requestWithAuth } from "@/lib/graphql/client";
 import { toast } from "sonner";
-import { GraphqlCatchError } from "@/helpers/errors";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 
 export const EditEmailForm = () => {
   const form = useForm<UpdateUserInput>({
-    resolver:zodResolver(updateUserSchema)
+    resolver: zodResolver(updateUserSchema),
   });
 
   const { refreshUserInfo } = useAuthenticator();
@@ -35,8 +40,7 @@ export const EditEmailForm = () => {
       refreshUserInfo();
     },
     onError: (error) => {
-      const err = error as unknown as GraphqlCatchError;
-      toast(err.response.errors[0].message);
+      handleGraphqlError(error);
     },
   });
 

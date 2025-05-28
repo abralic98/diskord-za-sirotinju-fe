@@ -1,3 +1,4 @@
+"use client"
 import { ScrollArea } from "@/components/ui/scroll-area";
 import routes from "@/lib/routes";
 import { useRouter } from "next/navigation";

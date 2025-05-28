@@ -4,7 +4,7 @@ import {
   DeleteServerMutation,
   DeleteServerMutationVariables,
 } from "@/generated/graphql";
-import { GraphqlCatchError } from "@/helpers/errors";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 import { queryKeys } from "@/helpers/queryKeys";
 import { useIds } from "@/hooks/useIds";
 import { requestWithAuth } from "@/lib/graphql/client";
@@ -40,8 +40,7 @@ export const DeleteServer = () => {
       replace(routes.discover);
     },
     onError: (error) => {
-      const err = error as unknown as GraphqlCatchError;
-      toast(err.response.errors[0].message);
+      handleGraphqlError(error);
     },
   });
   return (

@@ -7,9 +7,8 @@ import {
   CreateServerMutation,
   CreateServerMutationVariables,
 } from "@/generated/graphql";
-import { GraphqlCatchError } from "@/helpers/errors";
 import { queryKeys } from "@/helpers/queryKeys";
-import { client, requestWithAuth } from "@/lib/graphql/client";
+import { requestWithAuth } from "@/lib/graphql/client";
 import { queryClient } from "@/lib/react-query/queryClient";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -20,6 +19,7 @@ import { FormSwitch } from "@/components/custom/form/FormSwitch";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import routes from "@/lib/routes";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 
 export const CreateServerForm = () => {
   const form = useForm<CreateServerInput>({
@@ -28,7 +28,7 @@ export const CreateServerForm = () => {
       publicServer: false,
     },
   });
-  const { push } = useRouter()
+  const { push } = useRouter();
 
   const createServerMutation = useMutation({
     mutationFn: async (data: CreateServerInput) => {
@@ -46,12 +46,10 @@ export const CreateServerForm = () => {
       queryClient.refetchQueries({
         queryKey: [queryKeys.getAllUserServersSidebar],
       });
-      push(`${routes.dashboard}/${data.createServer?.id}`)
-
+      push(`${routes.dashboard}/${data.createServer?.id}`);
     },
     onError: (error) => {
-      const err = error as unknown as GraphqlCatchError;
-      toast(err.response.errors[0].message);
+      handleGraphqlError(error);
     },
   });
 

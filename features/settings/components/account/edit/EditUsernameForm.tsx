@@ -14,8 +14,8 @@ import { updateUserSchema } from "./zod";
 import { useMutation } from "@tanstack/react-query";
 import { requestWithAuth } from "@/lib/graphql/client";
 import { toast } from "sonner";
-import { GraphqlCatchError } from "@/helpers/errors";
 import { useAuthenticator } from "@/hooks/useAuthenticator";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 
 export const EditUsernameForm = () => {
   const form = useForm<UpdateUserInput>({
@@ -39,8 +39,7 @@ export const EditUsernameForm = () => {
       refreshUserInfo();
     },
     onError: (error) => {
-      const err = error as unknown as GraphqlCatchError;
-      toast(err.response.errors[0].message);
+      handleGraphqlError(error);
     },
   });
 

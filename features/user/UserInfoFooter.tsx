@@ -17,7 +17,6 @@ export const UserInfoFooter = () => {
   const { serverId, roomId } = useIds();
   const { handleLeaveRoom, isUserInVoiceRoom, setIsUserInVoiceRoom } =
     useVoiceRoomStore();
-  const audio = new Audio("/assets/sound/leave-room.mp3");
 
   return (
     <div className="bg-sidebar border border-sidebar-accent w-full h-15 flex flex-row gap-md items-center justify-between p-2">
@@ -30,6 +29,7 @@ export const UserInfoFooter = () => {
           <PhoneCallIcon
             onClick={() => {
               handleLeaveRoom(roomId, String(user?.id));
+              const audio = new Audio("/assets/sound/leave-room.mp3");
               audio.play().catch((error) => {
                 console.error("Error playing the audio:", error);
               });

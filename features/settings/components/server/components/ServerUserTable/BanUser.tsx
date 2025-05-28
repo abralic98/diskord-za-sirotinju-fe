@@ -8,7 +8,6 @@ import {
   BanUserInput,
   User,
 } from "@/generated/graphql";
-import { GraphqlCatchError } from "@/helpers/errors";
 import { queryKeys } from "@/helpers/queryKeys";
 import { useIds } from "@/hooks/useIds";
 import { requestWithAuth } from "@/lib/graphql/client";
@@ -20,6 +19,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { banUserSchema } from "../../zod";
 import { FormTextarea } from "@/components/custom/form/FormTextArea";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 
 interface Props {
   user?: User | null;
@@ -58,8 +58,7 @@ export const BanUser = ({ user, closeRef }: Props) => {
       });
     },
     onError: (error) => {
-      const err = error as unknown as GraphqlCatchError;
-      toast(err.response.errors[0].message);
+      handleGraphqlError(error);
     },
   });
 

@@ -10,8 +10,8 @@ import {
 import { requestWithAuth } from "@/lib/graphql/client";
 import { toast } from "sonner";
 import { useAuthenticator } from "@/hooks/useAuthenticator";
-import { GraphqlCatchError } from "@/helpers/errors";
 import { Button } from "@/components/ui/button";
+import { handleGraphqlError } from "@/helpers/handleGQLError";
 
 export const EditAvatar = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -41,8 +41,7 @@ export const EditAvatar = () => {
       refreshUserInfo();
     },
     onError: (error) => {
-      const err = error as unknown as GraphqlCatchError;
-      toast(err.response.errors[0].message);
+      handleGraphqlError(error);
     },
   });
 
