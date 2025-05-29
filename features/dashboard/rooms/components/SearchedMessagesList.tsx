@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   GetMessagesByRoomIdDocument,
   GetMessagesByRoomIdQuery,
@@ -6,10 +5,7 @@ import {
 import { queryKeys } from "@/helpers/queryKeys";
 import { useIds } from "@/hooks/useIds";
 import { usePagination } from "@/hooks/usePagination";
-import { requestWithAuth } from "@/lib/graphql/client";
-import { useQuery } from "@tanstack/react-query";
-import React, { Dispatch, SetStateAction, useEffect } from "react";
-import { NoMessages } from "../../components/NoMessages";
+import React, { useEffect } from "react";
 import { SingleMessage } from "@/features/shared/messages/SingleMessage";
 import { H4 } from "@/components/typography";
 import { PaginationTrigger } from "@/features/shared/PaginationTrigger";

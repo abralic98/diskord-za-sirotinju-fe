@@ -38,7 +38,6 @@ export const MainSidebar = ({ content }: Props) => {
     server.getServerById.createdBy?.id === user?.id;
 
   const serverName = open ? name : name?.slice(0, 2);
-  console.log(name, "name");
   return (
     <Sidebar collapsible="icon" className="relative h-full">
       <SidebarHeader className="h-20 flex items-start justify-center">

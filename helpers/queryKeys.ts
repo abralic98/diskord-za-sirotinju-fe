@@ -9,4 +9,6 @@ export const queryKeys = {
   getBannedUsersByServerId: "getBannedUsersByServerId",
   getMessagesByRoomIdSearch: "getMessagesByRoomIdSearch",
   getServerByInvite: "getServerByInvite",
+  getMyInbox: "getMyInbox",
+  getAllUsers: "getAllUsers"
 };

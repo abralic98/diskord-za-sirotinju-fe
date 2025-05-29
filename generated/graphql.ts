@@ -51,6 +51,12 @@ export type BannedUser = {
   user: User;
 };
 
+export type CreateDmInput = {
+  inboxId: Scalars['ID']['input'];
+  text: Scalars['String']['input'];
+  type: MessageType;
+};
+
 export type CreateMessageInput = {
   roomId: Scalars['ID']['input'];
   text: Scalars['String']['input'];
@@ -77,6 +83,39 @@ export type CreateUserInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
   username: Scalars['String']['input'];
+};
+
+export type DirectMessage = {
+  __typename?: 'DirectMessage';
+  author?: Maybe<User>;
+  dateCreated?: Maybe<Scalars['String']['output']>;
+  dateUpdated?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  inbox?: Maybe<Inbox>;
+  text?: Maybe<Scalars['String']['output']>;
+  type?: Maybe<MessageType>;
+};
+
+export type DirectMessagePage = {
+  __typename?: 'DirectMessagePage';
+  content: Array<DirectMessage>;
+  number: Scalars['Int']['output'];
+  size: Scalars['Int']['output'];
+  totalElements: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
+/**
+ * ###################################
+ * ## DIRECT MESSAGES
+ */
+export type Inbox = {
+  __typename?: 'Inbox';
+  dateCreated?: Maybe<Scalars['String']['output']>;
+  dateUpdated?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  messages?: Maybe<Array<Maybe<DirectMessage>>>;
+  users?: Maybe<Array<Maybe<User>>>;
 };
 
 export type JoinServerInput = {
@@ -117,6 +156,8 @@ export enum MessageType {
 export type Mutation = {
   __typename?: 'Mutation';
   banUserFromServer?: Maybe<Scalars['Boolean']['output']>;
+  createDirectMessage?: Maybe<DirectMessage>;
+  createInbox?: Maybe<Inbox>;
   createMessage?: Maybe<Message>;
   createRoom?: Maybe<Room>;
   createServer?: Maybe<Server>;
@@ -137,6 +178,16 @@ export type Mutation = {
 
 export type MutationBanUserFromServerArgs = {
   input?: InputMaybe<BanUserInput>;
+};
+
+
+export type MutationCreateDirectMessageArgs = {
+  message?: InputMaybe<CreateDmInput>;
+};
+
+
+export type MutationCreateInboxArgs = {
+  withUserId: Scalars['ID']['input'];
 };
 
 
@@ -218,9 +269,12 @@ export type Query = {
   __typename?: 'Query';
   getAllServers: ServerPage;
   getAllUserServers?: Maybe<Array<Maybe<Server>>>;
-  getAllUsers?: Maybe<Array<Maybe<User>>>;
+  getAllUsers: UserPage;
   getBannedUsersByServerId?: Maybe<Array<Maybe<BannedUser>>>;
+  getDirectMessagesByInboxId: DirectMessagePage;
+  getInboxById?: Maybe<Inbox>;
   getMessagesByRoomId: MessagePage;
+  getMyInbox?: Maybe<Array<Maybe<Inbox>>>;
   getRoomById?: Maybe<Room>;
   getRoomsByServerId?: Maybe<Rooms>;
   getServerById?: Maybe<Server>;
@@ -237,7 +291,27 @@ export type QueryGetAllServersArgs = {
 };
 
 
+export type QueryGetAllUsersArgs = {
+  page: Scalars['Int']['input'];
+  search: Scalars['String']['input'];
+  size: Scalars['Int']['input'];
+};
+
+
 export type QueryGetBannedUsersByServerIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryGetDirectMessagesByInboxIdArgs = {
+  id: Scalars['ID']['input'];
+  page: Scalars['Int']['input'];
+  search?: InputMaybe<Scalars['String']['input']>;
+  size: Scalars['Int']['input'];
+};
+
+
+export type QueryGetInboxByIdArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -324,11 +398,17 @@ export type ServerPage = {
 
 export type Subscription = {
   __typename?: 'Subscription';
-  messageAdded?: Maybe<Message>;
+  subscribeToMessagesByInboxId?: Maybe<DirectMessage>;
+  subscribeToMessagesByRoomId?: Maybe<Message>;
 };
 
 
-export type SubscriptionMessageAddedArgs = {
+export type SubscriptionSubscribeToMessagesByInboxIdArgs = {
+  inboxId: Scalars['ID']['input'];
+};
+
+
+export type SubscriptionSubscribeToMessagesByRoomIdArgs = {
   roomId: Scalars['ID']['input'];
 };
 
@@ -369,6 +449,15 @@ export type User = {
   phoneNumber?: Maybe<Scalars['Long']['output']>;
   userPresence?: Maybe<UserPresenceType>;
   username?: Maybe<Scalars['String']['output']>;
+};
+
+export type UserPage = {
+  __typename?: 'UserPage';
+  content: Array<User>;
+  number: Scalars['Int']['output'];
+  size: Scalars['Int']['output'];
+  totalElements: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
 };
 
 export enum UserPresenceType {
@@ -552,6 +641,51 @@ export type GetServerByInviteQueryVariables = Exact<{
 
 
 export type GetServerByInviteQuery = { __typename?: 'Query', getServerByInvite?: { __typename?: 'Server', id?: string | null, name?: string | null, banner?: string | null, serverImg?: string | null } | null };
+
+export type GetDirectMessagesByInboxIdQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+  page: Scalars['Int']['input'];
+  size: Scalars['Int']['input'];
+  search?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetDirectMessagesByInboxIdQuery = { __typename?: 'Query', getDirectMessagesByInboxId: { __typename?: 'DirectMessagePage', size: number, number: number, totalElements: number, totalPages: number, content: Array<{ __typename?: 'DirectMessage', id?: string | null, text?: string | null, type?: MessageType | null, dateCreated?: string | null, dateUpdated?: string | null, author?: { __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null }> } };
+
+export type GetMyInboxQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMyInboxQuery = { __typename?: 'Query', getMyInbox?: Array<{ __typename?: 'Inbox', id?: string | null, users?: Array<{ __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null, userPresence?: UserPresenceType | null } | null> | null } | null> | null };
+
+export type GetInboxByIdQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetInboxByIdQuery = { __typename?: 'Query', getInboxById?: { __typename?: 'Inbox', dateCreated?: string | null, dateUpdated?: string | null, users?: Array<{ __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null, userPresence?: UserPresenceType | null } | null> | null } | null };
+
+export type CreateInboxMutationVariables = Exact<{
+  withUserId: Scalars['ID']['input'];
+}>;
+
+
+export type CreateInboxMutation = { __typename?: 'Mutation', createInbox?: { __typename?: 'Inbox', id?: string | null } | null };
+
+export type CreateDirectMessageMutationVariables = Exact<{
+  message?: InputMaybe<CreateDmInput>;
+}>;
+
+
+export type CreateDirectMessageMutation = { __typename?: 'Mutation', createDirectMessage?: { __typename?: 'DirectMessage', id?: string | null } | null };
+
+export type GetAllUsersQueryVariables = Exact<{
+  page: Scalars['Int']['input'];
+  size: Scalars['Int']['input'];
+  search: Scalars['String']['input'];
+}>;
+
+
+export type GetAllUsersQuery = { __typename?: 'Query', getAllUsers: { __typename?: 'UserPage', size: number, number: number, totalElements: number, totalPages: number, content: Array<{ __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null, userPresence?: UserPresenceType | null }> } };
 
 
 
@@ -1169,5 +1303,178 @@ export const useGetServerByInviteQuery = <
     return useQuery<GetServerByInviteQuery, TError, TData>(
       ['getServerByInvite', variables],
       fetcher<GetServerByInviteQuery, GetServerByInviteQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetServerByInviteDocument, variables),
+      options
+    )};
+
+export const GetDirectMessagesByInboxIdDocument = `
+    query getDirectMessagesByInboxId($id: ID!, $page: Int!, $size: Int!, $search: String) {
+  getDirectMessagesByInboxId(id: $id, page: $page, size: $size, search: $search) {
+    content {
+      id
+      author {
+        id
+        username
+        avatar
+      }
+      text
+      type
+      dateCreated
+      dateUpdated
+    }
+    size
+    number
+    totalElements
+    totalPages
+  }
+}
+    `;
+
+export const useGetDirectMessagesByInboxIdQuery = <
+      TData = GetDirectMessagesByInboxIdQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      variables: GetDirectMessagesByInboxIdQueryVariables,
+      options?: UseQueryOptions<GetDirectMessagesByInboxIdQuery, TError, TData>
+    ) => {
+    
+    return useQuery<GetDirectMessagesByInboxIdQuery, TError, TData>(
+      ['getDirectMessagesByInboxId', variables],
+      fetcher<GetDirectMessagesByInboxIdQuery, GetDirectMessagesByInboxIdQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetDirectMessagesByInboxIdDocument, variables),
+      options
+    )};
+
+export const GetMyInboxDocument = `
+    query getMyInbox {
+  getMyInbox {
+    id
+    users {
+      id
+      username
+      avatar
+      userPresence
+    }
+  }
+}
+    `;
+
+export const useGetMyInboxQuery = <
+      TData = GetMyInboxQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      variables?: GetMyInboxQueryVariables,
+      options?: UseQueryOptions<GetMyInboxQuery, TError, TData>
+    ) => {
+    
+    return useQuery<GetMyInboxQuery, TError, TData>(
+      variables === undefined ? ['getMyInbox'] : ['getMyInbox', variables],
+      fetcher<GetMyInboxQuery, GetMyInboxQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetMyInboxDocument, variables),
+      options
+    )};
+
+export const GetInboxByIdDocument = `
+    query getInboxById($id: ID!) {
+  getInboxById(id: $id) {
+    users {
+      id
+      username
+      avatar
+      userPresence
+    }
+    dateCreated
+    dateUpdated
+  }
+}
+    `;
+
+export const useGetInboxByIdQuery = <
+      TData = GetInboxByIdQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      variables: GetInboxByIdQueryVariables,
+      options?: UseQueryOptions<GetInboxByIdQuery, TError, TData>
+    ) => {
+    
+    return useQuery<GetInboxByIdQuery, TError, TData>(
+      ['getInboxById', variables],
+      fetcher<GetInboxByIdQuery, GetInboxByIdQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetInboxByIdDocument, variables),
+      options
+    )};
+
+export const CreateInboxDocument = `
+    mutation createInbox($withUserId: ID!) {
+  createInbox(withUserId: $withUserId) {
+    id
+  }
+}
+    `;
+
+export const useCreateInboxMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      options?: UseMutationOptions<CreateInboxMutation, TError, CreateInboxMutationVariables, TContext>
+    ) => {
+    
+    return useMutation<CreateInboxMutation, TError, CreateInboxMutationVariables, TContext>(
+      ['createInbox'],
+      (variables?: CreateInboxMutationVariables) => fetcher<CreateInboxMutation, CreateInboxMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, CreateInboxDocument, variables)(),
+      options
+    )};
+
+export const CreateDirectMessageDocument = `
+    mutation createDirectMessage($message: CreateDMInput) {
+  createDirectMessage(message: $message) {
+    id
+  }
+}
+    `;
+
+export const useCreateDirectMessageMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      options?: UseMutationOptions<CreateDirectMessageMutation, TError, CreateDirectMessageMutationVariables, TContext>
+    ) => {
+    
+    return useMutation<CreateDirectMessageMutation, TError, CreateDirectMessageMutationVariables, TContext>(
+      ['createDirectMessage'],
+      (variables?: CreateDirectMessageMutationVariables) => fetcher<CreateDirectMessageMutation, CreateDirectMessageMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, CreateDirectMessageDocument, variables)(),
+      options
+    )};
+
+export const GetAllUsersDocument = `
+    query getAllUsers($page: Int!, $size: Int!, $search: String!) {
+  getAllUsers(page: $page, size: $size, search: $search) {
+    content {
+      id
+      username
+      avatar
+      userPresence
+    }
+    size
+    number
+    totalElements
+    totalPages
+  }
+}
+    `;
+
+export const useGetAllUsersQuery = <
+      TData = GetAllUsersQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      variables: GetAllUsersQueryVariables,
+      options?: UseQueryOptions<GetAllUsersQuery, TError, TData>
+    ) => {
+    
+    return useQuery<GetAllUsersQuery, TError, TData>(
+      ['getAllUsers', variables],
+      fetcher<GetAllUsersQuery, GetAllUsersQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetAllUsersDocument, variables),
       options
     )};

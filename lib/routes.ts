@@ -12,7 +12,8 @@ const routes = {
   account: `${settings}/account`,
   voice: `${settings}/voice`,
   discover: `/discover`,
-  serverSettings: `${settings}/server`
+  serverSettings: `${settings}/server`,
+  dm: `/dm`
 };
 
 export default routes;

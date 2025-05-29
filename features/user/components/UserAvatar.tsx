@@ -1,5 +1,6 @@
+import { UserPresence } from "@/components/custom/user/UserPresence";
 import { H4 } from "@/components/typography";
-import { Maybe } from "@/generated/graphql";
+import { Maybe, UserPresenceType } from "@/generated/graphql";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
@@ -7,12 +8,19 @@ import React from "react";
 interface Props {
   className?: string;
   userAvatar?: string | Maybe<string> | undefined;
+  withPresence?: UserPresenceType;
 }
 
 type DummyColors = "bg-red-500" | "bg-yellow-500" | "bg-blue-500";
 
-export const UserAvatar = ({ className, userAvatar }: Props) => {
-  if (userAvatar) return <HasAvatar className={className} path={userAvatar} />;
+export const UserAvatar = ({ className, userAvatar, withPresence }: Props) => {
+  if (userAvatar)
+    return (
+      <div className="relative">
+        <HasAvatar className={className} path={userAvatar} />
+        {withPresence && <UserPresence presence={withPresence} />}
+      </div>
+    );
   return <NoAvatar className={className} />;
 };
 
@@ -26,7 +34,7 @@ const HasAvatar = ({
   return (
     <div
       className={cn(
-        "w-12 h-12 rounded-full flex items-center justify-center bg-sidebar-accent overflow-hidden",
+        "w-12 h-12 rounded-full flex items-center justify-center bg-sidebar-accent overflow-hidden relative",
         className,
       )}
     >
