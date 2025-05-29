@@ -350,6 +350,7 @@ export type UpdateUserInput = {
   avatar?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   phoneNumber?: InputMaybe<Scalars['Long']['input']>;
+  userPresence?: InputMaybe<UserPresenceType>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
