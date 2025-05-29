@@ -9,7 +9,7 @@ export const UserInfo = ({ user }: Props) => {
   return (
     <div className="flex flex-col gap-xs">
       <Text>{user?.username ?? "No user"}</Text>
-      <Text>online</Text>
+      <Text>{user?.userPresence?.toLowerCase()}</Text>
     </div>
   );
 };

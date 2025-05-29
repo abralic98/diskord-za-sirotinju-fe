@@ -14,7 +14,7 @@ export const useAuthenticator = () => {
   const token = getCookie(CookieKeys.TOKEN);
   const { replace } = useRouter();
 
-  const { refetch } = useQuery({
+  const { refetch, isLoading } = useQuery({
     queryKey: [queryKeys.meQuery],
     queryFn: async (): Promise<MeQueryQuery> => {
       return await requestWithAuth<MeQueryQuery>(MeQueryDocument);
@@ -57,5 +57,5 @@ export const useAuthenticator = () => {
     }
   }, [token, user, refetch, setAuth, clearAuth]);
 
-  return { refreshUserInfo };
+  return { refreshUserInfo, isLoading };
 };
