@@ -1,4 +1,5 @@
 export function useRtc() {
+  // permission ask
   const getMicrophoneStream = async (): Promise<MediaStream | null> => {
     try {
       const constraints = {
@@ -9,10 +10,8 @@ export function useRtc() {
         },
       };
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      // console.log("🎙️ Mic access granted - stream active:", stream.active);
       return stream;
-    } catch (err) {
-      console.error("Mic access denied:", err);
+    } catch {
       return null;
     }
   };

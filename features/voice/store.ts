@@ -1,3 +1,4 @@
+import { Room } from "@/generated/graphql";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 

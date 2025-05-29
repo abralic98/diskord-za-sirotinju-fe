@@ -4,14 +4,18 @@ import { useIds } from "@/hooks/useIds";
 import { useRtc } from "./useRtc";
 import { useVoiceRoomStore } from "../store";
 
-export function useVoiceConnection() {
+export const useVoiceConnection = () => {
   const { user } = useAuthStore();
   const { roomId } = useIds();
   const { createPeerConnection, handleSocketMessage, getMicrophoneStream } =
     useRtc();
 
-  const { addUserToRoom, setUsersInRoom, removeUserFromRoom } =
-    useVoiceRoomStore();
+  const {
+    addUserToRoom,
+    setUsersInRoom,
+    removeUserFromRoom,
+    isUserInVoiceRoom,
+  } = useVoiceRoomStore();
 
   const socketRef = useRef<WebSocket | null>(null);
   const pcRef = useRef<RTCPeerConnection | null>(null);
@@ -25,15 +29,8 @@ export function useVoiceConnection() {
       socketRef.current = socket;
 
       socket.onopen = async () => {
-        // First request presence information
-        socket.send(
-          JSON.stringify({
-            type: "getPresence",
-            room: "all", // Special keyword for all rooms
-            sender: { id: user.id },
-          }),
-        );
-        if(!roomId) return;
+        if (!isUserInVoiceRoom) return;
+        if (!roomId) return;
 
         // Get microphone stream
         const stream = await getMicrophoneStream();
@@ -76,14 +73,14 @@ export function useVoiceConnection() {
             pcRef.current,
             socketRef.current,
             String(user.id),
-            roomId,
+            String(roomId),
           );
         }
       };
 
       socket.onclose = () => {
         // console.log("❌ Socket closed");
-        removeUserFromRoom(roomId, String(user.id));
+        removeUserFromRoom(String(roomId), String(user.id));
       };
 
       socket.onerror = (err) => {
@@ -107,4 +104,4 @@ export function useVoiceConnection() {
   }, [user?.id, roomId]);
 
   return {};
-}
+};

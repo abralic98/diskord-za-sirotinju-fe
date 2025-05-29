@@ -24,15 +24,19 @@ import { useRoomListSidebarStore } from "./store";
 import routes from "@/lib/routes";
 import { useRouter } from "next/navigation";
 import { VoiceRoomList } from "@/features/voice/components/VoiceRoomList";
+import { useGetRoomPresence } from "@/features/voice/hooks/useGetRoomPresence";
 
 export const RoomSidebar = () => {
   const { serverId } = useIds();
   const { setRooms } = useRoomListSidebarStore();
   const { replace } = useRouter();
   const [open, setOpen] = useState(false);
+  useGetRoomPresence();
+
   const header: CustomDialogProps["header"] = {
     title: "Create new room",
   };
+
   const { data, error } = useQuery<
     GetRoomsByServerIdQuery,
     GetRoomsByServerIdQueryVariables
