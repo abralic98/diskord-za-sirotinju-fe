@@ -75,7 +75,7 @@ query getMessagesByRoomId($id: ID!, $page: Int!, $size: Int!, $search: String) {
         avatar
       }
       text
-      imgPath
+      imageUrl
       type
       dateCreated
       dateUpdated
@@ -202,6 +202,7 @@ subscription subscribeToMessagesByRoomId($roomId: ID!) {
     text
     dateCreated
     dateUpdated
+    imageUrl
     author {
       id
       username

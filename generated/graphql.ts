@@ -58,6 +58,7 @@ export type CreateDmInput = {
 };
 
 export type CreateMessageInput = {
+  imageUrl?: InputMaybe<Scalars['String']['input']>;
   roomId: Scalars['ID']['input'];
   text: Scalars['String']['input'];
   type: MessageType;
@@ -134,7 +135,7 @@ export type Message = {
   dateCreated?: Maybe<Scalars['String']['output']>;
   dateUpdated?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
-  imgPath?: Maybe<Scalars['String']['output']>;
+  imageUrl?: Maybe<Scalars['String']['output']>;
   text?: Maybe<Scalars['String']['output']>;
   type?: Maybe<MessageType>;
 };
@@ -562,7 +563,7 @@ export type GetMessagesByRoomIdQueryVariables = Exact<{
 }>;
 
 
-export type GetMessagesByRoomIdQuery = { __typename?: 'Query', getMessagesByRoomId: { __typename?: 'MessagePage', size: number, number: number, totalElements: number, totalPages: number, content: Array<{ __typename?: 'Message', id?: string | null, text?: string | null, imgPath?: string | null, type?: MessageType | null, dateCreated?: string | null, dateUpdated?: string | null, author?: { __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null }> } };
+export type GetMessagesByRoomIdQuery = { __typename?: 'Query', getMessagesByRoomId: { __typename?: 'MessagePage', size: number, number: number, totalElements: number, totalPages: number, content: Array<{ __typename?: 'Message', id?: string | null, text?: string | null, imageUrl?: string | null, type?: MessageType | null, dateCreated?: string | null, dateUpdated?: string | null, author?: { __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null }> } };
 
 export type GetRoomByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -662,7 +663,7 @@ export type SubscribeToMessagesByRoomIdSubscriptionVariables = Exact<{
 }>;
 
 
-export type SubscribeToMessagesByRoomIdSubscription = { __typename?: 'Subscription', subscribeToMessagesByRoomId?: { __typename?: 'Message', id?: string | null, text?: string | null, dateCreated?: string | null, dateUpdated?: string | null, author?: { __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null } | null };
+export type SubscribeToMessagesByRoomIdSubscription = { __typename?: 'Subscription', subscribeToMessagesByRoomId?: { __typename?: 'Message', id?: string | null, text?: string | null, dateCreated?: string | null, dateUpdated?: string | null, imageUrl?: string | null, author?: { __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null } | null };
 
 export type GetDirectMessagesByInboxIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -1001,7 +1002,7 @@ export const GetMessagesByRoomIdDocument = `
         avatar
       }
       text
-      imgPath
+      imageUrl
       type
       dateCreated
       dateUpdated
@@ -1359,6 +1360,7 @@ export const SubscribeToMessagesByRoomIdDocument = `
     text
     dateCreated
     dateUpdated
+    imageUrl
     author {
       id
       username

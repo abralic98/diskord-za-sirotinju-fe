@@ -40,7 +40,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <QueryProvider>
-              <ReactQueryDevtools initialIsOpen={false} />
+              {/* <ReactQueryDevtools initialIsOpen={false} /> */}
               <Toaster />
               {/* <ThemeToggle /> */}
               {children}
