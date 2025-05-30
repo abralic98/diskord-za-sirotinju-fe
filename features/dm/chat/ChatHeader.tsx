@@ -16,6 +16,7 @@ import { useAuthStore } from "@/features/auth/store";
 import { UserAvatar } from "@/features/user/components/UserAvatar";
 import { ShowUsers } from "./ShowUsers";
 import { DeleteDM } from "./DeleteDM";
+import { AddMoreUsers } from "./AddMoreUsers";
 
 export const ChatHeader = () => {
   const { inboxId } = useIds();
@@ -65,6 +66,7 @@ export const ChatHeader = () => {
     <div className="flex items-center justify-between h-16 bg-sidebar border-none pl-4 pr-4">
       {data?.users?.length ? renderUsers() : <div />}
       <div className="flex flex-row gap-md">
+        <AddMoreUsers />
         <DeleteDM />
         {!aloneInRoom && <ShowUsers />}
       </div>

@@ -23,7 +23,7 @@ export const useUserListSidebarStore = create<UserListSidebarStore>()(
 );
 
 interface ServerListSidebarStore {
-  servers: (Server | null)[]; // Always an array internally
+  servers: (Server | null)[];
   setServers: (servers?: (Server | null)[]) => void;
   addServer: (server: Server) => void;
   removeServer: (serverId: string) => void;

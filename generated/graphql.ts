@@ -155,6 +155,7 @@ export enum MessageType {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addUserToInbox?: Maybe<Inbox>;
   banUserFromServer?: Maybe<Scalars['Boolean']['output']>;
   createDirectMessage?: Maybe<DirectMessage>;
   createInbox?: Maybe<Inbox>;
@@ -174,6 +175,12 @@ export type Mutation = {
   updateServer?: Maybe<Server>;
   updateUser?: Maybe<User>;
   updateUserPassword?: Maybe<User>;
+};
+
+
+export type MutationAddUserToInboxArgs = {
+  inboxId: Scalars['ID']['input'];
+  userId: Scalars['ID']['input'];
 };
 
 
@@ -434,6 +441,7 @@ export type UpdateServerInput = {
 
 export type UpdateUserInput = {
   avatar?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   phoneNumber?: InputMaybe<Scalars['Long']['input']>;
   userPresence?: InputMaybe<UserPresenceType>;
@@ -450,6 +458,7 @@ export type UpdateUserPasswordInput = {
 export type User = {
   __typename?: 'User';
   avatar?: Maybe<Scalars['String']['output']>;
+  dateCreated?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   phoneNumber?: Maybe<Scalars['Long']['output']>;
@@ -484,7 +493,7 @@ export type CreateSessionMutationVariables = Exact<{
 }>;
 
 
-export type CreateSessionMutation = { __typename?: 'Mutation', createSession?: { __typename?: 'UserWithToken', token?: string | null, user?: { __typename?: 'User', id?: string | null, username?: string | null, email?: string | null, avatar?: string | null, userPresence?: UserPresenceType | null } | null } | null };
+export type CreateSessionMutation = { __typename?: 'Mutation', createSession?: { __typename?: 'UserWithToken', token?: string | null, user?: { __typename?: 'User', id?: string | null, username?: string | null, email?: string | null, avatar?: string | null, userPresence?: UserPresenceType | null, dateCreated?: string | null } | null } | null };
 
 export type CreateUserMutationVariables = Exact<{
   user: CreateUserInput;
@@ -675,7 +684,7 @@ export type GetInboxByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetInboxByIdQuery = { __typename?: 'Query', getInboxById?: { __typename?: 'Inbox', dateCreated?: string | null, dateUpdated?: string | null, users?: Array<{ __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null, userPresence?: UserPresenceType | null } | null> | null } | null };
+export type GetInboxByIdQuery = { __typename?: 'Query', getInboxById?: { __typename?: 'Inbox', dateCreated?: string | null, dateUpdated?: string | null, users?: Array<{ __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null, userPresence?: UserPresenceType | null, dateCreated?: string | null } | null> | null } | null };
 
 export type CreateInboxMutationVariables = Exact<{
   withUserId: Scalars['ID']['input'];
@@ -714,6 +723,14 @@ export type RemoveMeFromInboxMutationVariables = Exact<{
 
 export type RemoveMeFromInboxMutation = { __typename?: 'Mutation', removeMeFromInbox?: boolean | null };
 
+export type AddUserToInboxMutationVariables = Exact<{
+  inboxId: Scalars['ID']['input'];
+  userId: Scalars['ID']['input'];
+}>;
+
+
+export type AddUserToInboxMutation = { __typename?: 'Mutation', addUserToInbox?: { __typename?: 'Inbox', id?: string | null } | null };
+
 
 
 export const CreateSessionDocument = `
@@ -726,6 +743,7 @@ export const CreateSessionDocument = `
       email
       avatar
       userPresence
+      dateCreated
     }
   }
 }
@@ -1424,6 +1442,7 @@ export const GetInboxByIdDocument = `
       username
       avatar
       userPresence
+      dateCreated
     }
     dateCreated
     dateUpdated
@@ -1554,5 +1573,27 @@ export const useRemoveMeFromInboxMutation = <
     return useMutation<RemoveMeFromInboxMutation, TError, RemoveMeFromInboxMutationVariables, TContext>(
       ['removeMeFromInbox'],
       (variables?: RemoveMeFromInboxMutationVariables) => fetcher<RemoveMeFromInboxMutation, RemoveMeFromInboxMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, RemoveMeFromInboxDocument, variables)(),
+      options
+    )};
+
+export const AddUserToInboxDocument = `
+    mutation addUserToInbox($inboxId: ID!, $userId: ID!) {
+  addUserToInbox(inboxId: $inboxId, userId: $userId) {
+    id
+  }
+}
+    `;
+
+export const useAddUserToInboxMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      options?: UseMutationOptions<AddUserToInboxMutation, TError, AddUserToInboxMutationVariables, TContext>
+    ) => {
+    
+    return useMutation<AddUserToInboxMutation, TError, AddUserToInboxMutationVariables, TContext>(
+      ['addUserToInbox'],
+      (variables?: AddUserToInboxMutationVariables) => fetcher<AddUserToInboxMutation, AddUserToInboxMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, AddUserToInboxDocument, variables)(),
       options
     )};

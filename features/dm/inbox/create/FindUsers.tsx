@@ -1,27 +1,20 @@
 import { FormInput } from "@/components/custom/form/FormInput";
 import { H4 } from "@/components/typography";
-import {
-  CreateInboxDocument,
-  CreateInboxMutation,
-  CreateInboxMutationVariables,
-  GetAllUsersDocument,
-  GetAllUsersQuery,
-} from "@/generated/graphql";
+import { GetAllUsersDocument, GetAllUsersQuery } from "@/generated/graphql";
 import { queryKeys } from "@/helpers/queryKeys";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePagination } from "@/hooks/usePagination";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { SingleUser } from "./SingleUser";
-import { useMutation } from "@tanstack/react-query";
-import { requestWithAuth } from "@/lib/graphql/client";
-import { queryClient } from "@/lib/react-query/queryClient";
 import { useRouter } from "next/navigation";
-import routes from "@/lib/routes";
-import { handleGraphqlError } from "@/helpers/handleGQLError";
 import { DialogClose } from "@/components/ui/dialog";
 
-export const FindUsers = () => {
+interface Props {
+  onUserSelect: (userId: string) => Promise<any> | void;
+}
+
+export const FindUsers = ({ onUserSelect }: Props) => {
   const form = useForm<{ search: string }>();
   const { push } = useRouter();
 
@@ -46,29 +39,6 @@ export const FindUsers = () => {
     [search],
   );
 
-  const createDMMutation = useMutation({
-    mutationFn: async (userId?: string | null) => {
-      if (!userId) return;
-      const modifiedData: CreateInboxMutationVariables = {
-        withUserId: userId,
-      };
-      const res = await requestWithAuth<CreateInboxMutation>(
-        CreateInboxDocument,
-        modifiedData,
-      );
-      return res;
-    },
-    onSuccess: (data) => {
-      queryClient.refetchQueries({
-        queryKey: [queryKeys.getMyInbox],
-      });
-      push(`${routes.dm}/${data?.createInbox?.id}`);
-    },
-    onError: (error) => {
-      handleGraphqlError(error);
-    },
-  });
-
   const renderUsers = () => {
     if (!query.data?.pages?.length) return null;
 
@@ -79,7 +49,7 @@ export const FindUsers = () => {
     if (!allUsers.length) return <H4>No Users found</H4>;
 
     return [...allUsers].map((user) => (
-      <DialogClose onClick={() => createDMMutation.mutateAsync(user.id)}>
+      <DialogClose onClick={() => onUserSelect(String(user.id))}>
         <SingleUser key={user.id} user={user} />
       </DialogClose>
     ));

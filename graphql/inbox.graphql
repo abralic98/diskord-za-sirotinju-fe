@@ -48,6 +48,7 @@ query getInboxById($id: ID!) {
       username
       avatar
       userPresence
+      dateCreated
     }
     dateCreated
     dateUpdated
@@ -97,4 +98,10 @@ subscription subscribeToMessagesByInboxId($inboxId: ID!) {
 
 mutation removeMeFromInbox($inboxId: ID!) {
   removeMeFromInbox(inboxId: $inboxId)
+}
+
+mutation addUserToInbox($inboxId: ID!, $userId: ID!) {
+  addUserToInbox(inboxId: $inboxId, userId: $userId) {
+    id
+  }
 }

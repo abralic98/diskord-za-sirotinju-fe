@@ -9,16 +9,17 @@ interface Props {
   className?: string;
   userAvatar?: string | Maybe<string> | undefined;
   withPresence?: UserPresenceType;
+  presenceClassName?: string
 }
 
 type DummyColors = "bg-red-500" | "bg-yellow-500" | "bg-blue-500";
 
-export const UserAvatar = ({ className, userAvatar, withPresence }: Props) => {
+export const UserAvatar = ({ className, userAvatar, withPresence, presenceClassName }: Props) => {
   if (userAvatar)
     return (
-      <div className="relative">
+      <div className="relative w-fit">
         <HasAvatar className={className} path={userAvatar} />
-        {withPresence && <UserPresence presence={withPresence} />}
+        {withPresence && <UserPresence className={presenceClassName} presence={withPresence} />}
       </div>
     );
   return <NoAvatar className={className} />;
