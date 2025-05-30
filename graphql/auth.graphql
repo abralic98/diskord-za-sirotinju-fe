@@ -6,6 +6,7 @@ mutation CreateSession($credentials: CreateSessionInput!) {
       username
       email
       avatar
+      userPresence
     }
   }
 }

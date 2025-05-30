@@ -16,7 +16,7 @@ import { useIds } from "@/hooks/useIds";
 import { queryClient } from "@/lib/react-query/queryClient";
 import routes from "@/lib/routes";
 import { SettingsIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { ReactNode } from "react";
 
 interface Props {
@@ -26,7 +26,6 @@ export const MainSidebar = ({ content }: Props) => {
   const { open } = useSidebar();
   const { serverId } = useIds();
   const { user } = useAuthStore();
-  const {push} = useRouter()
 
   const server: GetServerByIdQuery | undefined = queryClient.getQueryData([
     queryKeys.getServerById,
@@ -44,12 +43,9 @@ export const MainSidebar = ({ content }: Props) => {
         <div className="flex flex-row gap-md w-full items-center justify-between">
           <H3>{serverName}</H3>
           {showSettings && (
-            <SettingsIcon
-              className="cursor-pointer hover:animate-spin"
-              onClick={() => {
-                push(`${routes.serverSettings}/${server.getServerById?.id}`)
-              }}
-            />
+            <Link href={`${routes.serverSettings}/${server.getServerById?.id}`}>
+              <SettingsIcon className="cursor-pointer hover:animate-spin" />
+            </Link>
           )}
         </div>
       </SidebarHeader>

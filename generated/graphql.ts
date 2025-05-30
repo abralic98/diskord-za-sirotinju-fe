@@ -478,7 +478,7 @@ export type CreateSessionMutationVariables = Exact<{
 }>;
 
 
-export type CreateSessionMutation = { __typename?: 'Mutation', createSession?: { __typename?: 'UserWithToken', token?: string | null, user?: { __typename?: 'User', id?: string | null, username?: string | null, email?: string | null, avatar?: string | null } | null } | null };
+export type CreateSessionMutation = { __typename?: 'Mutation', createSession?: { __typename?: 'UserWithToken', token?: string | null, user?: { __typename?: 'User', id?: string | null, username?: string | null, email?: string | null, avatar?: string | null, userPresence?: UserPresenceType | null } | null } | null };
 
 export type CreateUserMutationVariables = Exact<{
   user: CreateUserInput;
@@ -698,6 +698,7 @@ export const CreateSessionDocument = `
       username
       email
       avatar
+      userPresence
     }
   }
 }
