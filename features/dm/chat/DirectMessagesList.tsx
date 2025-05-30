@@ -1,43 +1,46 @@
 "use client";
 import { SingleMessage } from "@/features/shared/messages/SingleMessage";
 import {
-  GetMessagesByRoomIdDocument,
-  GetMessagesByRoomIdQuery,
+  GetDirectMessagesByInboxIdDocument,
+  GetDirectMessagesByInboxIdQuery,
   Message,
 } from "@/generated/graphql";
 import { ErrorMessages } from "@/helpers/errors";
 import { queryKeys } from "@/helpers/queryKeys";
 import React, { useEffect, useRef, useState } from "react";
-import { CreateMessage } from "./CreateMessage";
 import { useWindowDimensions } from "@/hooks/useWindowDimensions";
-import { NoMessages } from "../../components/NoMessages";
 import { useIds } from "@/hooks/useIds";
 import { usePagination } from "@/hooks/usePagination";
 import { PaginationTrigger } from "@/features/shared/PaginationTrigger";
 import { scrollToBottom } from "@/helpers/scrollToBottom";
 import { usePaginationScrolling } from "@/hooks/usePaginationScrolling";
 import { AccessDenied } from "@/features/shared/AccessDenied";
-import { useRoomMessageConnection } from "../hooks/useRoomMessageConnection";
+// import { useRoomMessageConnection } from "../hooks/useRoomMessageConnection";
 import { handleGraphqlError } from "@/helpers/handleGQLError";
+import { NoMessages } from "@/features/dashboard/components/NoMessages";
+import { CreateDirectMessage } from "./CreateDirectMessage";
 
-export const RoomMessages = () => {
+export const DirectMessageList = () => {
   const { height } = useWindowDimensions();
-  const { roomId } = useIds();
+  const { inboxId } = useIds();
   const [firstScroll, setFirstScroll] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([]);
 
-  useRoomMessageConnection((newMessage) => {
-    setMessages((prev) => [...prev, newMessage]);
-  });
+  // useRoomMessageConnection((newMessage) => {
+  //   setMessages((prev) => [...prev, newMessage]);
+  // });
 
-  const query = usePagination<GetMessagesByRoomIdQuery, "getMessagesByRoomId">({
-    queryKey: [queryKeys.getMessagesByRoomId, roomId],
-    document: GetMessagesByRoomIdDocument,
-    variables: { id: roomId },
-    dataField: "getMessagesByRoomId",
+  const query = usePagination<
+    GetDirectMessagesByInboxIdQuery,
+    "getDirectMessagesByInboxId"
+  >({
+    queryKey: [queryKeys.getMessagesByInboxId, inboxId],
+    document: GetDirectMessagesByInboxIdDocument,
+    variables: { id: inboxId },
+    dataField: "getDirectMessagesByInboxId",
     pageSize: 20,
-    gcTime: 0, //temp fix
+    gcTime: 0,
   });
 
   usePaginationScrolling(scrollRef, query);
@@ -64,14 +67,14 @@ export const RoomMessages = () => {
       query.error?.message.includes(ErrorMessages.ACCESS_DENIED) ||
       query.error?.message.includes(ErrorMessages.INTERNAL_ERROR)
     )
-      return <AccessDenied pushTo="dashboard" type="no permission" />;
+      return <AccessDenied pushTo="dm" type="no permission" />;
     if (query.error?.message.includes(ErrorMessages.NOT_FOUND)) {
-      return <AccessDenied pushTo="dashboard" type="not found" />;
+      return <AccessDenied pushTo="dm" type="not found" />;
     }
     if (!query.data?.pages?.length) return <NoMessages />;
 
     const allMessages = query.data.pages.flatMap(
-      (page) => page.getMessagesByRoomId?.content ?? [],
+      (page) => page.getDirectMessagesByInboxId?.content ?? [],
     );
 
     if (!allMessages.length) return <NoMessages />;
@@ -103,7 +106,7 @@ export const RoomMessages = () => {
         {renderWebsocketMessages()}
       </div>
       <div className="pb-4 pl-2 pr-2">
-        <CreateMessage scrollRef={scrollRef} />
+        <CreateDirectMessage scrollRef={scrollRef} />
       </div>
     </div>
   );

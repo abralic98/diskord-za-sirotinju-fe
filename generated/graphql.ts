@@ -98,7 +98,7 @@ export type DirectMessage = {
 
 export type DirectMessagePage = {
   __typename?: 'DirectMessagePage';
-  content: Array<DirectMessage>;
+  content: Array<Maybe<DirectMessage>>;
   number: Scalars['Int']['output'];
   size: Scalars['Int']['output'];
   totalElements: Scalars['Int']['output'];
@@ -141,7 +141,7 @@ export type Message = {
 
 export type MessagePage = {
   __typename?: 'MessagePage';
-  content: Array<Message>;
+  content: Array<Maybe<Message>>;
   number: Scalars['Int']['output'];
   size: Scalars['Int']['output'];
   totalElements: Scalars['Int']['output'];
@@ -271,7 +271,7 @@ export type Query = {
   getAllUserServers?: Maybe<Array<Maybe<Server>>>;
   getAllUsers: UserPage;
   getBannedUsersByServerId?: Maybe<Array<Maybe<BannedUser>>>;
-  getDirectMessagesByInboxId: DirectMessagePage;
+  getDirectMessagesByInboxId?: Maybe<DirectMessagePage>;
   getInboxById?: Maybe<Inbox>;
   getMessagesByRoomId: MessagePage;
   getMyInbox?: Maybe<Array<Maybe<Inbox>>>;
@@ -547,7 +547,7 @@ export type GetMessagesByRoomIdQueryVariables = Exact<{
 }>;
 
 
-export type GetMessagesByRoomIdQuery = { __typename?: 'Query', getMessagesByRoomId: { __typename?: 'MessagePage', size: number, number: number, totalElements: number, totalPages: number, content: Array<{ __typename?: 'Message', id?: string | null, text?: string | null, imgPath?: string | null, type?: MessageType | null, dateCreated?: string | null, dateUpdated?: string | null, author?: { __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null }> } };
+export type GetMessagesByRoomIdQuery = { __typename?: 'Query', getMessagesByRoomId: { __typename?: 'MessagePage', size: number, number: number, totalElements: number, totalPages: number, content: Array<{ __typename?: 'Message', id?: string | null, text?: string | null, imgPath?: string | null, type?: MessageType | null, dateCreated?: string | null, dateUpdated?: string | null, author?: { __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null } | null> } };
 
 export type GetRoomByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -650,7 +650,7 @@ export type GetDirectMessagesByInboxIdQueryVariables = Exact<{
 }>;
 
 
-export type GetDirectMessagesByInboxIdQuery = { __typename?: 'Query', getDirectMessagesByInboxId: { __typename?: 'DirectMessagePage', size: number, number: number, totalElements: number, totalPages: number, content: Array<{ __typename?: 'DirectMessage', id?: string | null, text?: string | null, type?: MessageType | null, dateCreated?: string | null, dateUpdated?: string | null, author?: { __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null }> } };
+export type GetDirectMessagesByInboxIdQuery = { __typename?: 'Query', getDirectMessagesByInboxId?: { __typename?: 'DirectMessagePage', size: number, number: number, totalElements: number, totalPages: number, content: Array<{ __typename?: 'DirectMessage', id?: string | null, text?: string | null, type?: MessageType | null, dateCreated?: string | null, dateUpdated?: string | null, author?: { __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null } | null> } | null };
 
 export type GetMyInboxQueryVariables = Exact<{ [key: string]: never; }>;
 

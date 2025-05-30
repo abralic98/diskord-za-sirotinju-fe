@@ -7,6 +7,7 @@ export const useIds = () => {
   const roomId = params.roomId as string | undefined;
   const serverSettingsId = params.serverSettingsId as string | undefined;
   const inviteToken = params.inviteToken as string | undefined;
+  const inboxId = params.inbox as string | undefined;
 
-  return { serverId, roomId, serverSettingsId, inviteToken };
+  return { serverId, roomId, serverSettingsId, inviteToken, inboxId };
 };

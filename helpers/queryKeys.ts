@@ -10,5 +10,7 @@ export const queryKeys = {
   getMessagesByRoomIdSearch: "getMessagesByRoomIdSearch",
   getServerByInvite: "getServerByInvite",
   getMyInbox: "getMyInbox",
-  getAllUsers: "getAllUsers"
+  getAllUsers: "getAllUsers",
+  getInboxById: "getInboxById",
+  getMessagesByInboxId: "getMessagesByInboxId",
 };

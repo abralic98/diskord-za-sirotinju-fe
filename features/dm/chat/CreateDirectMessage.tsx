@@ -1,9 +1,8 @@
-"use client";
 import {
-  CreateMessageDocument,
-  CreateMessageInput,
-  CreateMessageMutation,
-  GetRoomByIdQuery,
+  CreateDirectMessageDocument,
+  CreateDirectMessageMutation,
+  CreateDirectMessageMutationVariables,
+  CreateDmInput,
   MessageType,
 } from "@/generated/graphql";
 import { queryKeys } from "@/helpers/queryKeys";
@@ -20,51 +19,43 @@ import { FormChatInput } from "@/components/custom/form/FormChatInput";
 interface Props {
   scrollRef: React.RefObject<HTMLDivElement | null>;
 }
-export const CreateMessage = ({ scrollRef }: Props) => {
-  const { roomId } = useIds();
-  const room: GetRoomByIdQuery | undefined = queryClient.getQueryData([
-    queryKeys.getRoomById,
-    roomId,
-  ]);
+export const CreateDirectMessage = ({ scrollRef }: Props) => {
+  const { inboxId } = useIds();
 
-  const form = useForm<CreateMessageInput>({
+  const form = useForm<CreateDmInput>({
     defaultValues: {
-      roomId: roomId,
-      type: MessageType.Text, // for now
+      inboxId: inboxId,
+      type: MessageType.Text,
     },
   });
-  const placeholder = room?.getRoomById?.name
-    ? `Message # ${room.getRoomById.name}`
-    : "Start typing";
 
-  const createMessageMutation = useMutation({
-    mutationFn: async (data: CreateMessageInput) => {
-      const modifiedData = {
+  const createDirectMessageMutation = useMutation({
+    mutationFn: async (data: CreateDmInput) => {
+      const modifiedData: CreateDirectMessageMutationVariables = {
         message: data,
       };
-      const res = await requestWithAuth<CreateMessageMutation>(
-        CreateMessageDocument,
+      const res = await requestWithAuth<CreateDirectMessageMutation>(
+        CreateDirectMessageDocument,
         modifiedData,
       );
       return res;
     },
     onSuccess: () => {
       queryClient.refetchQueries({
-        queryKey: [queryKeys.getMessagesByRoomId, roomId],
+        queryKey: [queryKeys.getMessagesByInboxId, inboxId],
       });
       form.reset();
-      //timeut da normalno skrolne a ne uvijek zadnji element ostane nevidljiv
       setTimeout(() => {
         scrollToBottom(scrollRef.current);
       }, 100);
     },
     onError: (error) => {
-      handleGraphqlError(error)
+      handleGraphqlError(error);
     },
   });
 
-  const onSubmit = async (data: CreateMessageInput) => {
-    createMessageMutation.mutateAsync(data);
+  const onSubmit = async (data: CreateDmInput) => {
+    createDirectMessageMutation.mutateAsync(data);
   };
 
   return (
@@ -79,14 +70,12 @@ export const CreateMessage = ({ scrollRef }: Props) => {
           }
         }}
       >
-        {room && (
-          <FormChatInput<CreateMessageInput>
-            name="text"
-            placeholder={placeholder}
-            inputClassName="h-14"
-            containerClassName="bg-sidebar-hover"
-          />
-        )}
+        <FormChatInput<CreateDmInput>
+          name="text"
+          placeholder="Start typing ..."
+          inputClassName="h-14"
+          containerClassName="bg-sidebar-hover"
+        />
       </form>
     </FormProvider>
   );

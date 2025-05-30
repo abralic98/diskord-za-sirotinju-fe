@@ -1,12 +1,12 @@
 import { H4, Text } from "@/components/typography";
 import { Label } from "@/components/ui/label";
 import { UserAvatar } from "@/features/user/components/UserAvatar";
-import { Message } from "@/generated/graphql";
+import { DirectMessage, Message } from "@/generated/graphql";
 import { formatDate, formatWSDate } from "@/helpers/date";
 import React from "react";
 
 interface Props {
-  message: Message | null;
+  message: Message | DirectMessage | null;
   ws?: boolean;
 }
 export const SingleMessage = ({ message, ws = false }: Props) => {
