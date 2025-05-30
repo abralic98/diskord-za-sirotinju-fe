@@ -17,6 +17,14 @@ export const SingleInbox = ({ inbox }: { inbox?: Inbox | null }) => {
   const inboxTitle = (): ReactNode | string => {
     if (!inbox.users) return null;
 
+    if (inbox.users.length === 1) {
+      return (
+        <Text className="h-13 flex items-center justify-center">
+          User left chat
+        </Text>
+      );
+    }
+
     if (inbox.users.length === 2) {
       const secondUser = inbox.users.find(
         (user) => user?.id !== currentUser?.id,

@@ -94,3 +94,7 @@ subscription subscribeToMessagesByInboxId($inboxId: ID!) {
     }
   }
 }
+
+mutation removeMeFromInbox($inboxId: ID!) {
+  removeMeFromInbox(inboxId: $inboxId)
+}

@@ -35,8 +35,11 @@ export const ChatHeader = () => {
     handleGraphqlError(error);
   }
 
+  const aloneInRoom = data?.users?.length === 1;
+
   const renderUsers = () => {
     if (!data?.users?.length) return null;
+    if (aloneInRoom) return <Text>You are alone here</Text>;
 
     if (data?.users?.length === 2) {
       const secondUser = data.users.find(
@@ -60,10 +63,10 @@ export const ChatHeader = () => {
   };
   return (
     <div className="flex items-center justify-between h-16 bg-sidebar border-none pl-4 pr-4">
-      {renderUsers()}
+      {data?.users?.length ? renderUsers() : <div />}
       <div className="flex flex-row gap-md">
         <DeleteDM />
-        <ShowUsers />
+        {!aloneInRoom && <ShowUsers />}
       </div>
     </div>
   );

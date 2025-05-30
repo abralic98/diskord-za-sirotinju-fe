@@ -2,15 +2,25 @@ import { useEffect } from "react";
 import { createClient } from "graphql-ws";
 import { useIds } from "@/hooks/useIds";
 import { SubscribeToMessagesByInboxIdDocument } from "@/generated/graphql";
+import { getCookie } from "cookies-next/client";
+import { CookieKeys } from "@/helpers/cookies";
 
 export const useDirectMessageConnection = (onMessage: (msg: any) => void) => {
   const { inboxId } = useIds();
+  const token = getCookie(CookieKeys.TOKEN);
 
   useEffect(() => {
     if (!inboxId) return;
 
     const client = createClient({
       url: `ws://localhost:8080/graphql?inbox/${inboxId}`,
+      connectionParams: () => {
+        return {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+      },
     });
 
     const dispose = client.subscribe(

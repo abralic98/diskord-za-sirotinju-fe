@@ -169,6 +169,7 @@ export type Mutation = {
   joinServer?: Maybe<Server>;
   joinServerWithInvite?: Maybe<Server>;
   kickUserFromServer?: Maybe<Scalars['Boolean']['output']>;
+  removeMeFromInbox?: Maybe<Scalars['Boolean']['output']>;
   unbanUserFromServer?: Maybe<Scalars['Boolean']['output']>;
   updateServer?: Maybe<Server>;
   updateUser?: Maybe<User>;
@@ -243,6 +244,11 @@ export type MutationJoinServerWithInviteArgs = {
 
 export type MutationKickUserFromServerArgs = {
   input?: InputMaybe<KickUserInput>;
+};
+
+
+export type MutationRemoveMeFromInboxArgs = {
+  inboxId: Scalars['ID']['input'];
 };
 
 
@@ -700,6 +706,13 @@ export type SubscribeToMessagesByInboxIdSubscriptionVariables = Exact<{
 
 
 export type SubscribeToMessagesByInboxIdSubscription = { __typename?: 'Subscription', subscribeToMessagesByInboxId?: { __typename?: 'DirectMessage', id?: string | null, text?: string | null, dateCreated?: string | null, dateUpdated?: string | null, author?: { __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null } | null };
+
+export type RemoveMeFromInboxMutationVariables = Exact<{
+  inboxId: Scalars['ID']['input'];
+}>;
+
+
+export type RemoveMeFromInboxMutation = { __typename?: 'Mutation', removeMeFromInbox?: boolean | null };
 
 
 
@@ -1524,3 +1537,22 @@ export const SubscribeToMessagesByInboxIdDocument = `
   }
 }
     `;
+export const RemoveMeFromInboxDocument = `
+    mutation removeMeFromInbox($inboxId: ID!) {
+  removeMeFromInbox(inboxId: $inboxId)
+}
+    `;
+
+export const useRemoveMeFromInboxMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      options?: UseMutationOptions<RemoveMeFromInboxMutation, TError, RemoveMeFromInboxMutationVariables, TContext>
+    ) => {
+    
+    return useMutation<RemoveMeFromInboxMutation, TError, RemoveMeFromInboxMutationVariables, TContext>(
+      ['removeMeFromInbox'],
+      (variables?: RemoveMeFromInboxMutationVariables) => fetcher<RemoveMeFromInboxMutation, RemoveMeFromInboxMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, RemoveMeFromInboxDocument, variables)(),
+      options
+    )};

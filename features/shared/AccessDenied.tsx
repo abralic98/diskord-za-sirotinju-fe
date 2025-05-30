@@ -12,10 +12,10 @@ type AccessDeniedType = "not found" | "no permission";
 
 interface Props {
   type: AccessDeniedType;
-  pushTo: keyof typeof routes;
+  pushTo: "dashboard" | "dm";
 }
 export const AccessDenied = ({ type, pushTo }: Props) => {
-  const { push } = useRouter();
+  const { replace } = useRouter();
   const [countdown, setCountdown] = useState(3);
   const title = type === "no permission" ? "Restricted Area" : "Not found";
   const description =
@@ -28,19 +28,19 @@ export const AccessDenied = ({ type, pushTo }: Props) => {
       setCountdown((prev) => {
         if (prev === 1) {
           clearInterval(timer);
-          push(pushTo);
+          replace(pushTo === "dm" ? routes.dm : routes.dashboard);
         }
         return prev - 1;
       });
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [push]);
+  }, [replace]);
 
   const redirection: EmptyLayoutRedirection = {
     title: `You will be redirected in ${countdown} second${countdown !== 1 ? "s" : ""}...`,
     action: () => {
-      push(pushTo);
+      replace(pushTo === "dm" ? routes.dm : routes.dashboard);
     },
   };
 
