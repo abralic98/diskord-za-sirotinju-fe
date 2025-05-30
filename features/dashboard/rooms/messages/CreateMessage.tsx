@@ -49,9 +49,6 @@ export const CreateMessage = ({ scrollRef }: Props) => {
       return res;
     },
     onSuccess: () => {
-      queryClient.refetchQueries({
-        queryKey: [queryKeys.getMessagesByRoomId, roomId],
-      });
       form.reset();
       //timeut da normalno skrolne a ne uvijek zadnji element ostane nevidljiv
       setTimeout(() => {
@@ -59,7 +56,7 @@ export const CreateMessage = ({ scrollRef }: Props) => {
       }, 100);
     },
     onError: (error) => {
-      handleGraphqlError(error)
+      handleGraphqlError(error);
     },
   });
 

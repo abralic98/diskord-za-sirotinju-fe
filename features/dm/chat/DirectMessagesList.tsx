@@ -15,10 +15,10 @@ import { PaginationTrigger } from "@/features/shared/PaginationTrigger";
 import { scrollToBottom } from "@/helpers/scrollToBottom";
 import { usePaginationScrolling } from "@/hooks/usePaginationScrolling";
 import { AccessDenied } from "@/features/shared/AccessDenied";
-// import { useRoomMessageConnection } from "../hooks/useRoomMessageConnection";
 import { handleGraphqlError } from "@/helpers/handleGQLError";
 import { NoMessages } from "@/features/dashboard/components/NoMessages";
 import { CreateDirectMessage } from "./CreateDirectMessage";
+import { useDirectMessageConnection } from "../hooks/useDirectMessageConnection";
 
 export const DirectMessageList = () => {
   const { height } = useWindowDimensions();
@@ -27,9 +27,9 @@ export const DirectMessageList = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([]);
 
-  // useRoomMessageConnection((newMessage) => {
-  //   setMessages((prev) => [...prev, newMessage]);
-  // });
+  useDirectMessageConnection((newMessage) => {
+    setMessages((prev) => [...prev, newMessage]);
+  });
 
   const query = usePagination<
     GetDirectMessagesByInboxIdQuery,
@@ -71,15 +71,16 @@ export const DirectMessageList = () => {
     if (query.error?.message.includes(ErrorMessages.NOT_FOUND)) {
       return <AccessDenied pushTo="dm" type="not found" />;
     }
-    if (!query.data?.pages?.length) return <NoMessages />;
 
-    const allMessages = query.data.pages.flatMap(
+    const allMessages = query?.data?.pages.flatMap(
       (page) => page.getDirectMessagesByInboxId?.content ?? [],
     );
 
-    if (!allMessages.length) return <NoMessages />;
+    if (!allMessages?.length && messages.length === 0) return <NoMessages />;
 
-    return [...allMessages]
+    const newArray = allMessages ? [...allMessages] : [];
+
+    return newArray
       .reverse()
       .map((message) => <SingleMessage key={message?.id} message={message} />);
   };

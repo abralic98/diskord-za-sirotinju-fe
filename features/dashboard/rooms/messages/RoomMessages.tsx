@@ -68,15 +68,15 @@ export const RoomMessages = () => {
     if (query.error?.message.includes(ErrorMessages.NOT_FOUND)) {
       return <AccessDenied pushTo="dashboard" type="not found" />;
     }
-    if (!query.data?.pages?.length) return <NoMessages />;
-
-    const allMessages = query.data.pages.flatMap(
+    const allMessages = query.data?.pages.flatMap(
       (page) => page.getMessagesByRoomId?.content ?? [],
     );
 
-    if (!allMessages.length) return <NoMessages />;
+    if (!allMessages?.length && messages.length === 0) return <NoMessages />;
 
-    return [...allMessages]
+    const newArray = allMessages ? [...allMessages] : [];
+
+    return newArray
       .reverse()
       .map((message) => <SingleMessage key={message?.id} message={message} />);
   };

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { createClient } from "graphql-ws";
 import { useIds } from "@/hooks/useIds";
+import { SubscribeToMessagesByRoomIdDocument } from "@/generated/graphql";
 
 export const useRoomMessageConnection = (onMessage: (msg: any) => void) => {
   const { roomId } = useIds();
@@ -9,48 +10,33 @@ export const useRoomMessageConnection = (onMessage: (msg: any) => void) => {
     if (!roomId) return;
 
     const client = createClient({
-      url: "ws://localhost:8080/graphql", // must match server URL
+      url: `ws://localhost:8080/graphql?room/${roomId}`,
     });
 
     const dispose = client.subscribe(
       {
-        query: `
-          subscription($roomId: ID!) {
-            messageAdded(roomId: $roomId) {
-              id
-              text
-              dateCreated
-              author {
-                username
-                avatar
-              }
-            }
-          }
-        `,
+        query: SubscribeToMessagesByRoomIdDocument,
         variables: {
           roomId: String(roomId),
         },
       },
       {
         next: (data) => {
-          console.log("📨 New data:", data);
-          if (data.data?.messageAdded) {
-            onMessage(data.data.messageAdded);
+          if (data.data?.subscribeToMessagesByRoomId) {
+            onMessage(data.data.subscribeToMessagesByRoomId);
           }
         },
         error: (err) => {
-          console.error("❌ Subscription error", err);
+          // console.error("Subscription error", err);
         },
         complete: () => {
-          console.warn(
-            "⚠️ Subscription completed — this should NOT happen unless Flux completes.",
-          );
+          console.log("complet");
         },
       },
     );
 
     return () => {
-      dispose(); // properly close on unmount
+      dispose(); 
     };
-  }, [roomId, ]);
+  }, [roomId]);
 };

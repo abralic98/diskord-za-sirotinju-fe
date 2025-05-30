@@ -41,9 +41,6 @@ export const CreateDirectMessage = ({ scrollRef }: Props) => {
       return res;
     },
     onSuccess: () => {
-      queryClient.refetchQueries({
-        queryKey: [queryKeys.getMessagesByInboxId, inboxId],
-      });
       form.reset();
       setTimeout(() => {
         scrollToBottom(scrollRef.current);

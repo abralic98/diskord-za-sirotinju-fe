@@ -195,3 +195,17 @@ query getServerByInvite($token: String!) {
     serverImg
   }
 }
+
+subscription subscribeToMessagesByRoomId($roomId: ID!) {
+  subscribeToMessagesByRoomId(roomId: $roomId) {
+    id
+    text
+    dateCreated
+    dateUpdated
+    author {
+      id
+      username
+      avatar
+    }
+  }
+}

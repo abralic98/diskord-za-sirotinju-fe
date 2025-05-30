@@ -80,3 +80,17 @@ query getAllUsers($page: Int!, $size: Int!, $search: String!) {
     totalPages
   }
 }
+
+subscription subscribeToMessagesByInboxId($inboxId: ID!) {
+  subscribeToMessagesByInboxId(inboxId: $inboxId) {
+    id
+    text
+    dateCreated
+    dateUpdated
+    author {
+      id
+      username
+      avatar
+    }
+  }
+}

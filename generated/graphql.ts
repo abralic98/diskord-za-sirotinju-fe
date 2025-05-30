@@ -98,7 +98,7 @@ export type DirectMessage = {
 
 export type DirectMessagePage = {
   __typename?: 'DirectMessagePage';
-  content: Array<Maybe<DirectMessage>>;
+  content: Array<DirectMessage>;
   number: Scalars['Int']['output'];
   size: Scalars['Int']['output'];
   totalElements: Scalars['Int']['output'];
@@ -141,7 +141,7 @@ export type Message = {
 
 export type MessagePage = {
   __typename?: 'MessagePage';
-  content: Array<Maybe<Message>>;
+  content: Array<Message>;
   number: Scalars['Int']['output'];
   size: Scalars['Int']['output'];
   totalElements: Scalars['Int']['output'];
@@ -271,7 +271,7 @@ export type Query = {
   getAllUserServers?: Maybe<Array<Maybe<Server>>>;
   getAllUsers: UserPage;
   getBannedUsersByServerId?: Maybe<Array<Maybe<BannedUser>>>;
-  getDirectMessagesByInboxId?: Maybe<DirectMessagePage>;
+  getDirectMessagesByInboxId: DirectMessagePage;
   getInboxById?: Maybe<Inbox>;
   getMessagesByRoomId: MessagePage;
   getMyInbox?: Maybe<Array<Maybe<Inbox>>>;
@@ -547,7 +547,7 @@ export type GetMessagesByRoomIdQueryVariables = Exact<{
 }>;
 
 
-export type GetMessagesByRoomIdQuery = { __typename?: 'Query', getMessagesByRoomId: { __typename?: 'MessagePage', size: number, number: number, totalElements: number, totalPages: number, content: Array<{ __typename?: 'Message', id?: string | null, text?: string | null, imgPath?: string | null, type?: MessageType | null, dateCreated?: string | null, dateUpdated?: string | null, author?: { __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null } | null> } };
+export type GetMessagesByRoomIdQuery = { __typename?: 'Query', getMessagesByRoomId: { __typename?: 'MessagePage', size: number, number: number, totalElements: number, totalPages: number, content: Array<{ __typename?: 'Message', id?: string | null, text?: string | null, imgPath?: string | null, type?: MessageType | null, dateCreated?: string | null, dateUpdated?: string | null, author?: { __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null }> } };
 
 export type GetRoomByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -642,6 +642,13 @@ export type GetServerByInviteQueryVariables = Exact<{
 
 export type GetServerByInviteQuery = { __typename?: 'Query', getServerByInvite?: { __typename?: 'Server', id?: string | null, name?: string | null, banner?: string | null, serverImg?: string | null } | null };
 
+export type SubscribeToMessagesByRoomIdSubscriptionVariables = Exact<{
+  roomId: Scalars['ID']['input'];
+}>;
+
+
+export type SubscribeToMessagesByRoomIdSubscription = { __typename?: 'Subscription', subscribeToMessagesByRoomId?: { __typename?: 'Message', id?: string | null, text?: string | null, dateCreated?: string | null, dateUpdated?: string | null, author?: { __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null } | null };
+
 export type GetDirectMessagesByInboxIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
   page: Scalars['Int']['input'];
@@ -650,7 +657,7 @@ export type GetDirectMessagesByInboxIdQueryVariables = Exact<{
 }>;
 
 
-export type GetDirectMessagesByInboxIdQuery = { __typename?: 'Query', getDirectMessagesByInboxId?: { __typename?: 'DirectMessagePage', size: number, number: number, totalElements: number, totalPages: number, content: Array<{ __typename?: 'DirectMessage', id?: string | null, text?: string | null, type?: MessageType | null, dateCreated?: string | null, dateUpdated?: string | null, author?: { __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null } | null> } | null };
+export type GetDirectMessagesByInboxIdQuery = { __typename?: 'Query', getDirectMessagesByInboxId: { __typename?: 'DirectMessagePage', size: number, number: number, totalElements: number, totalPages: number, content: Array<{ __typename?: 'DirectMessage', id?: string | null, text?: string | null, type?: MessageType | null, dateCreated?: string | null, dateUpdated?: string | null, author?: { __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null }> } };
 
 export type GetMyInboxQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -686,6 +693,13 @@ export type GetAllUsersQueryVariables = Exact<{
 
 
 export type GetAllUsersQuery = { __typename?: 'Query', getAllUsers: { __typename?: 'UserPage', size: number, number: number, totalElements: number, totalPages: number, content: Array<{ __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null, userPresence?: UserPresenceType | null }> } };
+
+export type SubscribeToMessagesByInboxIdSubscriptionVariables = Exact<{
+  inboxId: Scalars['ID']['input'];
+}>;
+
+
+export type SubscribeToMessagesByInboxIdSubscription = { __typename?: 'Subscription', subscribeToMessagesByInboxId?: { __typename?: 'DirectMessage', id?: string | null, text?: string | null, dateCreated?: string | null, dateUpdated?: string | null, author?: { __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null } | null };
 
 
 
@@ -1307,6 +1321,21 @@ export const useGetServerByInviteQuery = <
       options
     )};
 
+export const SubscribeToMessagesByRoomIdDocument = `
+    subscription subscribeToMessagesByRoomId($roomId: ID!) {
+  subscribeToMessagesByRoomId(roomId: $roomId) {
+    id
+    text
+    dateCreated
+    dateUpdated
+    author {
+      id
+      username
+      avatar
+    }
+  }
+}
+    `;
 export const GetDirectMessagesByInboxIdDocument = `
     query getDirectMessagesByInboxId($id: ID!, $page: Int!, $size: Int!, $search: String) {
   getDirectMessagesByInboxId(id: $id, page: $page, size: $size, search: $search) {
@@ -1479,3 +1508,19 @@ export const useGetAllUsersQuery = <
       fetcher<GetAllUsersQuery, GetAllUsersQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetAllUsersDocument, variables),
       options
     )};
+
+export const SubscribeToMessagesByInboxIdDocument = `
+    subscription subscribeToMessagesByInboxId($inboxId: ID!) {
+  subscribeToMessagesByInboxId(inboxId: $inboxId) {
+    id
+    text
+    dateCreated
+    dateUpdated
+    author {
+      id
+      username
+      avatar
+    }
+  }
+}
+    `;
