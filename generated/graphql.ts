@@ -52,6 +52,7 @@ export type BannedUser = {
 };
 
 export type CreateDmInput = {
+  imageUrl?: InputMaybe<Scalars['String']['input']>;
   inboxId: Scalars['ID']['input'];
   text: Scalars['String']['input'];
   type: MessageType;
@@ -92,6 +93,7 @@ export type DirectMessage = {
   dateCreated?: Maybe<Scalars['String']['output']>;
   dateUpdated?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
+  imageUrl?: Maybe<Scalars['String']['output']>;
   inbox?: Maybe<Inbox>;
   text?: Maybe<Scalars['String']['output']>;
   type?: Maybe<MessageType>;

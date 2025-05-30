@@ -26,7 +26,7 @@ interface Props {
 export const CreateMessage = ({ scrollRef }: Props) => {
   const { roomId } = useIds();
   const [file, setFile] = useState<File | null>(null);
-  const { isLoading, error, uploadedImage } = useCloudStorage({
+  const { isLoading, uploadedImage } = useCloudStorage({
     file,
   });
   const fileInputRef = useRef<HTMLInputElement>(null);

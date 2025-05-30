@@ -5,22 +5,28 @@ import {
   CreateDmInput,
   MessageType,
 } from "@/generated/graphql";
-import { queryKeys } from "@/helpers/queryKeys";
 import { useIds } from "@/hooks/useIds";
-import { queryClient } from "@/lib/react-query/queryClient";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { requestWithAuth } from "@/lib/graphql/client";
 import { scrollToBottom } from "@/helpers/scrollToBottom";
 import { handleGraphqlError } from "@/helpers/handleGQLError";
 import { FormChatInput } from "@/components/custom/form/FormChatInput";
+import { Image } from "lucide-react";
+import { useCloudStorage } from "@/hooks/useCloudStorage";
 
 interface Props {
   scrollRef: React.RefObject<HTMLDivElement | null>;
 }
 export const CreateDirectMessage = ({ scrollRef }: Props) => {
   const { inboxId } = useIds();
+  
+  const [file, setFile] = useState<File | null>(null);
+  const { isLoading, error, uploadedImage } = useCloudStorage({
+    file,
+  });
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<CreateDmInput>({
     defaultValues: {
@@ -55,6 +61,20 @@ export const CreateDirectMessage = ({ scrollRef }: Props) => {
     createDirectMessageMutation.mutateAsync(data);
   };
 
+  const openFile = () => {
+    fileInputRef?.current?.click();
+  };
+
+  useEffect(() => {
+    if (uploadedImage)
+      createDirectMessageMutation.mutateAsync({
+        type: MessageType.Attachment,
+        inboxId: String(inboxId),
+        imageUrl: uploadedImage,
+        text: "",
+      });
+  }, [uploadedImage]);
+
   return (
     <FormProvider {...form}>
       <form
@@ -67,12 +87,29 @@ export const CreateDirectMessage = ({ scrollRef }: Props) => {
           }
         }}
       >
-        <FormChatInput<CreateDmInput>
-          name="text"
-          placeholder="Start typing ..."
-          inputClassName="h-14"
-          containerClassName="bg-sidebar-hover"
-        />
+        {inboxId && (
+          <div>
+            <FormChatInput<CreateDmInput>
+              name="text"
+              placeholder="Start typing ..."
+              inputClassName="h-14"
+              containerClassName="bg-sidebar-hover"
+              icon={<Image />}
+              onClickIcon={openFile}
+              disabled={isLoading}
+            />
+
+            <input
+              type="file"
+              className="hidden"
+              ref={fileInputRef}
+              onChange={(e) => {
+                const selectedFile = e.target.files?.[0] || null;
+                setFile(selectedFile);
+              }}
+            />
+          </div>
+        )}
       </form>
     </FormProvider>
   );
