@@ -17,6 +17,13 @@ export const useGetRoomPresence = () => {
     );
     socketRef.current = socket;
 
+    //temporary until refactoring everything to subscriptions
+    const pingInterval = setInterval(() => {
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ type: "ping" }));
+      }
+    }, 30000);
+
     socket.onopen = () => {
       socket.send(
         JSON.stringify({
@@ -38,6 +45,7 @@ export const useGetRoomPresence = () => {
     };
 
     return () => {
+      clearInterval(pingInterval);
       if (socketRef.current?.readyState === WebSocket.OPEN) {
         socketRef.current.close();
       }

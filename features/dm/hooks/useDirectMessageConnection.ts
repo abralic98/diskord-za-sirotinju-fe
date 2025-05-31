@@ -20,8 +20,8 @@ export const useDirectMessageConnection = (onMessage: (msg: any) => void) => {
           Authorization: `Bearer ${token}`,
         },
       },
-      lazy: false, // connect immediately
-      retryAttempts: 0, // avoid stale retry behavior
+      lazy: false, 
+      retryAttempts: 0, 
     });
 
     const disposeSubscribe = client.subscribe(

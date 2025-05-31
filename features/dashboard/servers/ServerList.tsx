@@ -14,6 +14,7 @@ import { useServerListSidebarStore } from "./store";
 import { useEffect } from "react";
 import { DiscoverServers } from "./components/discovery/DiscoverServers";
 import { handleGraphqlError } from "@/helpers/handleGQLError";
+import { GoToDm } from "./components/GoToDm";
 
 export const ServerList = () => {
   const { setServers } = useServerListSidebarStore();
@@ -46,6 +47,7 @@ export const ServerList = () => {
       <div className="overflow-y-scroll w-full flex flex-col gap-md items-center">
         <CreateServer />
         <DiscoverServers />
+        <GoToDm />
         {renderServers()}
       </div>
     </ScrollArea>
