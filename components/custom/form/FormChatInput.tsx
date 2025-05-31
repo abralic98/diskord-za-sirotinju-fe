@@ -2,7 +2,6 @@ import { useFormContext, FieldValues, Path } from "react-hook-form";
 import { Input, InputProps } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
-import { ReactNode } from "react";
 
 type FormChatInputProps<T extends FieldValues> = {
   name: Path<T>;

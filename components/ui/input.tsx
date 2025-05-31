@@ -23,6 +23,7 @@ function Input({
   return (
     <div className="relative w-full">
       <input
+        disabled={disabled}
         type={secured ? "password" : (type ?? "text")}
         data-slot="input"
         className={cn(

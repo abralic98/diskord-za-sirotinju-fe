@@ -35,4 +35,6 @@ export const Text = ({
   <label className={cn("text-sm font-semibold", className)}>{children}</label>
 );
 
-export default { H4, H3, H2, H1, Text };
+const Typography = { H4, H3, H2, H1, Text };
+
+export default Typography;

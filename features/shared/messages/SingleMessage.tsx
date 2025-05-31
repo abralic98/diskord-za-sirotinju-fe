@@ -27,8 +27,8 @@ export const SingleMessage = ({ message, ws = false }: Props) => {
           alt="chatimage"
           className="pt-2"
           src={message?.imageUrl}
-          width={500}
-          height={500}
+          width={300}
+          height={300}
         />
       );
     } else {

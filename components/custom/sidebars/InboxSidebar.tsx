@@ -4,23 +4,14 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarTrigger,
-  useSidebar,
 } from "@/components/ui/sidebar";
-import { useAuthStore } from "@/features/auth/store";
 import { UserInfoFooter } from "@/features/user/UserInfoFooter";
-import { useIds } from "@/hooks/useIds";
-import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 
 interface Props {
   content: ReactNode;
 }
 export const InboxSidebar = ({ content }: Props) => {
-  const { open } = useSidebar();
-  const { serverId } = useIds();
-  const { user } = useAuthStore();
-  const { push } = useRouter();
-
   return (
     <Sidebar collapsible="icon" className="relative h-full">
       <SidebarContent>{content}</SidebarContent>

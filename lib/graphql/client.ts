@@ -17,6 +17,7 @@ export const client = new GraphQLClient(apiUrl, {
 
 export const requestWithAuth = async <T>(
   query: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variables?: Record<string, any>,
 ): Promise<T> => {
   try {

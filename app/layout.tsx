@@ -5,7 +5,6 @@ import { QueryProvider } from "@/lib/react-query/QueryProvider";
 import { ThemeProvider } from "@/components/custom/theme/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
