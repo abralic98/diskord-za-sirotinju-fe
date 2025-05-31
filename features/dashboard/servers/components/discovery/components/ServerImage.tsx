@@ -7,17 +7,19 @@ export const ServerImage = ({ server }: { server?: Server | null }) => {
   const renderBanner = () => {
     if (server?.banner) {
       return (
-        <Image
-          alt="server banner"
-          width={350}
-          height={100}
-          src={server.banner}
-        />
+        <div className="h-[120px]">
+          <Image
+            alt="server banner"
+            width={350}
+            height={100}
+            src={server.banner}
+          />
+        </div>
       );
     } else {
       return (
-        <div className="w-full h-[100px] bg-sidebar-hover rounded-lg flex items-center justify-center">
-          <ServerIcon className="w-[40px] h-[40px]"/>
+        <div className="w-full h-[120px] bg-sidebar-hover rounded-lg flex items-center justify-center">
+          <ServerIcon className="w-[40px] h-[40px]" />
         </div>
       );
     }

@@ -5,7 +5,6 @@ import { useServerListSidebarStore } from "./servers/store";
 import { useIds } from "@/hooks/useIds";
 import { NoServers } from "./components/NoServers";
 import { useAuthenticator } from "@/hooks/useAuthenticator";
-import routes from "@/lib/routes";
 
 export const DashboardContent = () => {
   const router = useRouter();

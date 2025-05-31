@@ -58,7 +58,7 @@ export const SingleServer = ({ server }: Props) => {
       <div className="p-4 flex flex-col gap-md mt-[50px]">
         <H4>{server.name}</H4>
         <ServerUsers serverUsers={server.joinedUsers ?? []} />
-        <Text className="h-[90px] break-words whitespace-pre-wrap">
+        <Text className="h-[70px] break-words whitespace-pre-wrap">
           {server.description}
         </Text>
         <Button type="button" onClick={() => joinServer()}>

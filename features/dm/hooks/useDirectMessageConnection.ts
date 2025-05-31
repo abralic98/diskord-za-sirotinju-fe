@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { createClient } from "graphql-ws";
+import { createClient, Client } from "graphql-ws";
 import { useIds } from "@/hooks/useIds";
 import { SubscribeToMessagesByInboxIdDocument } from "@/generated/graphql";
 import { getCookie } from "cookies-next/client";
@@ -13,22 +13,22 @@ export const useDirectMessageConnection = (onMessage: (msg: any) => void) => {
   useEffect(() => {
     if (!inboxId) return;
 
-    const client = createClient({
+    const client: Client = createClient({
       url: `${apiUrl}?inbox/${inboxId}`,
-      connectionParams: () => {
-        return {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
+      connectionParams: {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
+      lazy: false, // connect immediately
+      retryAttempts: 0, // avoid stale retry behavior
     });
 
-    const dispose = client.subscribe(
+    const disposeSubscribe = client.subscribe(
       {
         query: SubscribeToMessagesByInboxIdDocument,
         variables: {
-          inboxId: inboxId,
+          inboxId,
         },
       },
       {
@@ -38,16 +38,18 @@ export const useDirectMessageConnection = (onMessage: (msg: any) => void) => {
           }
         },
         error: (err) => {
-          // console.error(err);
+          console.error("Subscription error (inbox):", err);
         },
         complete: () => {
-          // console.log("done");
+          console.log("Direct message subscription complete");
         },
       },
     );
 
     return () => {
-      dispose();
+      disposeSubscribe(); // clean up subscription
+      client.dispose(); // close socket connection properly
     };
   }, [inboxId]);
 };
+

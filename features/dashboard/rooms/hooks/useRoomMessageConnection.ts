@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { createClient } from "graphql-ws";
+import { createClient, Client } from "graphql-ws";
 import { useIds } from "@/hooks/useIds";
 import { SubscribeToMessagesByRoomIdDocument } from "@/generated/graphql";
 import { getCookie } from "cookies-next/client";
@@ -12,24 +12,23 @@ export const useRoomMessageConnection = (onMessage: (msg: any) => void) => {
   useEffect(() => {
     if (!roomId) return;
 
-    const client = createClient({
+    // create the client
+    const client: Client = createClient({
       url: `${process.env.NEXT_PUBLIC_WS_URL}?room/${roomId}`,
-
-      connectionParams: () => {
-        return {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
+      connectionParams: {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
+      lazy: false,
+      retryAttempts: 0, // avoid reconnect loop
     });
 
-    const dispose = client.subscribe(
+    // subscribe
+    const disposeSubscribe = client.subscribe(
       {
         query: SubscribeToMessagesByRoomIdDocument,
-        variables: {
-          roomId: String(roomId),
-        },
+        variables: { roomId: String(roomId) },
       },
       {
         next: (data) => {
@@ -38,16 +37,18 @@ export const useRoomMessageConnection = (onMessage: (msg: any) => void) => {
           }
         },
         error: (err) => {
-          // console.error("Subscription error", err);
+          console.error("Subscription error:", err);
         },
         complete: () => {
-          console.log("complet");
+          console.log("Subscription complete");
         },
       },
     );
 
+    // cleanup
     return () => {
-      dispose();
+      disposeSubscribe(); // Unsubscribe from query
+      client.dispose(); // Fully close WebSocket connection
     };
   }, [roomId]);
 };

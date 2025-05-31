@@ -1,8 +1,8 @@
 ### build
 
 1. yarn dockerbuild 
-2. docker tag discord-za-sirotinju-fe-nextjs-app:latest abralic98/discord-za-sirotinju-fe-nextjs-app:latest
-3. docker push abralic98/discord-za-sirotinju-fe-nextjs-app:latest
+docker tag discord-za-sirotinju-fe-nextjs-app:latest abralic98/discord-za-sirotinju-fe-nextjs-app:latest
+docker push abralic98/discord-za-sirotinju-fe-nextjs-app:latest
 
 
 ### hetzner
