@@ -22,11 +22,6 @@ export const DashboardContent = () => {
       return;
     }
 
-    if (!hasServers) {
-      router.replace(routes.discover);
-      return;
-    }
-
     const firstServer = servers[0];
     if (firstServer?.id) {
       router.replace(`/dashboard/${firstServer.id}`);

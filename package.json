@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "types": "graphql-codegen"
+    "types": "graphql-codegen",
+    "dockerbuild": "docker-compose build"
   },
   "dependencies": {
     "@graphql-codegen/typescript": "^4.1.6",
