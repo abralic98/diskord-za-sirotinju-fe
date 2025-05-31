@@ -25,7 +25,9 @@ export const useVoiceConnection = () => {
     if (!user?.id) return;
 
     const start = async () => {
-      const socket = new WebSocket("ws://localhost:8080/ws/voice");
+      const url = process.env.NEXT_PUBLIC_VOICE_URL;
+      if (!url) return;
+      const socket = new WebSocket(url);
       socketRef.current = socket;
 
       socket.onopen = async () => {

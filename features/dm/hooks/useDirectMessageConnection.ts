@@ -4,6 +4,7 @@ import { useIds } from "@/hooks/useIds";
 import { SubscribeToMessagesByInboxIdDocument } from "@/generated/graphql";
 import { getCookie } from "cookies-next/client";
 import { CookieKeys } from "@/helpers/cookies";
+import { apiUrl } from "@/lib/graphql/client";
 
 export const useDirectMessageConnection = (onMessage: (msg: any) => void) => {
   const { inboxId } = useIds();
@@ -13,7 +14,7 @@ export const useDirectMessageConnection = (onMessage: (msg: any) => void) => {
     if (!inboxId) return;
 
     const client = createClient({
-      url: `ws://localhost:8080/graphql?inbox/${inboxId}`,
+      url: `${apiUrl}?inbox/${inboxId}`,
       connectionParams: () => {
         return {
           headers: {

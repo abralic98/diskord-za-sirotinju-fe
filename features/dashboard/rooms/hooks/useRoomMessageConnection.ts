@@ -13,7 +13,7 @@ export const useRoomMessageConnection = (onMessage: (msg: any) => void) => {
     if (!roomId) return;
 
     const client = createClient({
-      url: `ws://localhost:8080/graphql?room/${roomId}`,
+      url: `${process.env.NEXT_PUBLIC_WS_URL}?room/${roomId}`,
 
       connectionParams: () => {
         return {

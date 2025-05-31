@@ -13,7 +13,7 @@ export const useGetRoomPresence = () => {
     if (!user?.id) return;
 
     const socket = new WebSocket(
-      "ws://localhost:8080/ws/voice?server_presence",
+      `${process.env.NEXT_PUBLIC_VOICE_URL}?server_presence`,
     );
     socketRef.current = socket;
 
