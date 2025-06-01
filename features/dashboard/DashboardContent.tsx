@@ -31,7 +31,7 @@ export const DashboardContent = () => {
 
   if (loading) {
     return (
-      <div className="p-[12px] w-full bg-sidebar-border">
+      <div className="p-[12px] w-full bg-sidebar-accent">
         Redirecting to your first available server...
       </div>
     );
@@ -39,11 +39,11 @@ export const DashboardContent = () => {
 
   if (!hasServers) {
     return (
-      <div className="bg-sidebar-border w-full">
+      <div className="bg-sidebar-accent w-full">
         <NoServers />
       </div>
     );
   }
 
-  return null;
+  return <div className="bg-sidebar-accent w-full" />;
 };

@@ -20,10 +20,6 @@ export const useCloudStorage = ({
   const [error, setError] = useState<Error | null>(null);
   const [uploadedImage, setUploadedImage] = useState<string>();
 
-  const saveToBackend = () => {
-    //
-  };
-
   useEffect(() => {
     const upload = async () => {
       if (!file) return;
@@ -39,7 +35,6 @@ export const useCloudStorage = ({
         );
         if (response.$id) {
           const result = storageClient.getFileDownload(bucketId, response.$id);
-          saveToBackend();
           setUploadedImage(result);
         }
       } catch (err) {
