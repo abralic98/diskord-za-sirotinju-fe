@@ -10,11 +10,15 @@ import {
 } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/features/auth/store";
 import { UserInfoFooter } from "@/features/user/UserInfoFooter";
-import { GetServerByIdQuery } from "@/generated/graphql";
+import {
+  GetServerNameByIdDocument,
+  GetServerNameByIdQuery,
+} from "@/generated/graphql";
 import { queryKeys } from "@/helpers/queryKeys";
 import { useIds } from "@/hooks/useIds";
-import { queryClient } from "@/lib/react-query/queryClient";
+import { requestWithAuth } from "@/lib/graphql/client";
 import routes from "@/lib/routes";
+import { useQuery } from "@tanstack/react-query";
 import { SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import { ReactNode } from "react";
@@ -22,15 +26,24 @@ import { ReactNode } from "react";
 interface Props {
   content: ReactNode;
 }
-export const MainSidebar = ({ content }: Props) => {
+export const RoomServerSidebar = ({ content }: Props) => {
   const { open } = useSidebar();
   const { serverId } = useIds();
   const { user } = useAuthStore();
 
-  const server: GetServerByIdQuery | undefined = queryClient.getQueryData([
-    queryKeys.getServerById,
-    serverId,
-  ]);
+  const { data: server, error } = useQuery({
+    queryKey: [queryKeys.getServerById, serverId],
+    enabled: Boolean(serverId),
+    queryFn: async (): Promise<GetServerNameByIdQuery> => {
+      return await requestWithAuth<GetServerNameByIdQuery>(
+        GetServerNameByIdDocument,
+        {
+          id: serverId,
+        },
+      );
+    },
+  });
+
   const name = server?.getServerById?.name;
   const showSettings =
     server?.getServerById?.id &&

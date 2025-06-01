@@ -114,6 +114,30 @@ query getServerById($id: ID!) {
   }
 }
 
+query getServerNameById($id: ID!) {
+  getServerById(id: $id) {
+    id
+    name
+    createdBy {
+      id
+    }
+  }
+}
+
+query getJoinedUsersByServerId($id: ID!) {
+  getServerById(id: $id) {
+    joinedUsers {
+      id
+      username
+      userPresence
+      avatar
+    }
+    createdBy {
+      id
+    }
+  }
+}
+
 mutation createMessage($message: CreateMessageInput) {
   createMessage(message: $message) {
     id

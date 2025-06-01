@@ -2,7 +2,12 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/helpers/queryKeys";
-import { GetServerByIdDocument, GetServerByIdQuery } from "@/generated/graphql";
+import {
+  GetJoinedUsersByServerIdDocument,
+  GetJoinedUsersByServerIdQuery,
+  GetServerByIdDocument,
+  GetServerByIdQuery,
+} from "@/generated/graphql";
 import { SingleUser } from "./components/SingleUser";
 import { useIds } from "@/hooks/useIds";
 import { useUserListSidebarStore } from "./store";
@@ -15,12 +20,15 @@ export const ServerUsersSidebar = () => {
   const { serverId } = useIds();
 
   const { data, error } = useQuery({
-    queryKey: [queryKeys.getServerById, serverId],
-    enabled: Boolean(serverId),
-    queryFn: async (): Promise<GetServerByIdQuery> => {
-      return await requestWithAuth<GetServerByIdQuery>(GetServerByIdDocument, {
-        id: serverId,
-      });
+    queryKey: [queryKeys.getJoinedUsersByServerId, serverId],
+    enabled: Boolean(serverId) && isOpen,
+    queryFn: async (): Promise<GetJoinedUsersByServerIdQuery> => {
+      return await requestWithAuth<GetJoinedUsersByServerIdQuery>(
+        GetJoinedUsersByServerIdDocument,
+        {
+          id: serverId,
+        },
+      );
     },
   });
 

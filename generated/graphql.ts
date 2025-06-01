@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { useMutation, useQuery, UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -582,6 +581,20 @@ export type GetServerByIdQueryVariables = Exact<{
 
 export type GetServerByIdQuery = { __typename?: 'Query', getServerById?: { __typename?: 'Server', id?: string | null, name?: string | null, description?: string | null, serverImg?: string | null, banner?: string | null, createdBy?: { __typename?: 'User', id?: string | null } | null, joinedUsers?: Array<{ __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null, userPresence?: UserPresenceType | null } | null> | null } | null };
 
+export type GetServerNameByIdQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetServerNameByIdQuery = { __typename?: 'Query', getServerById?: { __typename?: 'Server', id?: string | null, name?: string | null, createdBy?: { __typename?: 'User', id?: string | null } | null } | null };
+
+export type GetJoinedUsersByServerIdQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetJoinedUsersByServerIdQuery = { __typename?: 'Query', getServerById?: { __typename?: 'Server', joinedUsers?: Array<{ __typename?: 'User', id?: string | null, username?: string | null, userPresence?: UserPresenceType | null, avatar?: string | null } | null> | null, createdBy?: { __typename?: 'User', id?: string | null } | null } | null };
+
 export type CreateMessageMutationVariables = Exact<{
   message?: InputMaybe<CreateMessageInput>;
 }>;
@@ -1091,6 +1104,64 @@ export const useGetServerByIdQuery = <
     return useQuery<GetServerByIdQuery, TError, TData>(
       ['getServerById', variables],
       fetcher<GetServerByIdQuery, GetServerByIdQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetServerByIdDocument, variables),
+      options
+    )};
+
+export const GetServerNameByIdDocument = `
+    query getServerNameById($id: ID!) {
+  getServerById(id: $id) {
+    id
+    name
+    createdBy {
+      id
+    }
+  }
+}
+    `;
+
+export const useGetServerNameByIdQuery = <
+      TData = GetServerNameByIdQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      variables: GetServerNameByIdQueryVariables,
+      options?: UseQueryOptions<GetServerNameByIdQuery, TError, TData>
+    ) => {
+    
+    return useQuery<GetServerNameByIdQuery, TError, TData>(
+      ['getServerNameById', variables],
+      fetcher<GetServerNameByIdQuery, GetServerNameByIdQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetServerNameByIdDocument, variables),
+      options
+    )};
+
+export const GetJoinedUsersByServerIdDocument = `
+    query getJoinedUsersByServerId($id: ID!) {
+  getServerById(id: $id) {
+    joinedUsers {
+      id
+      username
+      userPresence
+      avatar
+    }
+    createdBy {
+      id
+    }
+  }
+}
+    `;
+
+export const useGetJoinedUsersByServerIdQuery = <
+      TData = GetJoinedUsersByServerIdQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      variables: GetJoinedUsersByServerIdQueryVariables,
+      options?: UseQueryOptions<GetJoinedUsersByServerIdQuery, TError, TData>
+    ) => {
+    
+    return useQuery<GetJoinedUsersByServerIdQuery, TError, TData>(
+      ['getJoinedUsersByServerId', variables],
+      fetcher<GetJoinedUsersByServerIdQuery, GetJoinedUsersByServerIdQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetJoinedUsersByServerIdDocument, variables),
       options
     )};
 

@@ -13,4 +13,6 @@ export const queryKeys = {
   getAllUsers: "getAllUsers",
   getInboxById: "getInboxById",
   getMessagesByInboxId: "getMessagesByInboxId",
+  getServerNameById: "getServerNameById",
+  getJoinedUsersByServerId: "getJoinedUsersByServerId",
 };

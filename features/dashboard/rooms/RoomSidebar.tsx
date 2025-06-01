@@ -1,6 +1,5 @@
 "use client";
 
-import { MainSidebar } from "@/components/custom/sidebars/MainSidebar";
 import {
   GetRoomsByServerIdDocument,
   GetRoomsByServerIdQuery,
@@ -25,6 +24,7 @@ import routes from "@/lib/routes";
 import { useRouter } from "next/navigation";
 import { VoiceRoomList } from "@/features/voice/components/VoiceRoomList";
 import { useGetRoomPresence } from "@/features/voice/hooks/useGetRoomPresence";
+import { RoomServerSidebar } from "@/components/custom/sidebars/RoomServerSidebar";
 
 export const RoomSidebar = () => {
   const { serverId } = useIds();
@@ -83,7 +83,7 @@ export const RoomSidebar = () => {
     },
   ];
   return (
-    <MainSidebar
+    <RoomServerSidebar
       content={
         <div className="h-full border border-sidebar-border">
           <Context
