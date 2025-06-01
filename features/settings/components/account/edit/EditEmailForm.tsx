@@ -25,9 +25,11 @@ export const EditEmailForm = () => {
   const { refreshUserInfo } = useAuthenticator();
 
   const updateUserMutation = useMutation({
-    mutationFn: async (data: UpdateUserInput) => {
+    mutationFn: async () => {
       const modifiedData: UpdateUserMutationVariables = {
-        user: data,
+        user: {
+          email: form.getValues("email"),
+        },
       };
       const res = await requestWithAuth<UpdateUserMutation>(
         UpdateUserDocument,
@@ -44,9 +46,6 @@ export const EditEmailForm = () => {
     },
   });
 
-  const onSubmit = async (data: UpdateUserInput) => {
-    updateUserMutation.mutateAsync(data);
-  };
   return (
     <FormProvider {...form}>
       <form>
@@ -58,12 +57,16 @@ export const EditEmailForm = () => {
                 Cancel
               </Button>
             </DialogClose>
-            <Button
-              className="min-w-[150px]"
-              onClick={form.handleSubmit(onSubmit)}
-            >
-              Change Email
-            </Button>
+            <DialogClose>
+              <Button
+                className="min-w-[150px]"
+                onClick={() => {
+                  updateUserMutation.mutateAsync();
+                }}
+              >
+                Change Email
+              </Button>
+            </DialogClose>
           </div>
         </div>
       </form>

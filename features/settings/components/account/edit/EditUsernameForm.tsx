@@ -24,9 +24,11 @@ export const EditUsernameForm = () => {
   const { refreshUserInfo } = useAuthenticator();
 
   const updateUserMutation = useMutation({
-    mutationFn: async (data: UpdateUserInput) => {
+    mutationFn: async () => {
       const modifiedData: UpdateUserMutationVariables = {
-        user: data,
+        user: {
+          username: form.getValues("username"),
+        },
       };
       const res = await requestWithAuth<UpdateUserMutation>(
         UpdateUserDocument,
@@ -43,10 +45,6 @@ export const EditUsernameForm = () => {
     },
   });
 
-  const onSubmit = async (data: UpdateUserInput) => {
-    updateUserMutation.mutateAsync(data);
-  };
-
   return (
     <FormProvider {...form}>
       <form>
@@ -61,7 +59,9 @@ export const EditUsernameForm = () => {
             <DialogClose>
               <Button
                 className="min-w-[150px]"
-                onClick={form.handleSubmit(onSubmit)}
+                onClick={() => {
+                  updateUserMutation.mutateAsync();
+                }}
               >
                 Change Username
               </Button>

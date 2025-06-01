@@ -523,7 +523,7 @@ export type UpdateUserPasswordMutation = { __typename?: 'Mutation', updateUserPa
 export type MeQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQueryQuery = { __typename?: 'Query', meQuery?: { __typename?: 'User', id?: string | null, username?: string | null, email?: string | null, phoneNumber?: any | null, avatar?: string | null, userPresence?: UserPresenceType | null } | null };
+export type MeQueryQuery = { __typename?: 'Query', meQuery?: { __typename?: 'User', id?: string | null, username?: string | null, email?: string | null, description?: string | null, phoneNumber?: any | null, avatar?: string | null, userPresence?: UserPresenceType | null } | null };
 
 export type GetAllUserServersSidebarQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -853,6 +853,7 @@ export const MeQueryDocument = `
     id
     username
     email
+    description
     phoneNumber
     avatar
     userPresence

@@ -10,7 +10,7 @@ import { EditAvatar } from "./edit/EditAvatar";
 export const AccountBasicInfo = () => {
   const { user } = useAuthStore();
   return (
-    <div className="w-[500px] min-h-[370px] bg-sidebar border border-sidebar p-10 rounded-xl flex flex-col gap-md">
+    <div className="w-[500px] min-h-[445px] bg-sidebar border border-sidebar p-10 rounded-xl flex flex-col gap-md">
       <div className="flex flex-row gap-md items-center justify-between">
         <div className="flex flex-row gap-md items-center">
           <UserAvatar userAvatar={user?.avatar} className="w-[70px] h-[70px]" />

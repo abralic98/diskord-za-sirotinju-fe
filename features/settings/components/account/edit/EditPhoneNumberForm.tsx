@@ -24,11 +24,10 @@ export const EditPhoneNumberForm = () => {
   const { refreshUserInfo } = useAuthenticator();
 
   const updateUserMutation = useMutation({
-    mutationFn: async (data: UpdateUserInput) => {
+    mutationFn: async () => {
       const modifiedData: UpdateUserMutationVariables = {
         user: {
-          ...data,
-          phoneNumber: Number(data.phoneNumber),
+          phoneNumber: Number(form.getValues("phoneNumber")),
         },
       };
       const res = await requestWithAuth<UpdateUserMutation>(
@@ -46,9 +45,6 @@ export const EditPhoneNumberForm = () => {
     },
   });
 
-  const onSubmit = async (data: UpdateUserInput) => {
-    updateUserMutation.mutateAsync(data);
-  };
   return (
     <FormProvider {...form}>
       <form>
@@ -60,12 +56,16 @@ export const EditPhoneNumberForm = () => {
                 Cancel
               </Button>
             </DialogClose>
-            <Button
-              className="min-w-[150px]"
-              onClick={form.handleSubmit(onSubmit)}
-            >
-              Update phone number
-            </Button>
+            <DialogClose>
+              <Button
+                className="min-w-[150px]"
+                onClick={() => {
+                  updateUserMutation.mutateAsync();
+                }}
+              >
+                Update phone number
+              </Button>
+            </DialogClose>
           </div>
         </div>
       </form>

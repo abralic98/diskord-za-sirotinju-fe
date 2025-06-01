@@ -25,11 +25,10 @@ export const EditDescriptionForm = () => {
   const { refreshUserInfo } = useAuthenticator();
 
   const updateUserMutation = useMutation({
-    mutationFn: async (data: UpdateUserInput) => {
+    mutationFn: async () => {
       const modifiedData: UpdateUserMutationVariables = {
         user: {
-          ...data,
-          description: data.description,
+          description: form.getValues("description"),
         },
       };
       const res = await requestWithAuth<UpdateUserMutation>(
@@ -47,9 +46,6 @@ export const EditDescriptionForm = () => {
     },
   });
 
-  const onSubmit = async (data: UpdateUserInput) => {
-    updateUserMutation.mutateAsync(data);
-  };
   return (
     <FormProvider {...form}>
       <form>
@@ -68,7 +64,9 @@ export const EditDescriptionForm = () => {
               <Button
                 type="button"
                 className="min-w-[150px]"
-                onClick={form.handleSubmit(onSubmit)}
+                onClick={() => {
+                  updateUserMutation.mutateAsync();
+                }}
               >
                 Update Description
               </Button>
