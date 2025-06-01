@@ -4,6 +4,7 @@ import { ChangePassword } from "./ChangePassword";
 import { H3, Text } from "@/components/typography";
 import { DisableAccount } from "./DisableAccount";
 import { DeleteAccount } from "./DeleteAccount";
+import { Logout } from "./Logout";
 
 export const AccountSettings = () => {
   return (
@@ -21,6 +22,8 @@ export const AccountSettings = () => {
         <DisableAccount />
         <DeleteAccount />
       </div>
+      <H3>Logout</H3>
+      <Logout />
     </div>
   );
 };

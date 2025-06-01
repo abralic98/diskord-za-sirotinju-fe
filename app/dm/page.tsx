@@ -1,9 +1,12 @@
-import React from 'react'
+import { NoDMSelected } from "@/features/dm/components/NoDMSelected";
+import React from "react";
 
 const DMPage = () => {
   return (
-    <div>dmpage</div>
-  )
-}
+    <div className="bg-sidebar-accent w-full">
+      <NoDMSelected />;
+    </div>
+  );
+};
 
 export default DMPage;
