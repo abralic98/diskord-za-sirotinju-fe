@@ -689,7 +689,7 @@ export type GetDirectMessagesByInboxIdQueryVariables = Exact<{
 }>;
 
 
-export type GetDirectMessagesByInboxIdQuery = { __typename?: 'Query', getDirectMessagesByInboxId: { __typename?: 'DirectMessagePage', size: number, number: number, totalElements: number, totalPages: number, content: Array<{ __typename?: 'DirectMessage', id?: string | null, text?: string | null, type?: MessageType | null, dateCreated?: string | null, dateUpdated?: string | null, author?: { __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null }> } };
+export type GetDirectMessagesByInboxIdQuery = { __typename?: 'Query', getDirectMessagesByInboxId: { __typename?: 'DirectMessagePage', size: number, number: number, totalElements: number, totalPages: number, content: Array<{ __typename?: 'DirectMessage', id?: string | null, imageUrl?: string | null, text?: string | null, type?: MessageType | null, dateCreated?: string | null, dateUpdated?: string | null, author?: { __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null }> } };
 
 export type GetMyInboxQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -731,7 +731,7 @@ export type SubscribeToMessagesByInboxIdSubscriptionVariables = Exact<{
 }>;
 
 
-export type SubscribeToMessagesByInboxIdSubscription = { __typename?: 'Subscription', subscribeToMessagesByInboxId?: { __typename?: 'DirectMessage', id?: string | null, text?: string | null, dateCreated?: string | null, dateUpdated?: string | null, author?: { __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null } | null };
+export type SubscribeToMessagesByInboxIdSubscription = { __typename?: 'Subscription', subscribeToMessagesByInboxId?: { __typename?: 'DirectMessage', id?: string | null, text?: string | null, imageUrl?: string | null, dateCreated?: string | null, dateUpdated?: string | null, author?: { __typename?: 'User', id?: string | null, username?: string | null, avatar?: string | null } | null } | null };
 
 export type RemoveMeFromInboxMutationVariables = Exact<{
   inboxId: Scalars['ID']['input'];
@@ -1453,6 +1453,7 @@ export const GetDirectMessagesByInboxIdDocument = `
         username
         avatar
       }
+      imageUrl
       text
       type
       dateCreated
@@ -1622,6 +1623,7 @@ export const SubscribeToMessagesByInboxIdDocument = `
   subscribeToMessagesByInboxId(inboxId: $inboxId) {
     id
     text
+    imageUrl
     dateCreated
     dateUpdated
     author {

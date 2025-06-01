@@ -17,6 +17,7 @@ query getDirectMessagesByInboxId(
         username
         avatar
       }
+      imageUrl
       text
       type
       dateCreated
@@ -86,6 +87,7 @@ subscription subscribeToMessagesByInboxId($inboxId: ID!) {
   subscribeToMessagesByInboxId(inboxId: $inboxId) {
     id
     text
+    imageUrl
     dateCreated
     dateUpdated
     author {
