@@ -416,7 +416,6 @@ export type Subscription = {
   __typename?: 'Subscription';
   subscribeToMessagesByInboxId?: Maybe<DirectMessage>;
   subscribeToMessagesByRoomId?: Maybe<Message>;
-  userStatusSubscription?: Maybe<User>;
 };
 
 
@@ -427,11 +426,6 @@ export type SubscriptionSubscribeToMessagesByInboxIdArgs = {
 
 export type SubscriptionSubscribeToMessagesByRoomIdArgs = {
   roomId: Scalars['ID']['input'];
-};
-
-
-export type SubscriptionUserStatusSubscriptionArgs = {
-  userId: Scalars['ID']['input'];
 };
 
 export type UnbanUserInput = {
@@ -468,6 +462,7 @@ export type User = {
   __typename?: 'User';
   avatar?: Maybe<Scalars['String']['output']>;
   dateCreated?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   phoneNumber?: Maybe<Scalars['Long']['output']>;
@@ -524,13 +519,6 @@ export type UpdateUserPasswordMutationVariables = Exact<{
 
 
 export type UpdateUserPasswordMutation = { __typename?: 'Mutation', updateUserPassword?: { __typename?: 'User', id?: string | null } | null };
-
-export type UserStatusSubscriptionSubscriptionVariables = Exact<{
-  userId: Scalars['ID']['input'];
-}>;
-
-
-export type UserStatusSubscriptionSubscription = { __typename?: 'Subscription', userStatusSubscription?: { __typename?: 'User', id?: string | null, userPresence?: UserPresenceType | null } | null };
 
 export type MeQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -859,14 +847,6 @@ export const useUpdateUserPasswordMutation = <
       options
     )};
 
-export const UserStatusSubscriptionDocument = `
-    subscription userStatusSubscription($userId: ID!) {
-  userStatusSubscription(userId: $userId) {
-    id
-    userPresence
-  }
-}
-    `;
 export const MeQueryDocument = `
     query meQuery {
   meQuery {

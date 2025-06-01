@@ -1,9 +1,7 @@
-import React from 'react'
+import { redirect } from "next/navigation";
 
 const SettingsPage = () => {
-  return (
-    <div>div</div>
-  )
-}
+  return redirect("/settings/account");
+};
 
-export default SettingsPage
+export default SettingsPage;

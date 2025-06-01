@@ -10,7 +10,7 @@ export const ServerImage = ({ server }: { server?: Server | null }) => {
         <div className="h-[120px]">
           <Image
             alt="server banner"
-            width={350}
+            width={320}
             height={100}
             src={server.banner}
           />

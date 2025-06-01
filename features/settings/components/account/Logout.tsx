@@ -8,9 +8,11 @@ import {
   UpdateUserMutationVariables,
   UserPresenceType,
 } from "@/generated/graphql";
+import { CookieKeys } from "@/helpers/cookies";
 import { handleGraphqlError } from "@/helpers/handleGQLError";
 import { requestWithAuth } from "@/lib/graphql/client";
 import { useMutation } from "@tanstack/react-query";
+import { setCookie } from "cookies-next/client";
 import React from "react";
 
 export const Logout = () => {
@@ -31,6 +33,7 @@ export const Logout = () => {
     },
     onSuccess: () => {
       clearAuth();
+      setCookie(CookieKeys.TOKEN, undefined);
     },
     onError: (error) => {
       handleGraphqlError(error);

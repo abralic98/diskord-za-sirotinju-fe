@@ -44,7 +44,7 @@ export const ServerList = () => {
 
   return (
     <div ref={scrollRef}>
-      <div className="w-full bg-sidebar grid grid-cols-3 gap-4">
+      <div className="w-full bg-sidebar grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {renderServers()}
       </div>
       {query.hasNextPage && <PaginationTrigger query={query} />}

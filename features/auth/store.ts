@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { User } from "@/generated/graphql"; // Import the User type
-import { getCookie, setCookie } from "cookies-next/client";
+import { getCookie } from "cookies-next/client";
 import { CookieKeys } from "@/helpers/cookies";
 
 interface AuthStore {
@@ -20,7 +20,7 @@ export const useAuthStore = create<AuthStore>()(
         set({ token, user }, false, "setAuth");
       },
       clearAuth: () => {
-        setCookie(CookieKeys.TOKEN, undefined);
+        // setCookie(CookieKeys.TOKEN, undefined); zakomentirano jer na fast refresh nekad zna ne dobit response na vrijeme i izbaci na login
         set({ token: null, user: null }, false, "clearAuth");
       },
     }),

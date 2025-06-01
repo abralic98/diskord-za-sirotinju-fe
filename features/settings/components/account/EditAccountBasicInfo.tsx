@@ -6,6 +6,7 @@ import { ReactNode } from "react";
 import { EditUsernameForm } from "./edit/EditUsernameForm";
 import { EditEmailForm } from "./edit/EditEmailForm";
 import { EditPhoneNumberForm } from "./edit/EditPhoneNumberForm";
+import { EditDescriptionForm } from "./edit/EditDescriptionForm";
 
 interface EditFormProps {
   label: string;
@@ -23,13 +24,18 @@ export const EditAccountBasicInfo = ({ user }: { user: User | null }) => {
         dialogForm={<EditUsernameForm />}
       />
       <EditForm
+        label={"About you"}
+        value={user?.description ?? "Description empty"}
+        dialogForm={<EditDescriptionForm />}
+      />
+      <EditForm
         label={"Email"}
         value={String(user.email)}
         dialogForm={<EditEmailForm />}
       />
       <EditForm
         label={"Phone number"}
-        value={user?.phoneNumber?.toString() ?? "Phone not added"}
+        value={user?.phoneNumber ?? "Phone not added"}
         dialogForm={<EditPhoneNumberForm />}
       />
     </div>

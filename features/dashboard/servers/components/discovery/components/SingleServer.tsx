@@ -53,7 +53,7 @@ export const SingleServer = ({ server }: Props) => {
   };
 
   return (
-    <div className="w-[350px] h-[400px] bg-sidebar-accent rounded-lg">
+    <div className="w-[320px] h-[400px] bg-sidebar-accent rounded-lg">
       <ServerImage server={server} />
       <div className="p-4 flex flex-col gap-md mt-[50px]">
         <H4>{server.name}</H4>
