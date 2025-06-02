@@ -15,7 +15,7 @@ interface UploadResult {
 export const useCloudStorage = ({
   file,
 }: UseCloudStorageProps): UploadResult => {
-  const bucketId = "6822fe5600188749a318";
+  const bucketId = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID!;
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [uploadedImage, setUploadedImage] = useState<string>();
