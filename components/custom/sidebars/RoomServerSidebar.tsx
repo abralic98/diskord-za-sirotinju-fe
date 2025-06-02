@@ -31,7 +31,7 @@ export const RoomServerSidebar = ({ content }: Props) => {
   const { serverId } = useIds();
   const { user } = useAuthStore();
 
-  const { data: server, error } = useQuery({
+  const { data: server } = useQuery({
     queryKey: [queryKeys.getServerById, serverId],
     enabled: Boolean(serverId),
     queryFn: async (): Promise<GetServerNameByIdQuery> => {

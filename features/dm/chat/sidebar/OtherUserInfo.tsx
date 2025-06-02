@@ -20,7 +20,7 @@ export const OtherUserInfo = ({ user }: { user?: User | null }) => {
       <InboxCard className="flex flex-col gap-md p-4">
         <div className="flex flex-col gap-sm">
           <Text>About me</Text>
-          <Label> descfription backend</Label>
+          <Label>{user.description}</Label>
         </div>
         <div className="flex flex-col gap-sm">
           <Text>Member Since</Text>

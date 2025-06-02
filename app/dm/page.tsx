@@ -4,7 +4,7 @@ import React from "react";
 const DMPage = () => {
   return (
     <div className="bg-sidebar-accent w-full">
-      <NoDMSelected />;
+      <NoDMSelected />
     </div>
   );
 };
