@@ -30,3 +30,13 @@ export const updateUserPasswordSchema = z
     path: ["confirmNewPassword"],
     message: "Passwords do not match",
   });
+
+export const deactivateUserSchema = z
+  .object({
+    password: z.string(),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords do not match",
+  });

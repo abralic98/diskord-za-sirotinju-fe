@@ -1,0 +1,5 @@
+mutation deactivateUser($password: String!, $confirmPassword: String!) {
+  deactivateUser(password: $password, confirmPassword: $confirmPassword) {
+    id
+  }
+}

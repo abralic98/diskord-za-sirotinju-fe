@@ -58,7 +58,7 @@ export const Invite = () => {
         />
       );
     } else {
-      if (server?.name) return <H4>{server.name.slice(0, 2)}</H4>;
+      if (server?.name) return <H4 className="w-20 h-20 rounded-full bg-sidebar flex items-center justify-center ">{server.name.slice(0, 2)}</H4>;
     }
   };
 
@@ -68,7 +68,7 @@ export const Invite = () => {
     <div>
       <div className=" w-full">{renderBanner()}</div>
       <CenterScreen>
-        <BaseCard className="h-[220px] z-50">
+        <BaseCard className="max-h-[220px] z-50">
           <H4>{`You are joining`}</H4>
           <div className="w-full flex flex-row gap-md items-center">
             {renderIcon()}

@@ -17,7 +17,7 @@ export const DeleteAccount = () => {
   return (
     <CustomDialog
       header={header}
-      trigger={<Button variant={"destructive"}>Delete Account</Button>}
+      trigger={<Button variant={"destructive"}>Delete Account todo</Button>}
       content={<DeleteAccountForm />}
     />
   );
