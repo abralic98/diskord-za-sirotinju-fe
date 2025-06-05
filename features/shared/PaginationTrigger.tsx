@@ -14,7 +14,7 @@ export const PaginationTrigger: React.FC<PaginationTriggerProps> = ({
   const { ref, inView } = useInView({
     threshold: 0,
     triggerOnce: false,
-    rootMargin: "200px", // Add some margin to prevent triggering too early
+    rootMargin: "200px",
   });
 
   const { hasNextPage, isFetchingNextPage, fetchNextPage } = query;

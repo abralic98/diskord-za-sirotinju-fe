@@ -12,7 +12,6 @@ export const useRoomMessageConnection = (onMessage: (msg: any) => void) => {
   useEffect(() => {
     if (!roomId) return;
 
-    // create the client
     const client: Client = createClient({
       url: `${process.env.NEXT_PUBLIC_WS_URL}?room/${roomId}`,
       connectionParams: {
@@ -21,7 +20,7 @@ export const useRoomMessageConnection = (onMessage: (msg: any) => void) => {
         },
       },
       lazy: false,
-      retryAttempts: 0, // avoid reconnect loop
+      retryAttempts: 0,
     });
 
     // subscribe
@@ -45,10 +44,9 @@ export const useRoomMessageConnection = (onMessage: (msg: any) => void) => {
       },
     );
 
-    // cleanup
     return () => {
-      disposeSubscribe(); // Unsubscribe from query
-      client.dispose(); // Fully close WebSocket connection
+      disposeSubscribe();
+      client.dispose();
     };
   }, [roomId]);
 };
