@@ -29,13 +29,7 @@ export const SingleServer = ({ server }: Props) => {
 
   const renderIcon = () => {
     if (server?.serverImg) {
-      return (
-        <Image
-          alt="server icon"
-          fill
-          src={server.serverImg}
-        />
-      );
+      return <Image alt="server icon" fill src={server.serverImg} />;
     } else {
       if (server?.name) return <H4>{server?.name.slice(0, 2)}</H4>;
     }
