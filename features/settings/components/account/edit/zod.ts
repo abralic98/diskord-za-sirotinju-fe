@@ -4,7 +4,7 @@ export const updateUserSchema = z.object({
   username: z.string().nullable().optional(),
   phoneNumber: z.number().nullable().optional(),
   email: z.string().email().nullable().optional(),
-  desciption: z.string().nullable().optional(),
+  desrciption: z.string().nullable().optional(),
 });
 
 export const updateUserPasswordSchema = z
